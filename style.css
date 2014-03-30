@@ -1,0 +1,178 @@
+.clear	{
+	clear: both;
+}
+
+#drumkits	{
+	float: left;
+	width: 220px;
+}
+#drumkits > .instrument	{
+	cursor: pointer;
+	width: 190px;
+	z-index: 10;
+}
+#drumkits > .instrument:hover	{
+	background-color: #cccccc;
+}
+#drumkits > .instrument.dragging	{
+	background-color: #cccccc;
+}
+
+#instruments	{
+	float: left;
+	/*height: 100%;*/
+	padding: 2px;
+	margin: 2px;
+	width: 200px;
+}
+
+#notes	{
+	float: left;
+	min-height: 50px;
+	overflow-x: auto;
+	width: 800px;
+}
+
+.instrument	{
+	border-radius: 4px;
+	border: 1px solid black;
+	height: 24px;
+	margin: 2px;
+	padding: 4px;
+	position: relative;
+	width: 95%;
+}
+.instrument:hover > span	{
+	display: block;
+}
+.instrument.add	{
+	box-shadow: 0px 0px 6px darkgray inset;
+}
+.instrument.add:hover	{
+	box-shadow: 0px 0px 12px gray inset;
+}
+.instrument.note.active	{
+	background-color: black;
+}
+.instrument .label	{
+	border: none;
+	color: black;
+	font-size: 13px;
+	padding: 3px;
+	outline: none;
+}
+/*.instrument .label:hover	{
+	background-color: #cccccc;
+}*/
+.instrument > span	{
+	cursor: pointer;
+	border-radius: 4px;
+	display: none;
+	height: 16px;
+	padding: 0px 1px 4px 4px;
+	position: absolute;
+	top: 7px;
+	width: 16px;
+}
+/*.instrument > span:hover	{
+	background-color: #dddddd;
+}*/
+/*.instrument .edit	{
+	right: 24px;
+	background: url("pencil.png") 50% 50% / 80% auto no-repeat transparent;
+}*/
+.instrument .close	{
+	right: 4px;
+}
+
+.measure	{
+	border-left-color: black;
+}
+
+.measureSettings > .setting	{
+	float: left;
+	margin: 4px 30px 4px 4px;
+	font-size: 14px;
+	height: 24px;
+}
+div.bpm	{
+	width: 100px;
+}
+
+.column	{
+	/*border-radius: 4px;*/
+	border-left: 2px solid transparent;
+	float: left;
+	margin: 2px;
+	padding: 2px;
+	position: relative;
+}
+.column:hover	{
+	background-color: #C7F2FF;
+}
+.column.current	{
+	border-left-color: black;
+}
+
+.instrument.note	{
+	width: 24px;
+}
+.instrument.note:hover	{
+	background-color: #DEF7FF;
+}
+.instrument.note.selected	{
+	border-color: blue;
+}
+
+/* PLAY BUTTONS */
+#playbuttons	{
+	float: left;
+	margin: 2px;
+}
+.playbutton	{
+	cursor: pointer;
+	float: left;
+	height: 20px;
+	margin: 2px;
+	padding: 4px;
+	width: 20px;
+}
+.play	{
+	background: url("playbuttons.png") -30px 0px / auto 26px no-repeat transparent;
+}
+.play.pause	{
+	background: url("playbuttons.png") 2px 0px / auto 26px no-repeat transparent;
+}
+.stop	{
+	background: url("playbuttons.png") -64px 0px / auto 26px no-repeat transparent;
+}
+
+#importExport	{
+	box-shadow: 0px 0px 50px black;
+	border-radius: 10px;
+	display: none;
+	height: 60%;
+	left: 20%;
+	position: fixed;
+	text-align: center;
+	top: 20%;
+	width: 60%;
+	z-index: 9999999;
+}
+.text	{
+	border: none;
+	border-radius: 10px;
+	font-family: monaco, lucida grande, arial, sans-serif;
+	font-size: 11px;
+	height: 85%;
+	outline: none;
+	padding: 1%;
+	resize: none;
+	width: 100%;
+}
+.playbuttons .import, .playbuttons .export	{
+	cursor: pointer;
+	height: 26px;
+	margin: 5px 0px 0px 0px;
+	width: 100%;
+}
