@@ -1,7 +1,10 @@
-drum_machine
+Drum Machine
 ============
 
-A simple drum machine for the web
+A simple drum machine for the web.
+
+See demo at http://jneuendorf.github.io/drum_machine/
+
 
 Uses
 - jQuery (http://jquery.com/),
