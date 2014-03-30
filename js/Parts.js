@@ -116,7 +116,6 @@
             },
             drop: function(ev, ui) {
               var instrumentDiv, instrumentName, kitName;
-              console.log(ui);
               instrumentDiv = ui.draggable;
               kitName = instrumentDiv.attr("data-kitname");
               instrumentName = instrumentDiv.attr("data-instrumentname");
@@ -207,7 +206,6 @@
 
     PartNotes.prototype.draw = function() {
       var div, firstDraw, idx, mDiv, master, measure, _i, _len, _ref;
-      console.log("drawing notes");
       div = this._container.find("." + this._id);
       firstDraw = div.length === 0;
       master = this._master;
@@ -270,17 +268,6 @@
 
     PartImportExport.prototype.getDiv = function() {
       return this._div;
-    };
-
-    PartImportExport.prototype.setText = function(text, updateButton) {
-      if (updateButton == null) {
-        updateButton = true;
-      }
-      this._text = text;
-      if (updateButton === true) {
-        this._div.find(".copy").attr("data-clipboard-text", this._text);
-      }
-      return this;
     };
 
     return PartImportExport;

@@ -112,7 +112,6 @@
         })(this);
         for (i = _j = 0, _ref2 = col.length - 1; 0 <= _ref2 ? _j < _ref2 : _j > _ref2; i = 0 <= _ref2 ? ++_j : --_j) {
           note = col[i];
-          console.log(note);
           note = $("<div class='instrument note" + (note != null ? " active" : "") + "' />");
           _fn(i, note, idx);
           column.append(note);

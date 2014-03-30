@@ -108,17 +108,14 @@
 
     DrumMachine.prototype["import"] = function() {
       var instrument, instruments, json, makeInstrumentFromKit, measure, measures, newMeasure, temp, transformData, _i, _j, _len, _len1;
-      console.log("getting json");
       json = this._popup.find(".text").val();
       if ((json == null) || json === "") {
         return this;
       }
       json = $.parseJSON(json);
-      console.log("checking json", json);
       if ((json == null) || $.isEmptyObject(json)) {
         return this;
       }
-      console.log("json ok");
       makeInstrumentFromKit = (function(_this) {
         return function(kitName, name, volume) {
           var instrument, path;

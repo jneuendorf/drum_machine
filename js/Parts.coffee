@@ -99,7 +99,6 @@ class App.PartInstruments extends App.Part
 						return @
 					# add dropped instrument to all measures
 					drop: (ev, ui) ->
-						console.log ui
 						instrumentDiv = ui.draggable
 						# get instrument info
 						kitName = instrumentDiv.attr "data-kitname"
@@ -189,7 +188,6 @@ class App.PartNotes extends App.Part
 		super master, container, className, id
 	
 	draw: () ->
-		console.log "drawing notes"
 		div			= @_container.find(".#{@_id}")
 		firstDraw	= div.length is 0
 		master		= @_master
@@ -243,39 +241,8 @@ class App.PartImportExport extends App.Part
 			@_div = div
 			master.setPopup @_div
 			@_container.append div
-
-
-			# ZeroClipboard.config {
-			# 	moviePath: "ZeroClipboard.swf"
-			# 	hoverClass: "test"
-			# 	trustedDomains: [window.location.host]
-			# }
-			# client = new ZeroClipboard( @_container.find("button.copy") )
-
-			# # client.clip @_container.find("button.copy")[0]
-
-			# client.on 'mouseover', ( client, args ) ->
-			# 	alert( "mouse is over movie" )
-			
-			# client.on "load", (client) ->
-			# 	# movie is loaded
-			# 	console.log "loaded"
-
-			# client.on 'dataRequested', ( client, args ) ->
-			# 	console.log "dataRequested"
-			# 	client.setText( 'Copied to clipboard.' )
-
-			# client.on "complete", (client, args) ->
-			# 	# 'this' is the element that was clicked
-			# 	console.log "copied!"
 		return @
 
 	# GETTERS & SETTERS
 	getDiv: () ->
 		return @_div
-
-	setText: (text, updateButton = true) ->
-		@_text = text
-		if updateButton is true
-			@_div.find(".copy").attr "data-clipboard-text", @_text
-		return @

@@ -97,7 +97,7 @@ class App.Measure
 			# ignore last instrument because it's a pseudo instrument (drop area for new instruments)
 			for i in [0...(col.length - 1)]
 				note = col[i]
-				console.log note
+
 				note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
 				# click on note
 				do (i, note, idx) =>
