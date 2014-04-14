@@ -9,7 +9,7 @@ class App.Measure
 	@getID: () ->
 		return "measure" + count++
 
-	constructor: (@_instruments, quarterSplit, @_beats, @_bpm) ->
+	constructor: (@_drumMachine, @_instruments, quarterSplit, @_beats, @_bpm) ->
 		modes = App.Measure.modes
 
 		@_noteIndex = 0
@@ -69,14 +69,20 @@ class App.Measure
 							<div class="bpm setting">
 								BPM: <input class="bpm" type="number" value="#{@_bpm}" min="1" max="#{App.Measure.maxBPM}" />
 							</div>
+							<div class="close setting">
+								&#10006;
+							</div>
 							<div class="clear" />
 						</div>"""
 
 		settings.find(".select").change (ev) ->
-			resetStepSize( ev, @ )
+			return resetStepSize( ev, @ )
 
 		settings.find("input.bpm").change (ev) ->
-			resetBPM( ev, @ )
+			return resetBPM( ev, @ )
+
+		settings.find(".close").click (ev) =>
+			return @remove()
 
 		return settings
 
@@ -97,7 +103,6 @@ class App.Measure
 			# ignore last instrument because it's a pseudo instrument (drop area for new instruments)
 			for i in [0...(col.length - 1)]
 				note = col[i]
-				console.log note
 				note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
 				# click on note
 				do (i, note, idx) =>
@@ -117,6 +122,10 @@ class App.Measure
 		if firstDraw
 			@_div = div
 
+		return @
+
+	remove: () ->
+		@_drumMachine.removeMeasure(@)
 		return @
 
 	toggleNote: (x, y) ->
@@ -227,6 +236,9 @@ class App.Measure
 		return @
 
 	# GETTERS
+	getDrumMachine: () ->
+		return @_drumMachine
+
 	getInstruments: () ->
 		return @_instruments
 

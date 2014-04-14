@@ -32,13 +32,10 @@ class App.DrumMachine
 
 
 		@_measures = []
-		@_measures.push new App.Measure(@_instruments, 2, 4, 120)
-		@_measures.push new App.Measure(@_instruments, 2, 3, 120)
+		@_measures.push new App.Measure(@, @_instruments, 2, 4, 120)
+		@_measures.push new App.Measure(@, @_instruments, 2, 3, 120)
 
 		console.log @
-
-	# getInstrumentsHeight: () ->
-	# 	return @_instruments.length * 30 + 24
 
 	draw: () ->
 		# draw all components
@@ -89,7 +86,6 @@ class App.DrumMachine
 
 	import: () ->
 		# get json
-		console.log "getting json"
 		json = @_popup.find(".text").val()
 
 		if not json? or json is ""
@@ -97,12 +93,8 @@ class App.DrumMachine
 
 		json = $.parseJSON json
 
-		console.log "checking json", json
-
 		if not json? or $.isEmptyObject json
 			return @
-
-		console.log "json ok"
 
 		# json looks like
 		# {"instruments":[{"name":"Bass Kick Default","kitName":"Rock","volume":80},{"name":"Snare Default","kitName":"Rock","volume":80},{"name":"Hihat Default","kitName":"Rock","volume":80}],"measures":[{"beats":4,"bpm":120,"data":[[1,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]},{"beats":3,"bpm":120,"data":[[1,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]}]}
@@ -140,7 +132,7 @@ class App.DrumMachine
 
 		# load measures
 		for measure in measures
-			newMeasure = new App.Measure(@_instruments, 2, measure.beats, measure.bpm)
+			newMeasure = new App.Measure(@, @_instruments, 2, measure.beats, measure.bpm)
 			newMeasure.setData transformData(measure.data, @_instruments)
 			@_measures.push newMeasure
 
@@ -171,6 +163,20 @@ class App.DrumMachine
 		@drawPartial [App.PartDrumkits, App.PartImportExport]
 
 		return @
+
+	addMeasure: (measure) ->
+		console.log @_measures
+		if not measure?
+			measure = new App.Measure(@, @_instruments, 2, 4, 120)
+		@_measures.push measure
+		@draw()
+		return @
+
+	removeMeasure: (measure) ->
+		@_measures = (m for m in @_measures when m isnt measure)
+		@draw()
+		return @
+
 
 	################
 	# PLAY FUNCTIONS

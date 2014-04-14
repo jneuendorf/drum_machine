@@ -189,7 +189,6 @@ class App.PartNotes extends App.Part
 		super master, container, className, id
 	
 	draw: () ->
-		console.log "drawing notes"
 		div			= @_container.find(".#{@_id}")
 		firstDraw	= div.length is 0
 		master		= @_master
@@ -207,6 +206,14 @@ class App.PartNotes extends App.Part
 				$(@).attr("data-absidx", idx++)
 
 			div.append mDiv
+
+		# draw "add measure" button
+		addMeasureBtn = $ "<button class='addMeasure'>add meausure</button>"
+		addMeasureBtn.click () ->
+			master.addMeasure()
+			return @
+		div.append addMeasureBtn
+
 
 		if firstDraw
 			@_container.append div

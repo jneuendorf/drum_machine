@@ -1,3 +1,8 @@
+body {
+	font-family: tahoma, helvetica;
+	font-size: 16px;
+}
+
 .clear	{
 	clear: both;
 }
@@ -95,10 +100,20 @@
 	font-size: 14px;
 	height: 24px;
 }
-div.bpm	{
+.measureSettings > .bpm	{
 	width: 100px;
 }
-
+.measureSettings input.bpm	{
+	width: 50;
+}
+.measureSettings > .close {
+	cursor: pointer;
+	display: none;
+	margin-left: 100px;
+}
+.measureSettings:hover > .close {
+	display: block;
+}
 .column	{
 	/*border-radius: 4px;*/
 	border-left: 2px solid transparent;
@@ -122,6 +137,9 @@ div.bpm	{
 }
 .instrument.note.selected	{
 	border-color: blue;
+}
+.addMeasure {
+	margin: 4px;
 }
 
 /* PLAY BUTTONS */

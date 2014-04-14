@@ -46,6 +46,8 @@ $(document).ready(function()	{
 			]);
 
 			dm.draw();
+
+			window.dm = dm;
 		}
 	});
 

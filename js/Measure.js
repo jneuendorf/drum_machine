@@ -17,8 +17,9 @@
       return "measure" + count++;
     };
 
-    function Measure(_instruments, quarterSplit, _beats, _bpm) {
+    function Measure(_drumMachine, _instruments, quarterSplit, _beats, _bpm) {
       var col, data, idx, modes, x, xMax, y, yMax, _i, _j;
+      this._drumMachine = _drumMachine;
       this._instruments = _instruments;
       this._beats = _beats;
       this._bpm = _bpm;
@@ -75,13 +76,18 @@
           return res;
         };
       })(this);
-      settings = $("<div class=\"measureSettings\">\n	<div class=\"split setting\">\n		<select class=\"select\">\n			" + (drawOptions()) + "\n		</select>\n		notes,\n	</div>\n	<div class=\"bpm setting\">\n		BPM: <input class=\"bpm\" type=\"number\" value=\"" + this._bpm + "\" min=\"1\" max=\"" + App.Measure.maxBPM + "\" />\n	</div>\n	<div class=\"clear\" />\n</div>");
+      settings = $("<div class=\"measureSettings\">\n	<div class=\"split setting\">\n		<select class=\"select\">\n			" + (drawOptions()) + "\n		</select>\n		notes,\n	</div>\n	<div class=\"bpm setting\">\n		BPM: <input class=\"bpm\" type=\"number\" value=\"" + this._bpm + "\" min=\"1\" max=\"" + App.Measure.maxBPM + "\" />\n	</div>\n	<div class=\"close setting\">\n		&#10006;\n	</div>\n	<div class=\"clear\" />\n</div>");
       settings.find(".select").change(function(ev) {
         return resetStepSize(ev, this);
       });
       settings.find("input.bpm").change(function(ev) {
         return resetBPM(ev, this);
       });
+      settings.find(".close").click((function(_this) {
+        return function(ev) {
+          return _this.remove();
+        };
+      })(this));
       return settings;
     };
 
@@ -112,7 +118,6 @@
         })(this);
         for (i = _j = 0, _ref2 = col.length - 1; 0 <= _ref2 ? _j < _ref2 : _j > _ref2; i = 0 <= _ref2 ? ++_j : --_j) {
           note = col[i];
-          console.log(note);
           note = $("<div class='instrument note" + (note != null ? " active" : "") + "' />");
           _fn(i, note, idx);
           column.append(note);
@@ -123,6 +128,11 @@
       if (firstDraw) {
         this._div = div;
       }
+      return this;
+    };
+
+    Measure.prototype.remove = function() {
+      this._drumMachine.removeMeasure(this);
       return this;
     };
 
@@ -278,6 +288,10 @@
     Measure.prototype.setData = function(data) {
       this._data = data;
       return this;
+    };
+
+    Measure.prototype.getDrumMachine = function() {
+      return this._drumMachine;
     };
 
     Measure.prototype.getInstruments = function() {

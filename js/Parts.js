@@ -206,8 +206,7 @@
     }
 
     PartNotes.prototype.draw = function() {
-      var div, firstDraw, idx, mDiv, master, measure, _i, _len, _ref;
-      console.log("drawing notes");
+      var addMeasureBtn, div, firstDraw, idx, mDiv, master, measure, _i, _len, _ref;
       div = this._container.find("." + this._id);
       firstDraw = div.length === 0;
       master = this._master;
@@ -225,6 +224,12 @@
         });
         div.append(mDiv);
       }
+      addMeasureBtn = $("<button class='addMeasure'>add meausure</button>");
+      addMeasureBtn.click(function() {
+        master.addMeasure();
+        return this;
+      });
+      div.append(addMeasureBtn);
       if (firstDraw) {
         this._container.append(div);
       }

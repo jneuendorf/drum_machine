@@ -26,8 +26,8 @@
       this._popup = null;
       this._parts = [new App.Part["new"]("Drumkits", this, container, "drumkits", "drumkits"), new App.Part["new"]("PlayButtons", this, container, "playbuttons", "playbuttons"), new App.Part["new"]("Instruments", this, container, "instruments", "instruments"), new App.Part["new"]("Notes", this, container, "notes", "notes"), new App.Part["new"]("ImportExport", this, container, "importExport", "importExport")];
       this._measures = [];
-      this._measures.push(new App.Measure(this._instruments, 2, 4, 120));
-      this._measures.push(new App.Measure(this._instruments, 2, 3, 120));
+      this._measures.push(new App.Measure(this, this._instruments, 2, 4, 120));
+      this._measures.push(new App.Measure(this, this._instruments, 2, 3, 120));
       console.log(this);
     }
 
@@ -108,17 +108,14 @@
 
     DrumMachine.prototype["import"] = function() {
       var instrument, instruments, json, makeInstrumentFromKit, measure, measures, newMeasure, temp, transformData, _i, _j, _len, _len1;
-      console.log("getting json");
       json = this._popup.find(".text").val();
       if ((json == null) || json === "") {
         return this;
       }
       json = $.parseJSON(json);
-      console.log("checking json", json);
       if ((json == null) || $.isEmptyObject(json)) {
         return this;
       }
-      console.log("json ok");
       makeInstrumentFromKit = (function(_this) {
         return function(kitName, name, volume) {
           var instrument, path;
@@ -161,7 +158,7 @@
       this._instruments.push(null);
       for (_j = 0, _len1 = measures.length; _j < _len1; _j++) {
         measure = measures[_j];
-        newMeasure = new App.Measure(this._instruments, 2, measure.beats, measure.bpm);
+        newMeasure = new App.Measure(this, this._instruments, 2, measure.beats, measure.bpm);
         newMeasure.setData(transformData(measure.data, this._instruments));
         this._measures.push(newMeasure);
       }
@@ -193,6 +190,34 @@
         measure.removeInstrumentFromData(index);
       }
       this.drawPartial([App.PartDrumkits, App.PartImportExport]);
+      return this;
+    };
+
+    DrumMachine.prototype.addMeasure = function(measure) {
+      console.log(this._measures);
+      if (measure == null) {
+        measure = new App.Measure(this, this._instruments, 2, 4, 120);
+      }
+      this._measures.push(measure);
+      this.draw();
+      return this;
+    };
+
+    DrumMachine.prototype.removeMeasure = function(measure) {
+      var m;
+      this._measures = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this._measures;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          m = _ref[_i];
+          if (m !== measure) {
+            _results.push(m);
+          }
+        }
+        return _results;
+      }).call(this);
+      this.draw();
       return this;
     };
 
