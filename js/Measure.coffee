@@ -1,261 +1,261 @@
 class App.Measure
-	@maxBPM: 480
-	# how much will a quarter note be split? (4ths, 8ths, 16ths, 32nds, 64ths)
-	@modes:		[1, 2, 4, 8, 16]
-	# how big is the step size from one column to the next
-	@stepSizes:	[16, 8, 4, 2, 1]
+    @maxBPM: 480
+    # how much will a quarter note be split? (4ths, 8ths, 16ths, 32nds, 64ths)
+    @modes:        [1, 2, 4, 8, 16]
+    # how big is the step size from one column to the next
+    @stepSizes:    [16, 8, 4, 2, 1]
 
-	count = 0
-	@getID: () ->
-		return "measure" + count++
+    count = 0
+    @getID: () ->
+        return "measure" + count++
 
-	constructor: (@_drumMachine, @_instruments, quarterSplit, @_beats, @_bpm) ->
-		modes = App.Measure.modes
+    constructor: (@_drumMachine, @_instruments, quarterSplit, @_beats, @_bpm) ->
+        modes = App.Measure.modes
 
-		@_noteIndex = 0
-		@_div = null
-		@_id = App.Measure.getID()
-		
-		idx = App.Measure.modes.indexOf quarterSplit
-		# set default to 8th notes
-		if idx < 0
-			idx = 1
-		@_stepSize = App.Measure.stepSizes[idx]
+        @_noteIndex = 0
+        @_div = null
+        @_id = App.Measure.getID()
 
-		# init data
-		data = []
+        idx = App.Measure.modes.indexOf quarterSplit
+        # set default to 8th notes
+        if idx < 0
+            idx = 1
+        @_stepSize = App.Measure.stepSizes[idx]
 
-		# init with null values
-		xMax = @_beats * modes[modes.length - 1]
-		yMax = _instruments.length
-		for x in [0...xMax]
-			# init column
-			col = []
-			col.push(null) for y in [0...yMax]
-			data[x] = col
+        # init data
+        data = []
 
-		@_data = data
+        # init with null values
+        xMax = @_beats * modes[modes.length - 1]
+        yMax = @_instruments.length
+        for x in [0...xMax]
+            # init column
+            col = []
+            col.push(null) for y in [0...yMax]
+            data[x] = col
 
-	drawSettings: () ->
-		# inner functions
-		resetBPM = (ev, textfield) =>
-			@setBPM parseInt(textfield.value, 10)
-			return @
+        @_data = data
 
-		resetStepSize = (ev, select) =>
-			@setStepSize parseInt(select.value, 10)
-			@draw()
-			return @
+    drawSettings: () ->
+        # inner functions
+        resetBPM = (ev, textfield) =>
+            @setBPM parseInt(textfield.value, 10)
+            return @
 
-		drawOptions = () =>
-			res = ""
-			for val, i in App.Measure.stepSizes
-				# select current mode
-				if @_stepSize isnt val
-					res += "<option value='#{val}'>#{App.Measure.modes[i] * 4}th</option>"
-				else
-					res += "<option value='#{val}' selected>#{App.Measure.modes[i] * 4}th</option>"
-			return res
-		# end of inner functions
+        resetStepSize = (ev, select) =>
+            @setStepSize parseInt(select.value, 10)
+            @draw()
+            return @
+
+        drawOptions = () =>
+            res = ""
+            for val, i in App.Measure.stepSizes
+                # select current mode
+                if @_stepSize isnt val
+                    res += "<option value='#{val}'>#{App.Measure.modes[i] * 4}th</option>"
+                else
+                    res += "<option value='#{val}' selected>#{App.Measure.modes[i] * 4}th</option>"
+            return res
+        # end of inner functions
 
 
-		settings = $ """<div class="measureSettings">
-							<div class="split setting">
-								<select class="select">
-									#{do drawOptions}
-								</select>
-								notes,
-							</div>
-							<div class="bpm setting">
-								BPM: <input class="bpm" type="number" value="#{@_bpm}" min="1" max="#{App.Measure.maxBPM}" />
-							</div>
-							<div class="close setting">
-								&#10006;
-							</div>
-							<div class="clear" />
-						</div>"""
+        settings = $ """<div class="measureSettings">
+                            <div class="split setting">
+                                <select class="select">
+                                    #{do drawOptions}
+                                </select>
+                                notes,
+                            </div>
+                            <div class="bpm setting">
+                                BPM: <input class="bpm" type="number" value="#{@_bpm}" min="1" max="#{App.Measure.maxBPM}" />
+                            </div>
+                            <div class="close setting">
+                                &#10006;
+                            </div>
+                            <div class="clear" />
+                        </div>"""
 
-		settings.find(".select").change (ev) ->
-			return resetStepSize( ev, @ )
+        settings.find(".select").change (ev) ->
+            return resetStepSize( ev, @ )
 
-		settings.find("input.bpm").change (ev) ->
-			return resetBPM( ev, @ )
+        settings.find("input.bpm").change (ev) ->
+            return resetBPM( ev, @ )
 
-		settings.find(".close").click (ev) =>
-			return @remove()
+        settings.find(".close").click (ev) =>
+            return @remove()
 
-		return settings
+        return settings
 
-	draw: () ->
-		div = @_div
-		firstDraw = div not instanceof jQuery
+    draw: () ->
+        div = @_div
+        firstDraw = div not instanceof jQuery
 
-		if firstDraw
-			div = $ "<div class='measure' id='#{@_id}' />"
+        if firstDraw
+            div = $ "<div class='measure' id='#{@_id}' />"
 
-		# draw measure settings
-		div.empty().append @drawSettings()
+        # draw measure settings
+        div.empty().append @drawSettings()
 
-		for col, idx in @_data by @_stepSize
-			# clone = instruments.clone()
-			column = $ "<div class='column' data-colidx='#{idx}' />"
+        for col, idx in @_data by @_stepSize
+            # clone = instruments.clone()
+            column = $ "<div class='column' data-colidx='#{idx}' />"
 
-			# ignore last instrument because it's a pseudo instrument (drop area for new instruments)
-			for i in [0...(col.length - 1)]
-				note = col[i]
-				note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
-				# click on note
-				do (i, note, idx) =>
-					note.click () =>
-						@toggleNote(idx, i)
-						if @noteIsActive(idx, i)
-							note.addClass "active"
-						else
-							note.removeClass "active"
-				column.append note
+            # ignore last instrument because it's a pseudo instrument (drop area for new instruments)
+            for i in [0...(col.length - 1)]
+                note = col[i]
+                note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
+                # click on note
+                do (i, note, idx) =>
+                    note.click () =>
+                        @toggleNote(idx, i)
+                        if @noteIsActive(idx, i)
+                            note.addClass "active"
+                        else
+                            note.removeClass "active"
+                column.append note
 
-			div.append column
-		
-		# clear both after last column
-		div.append "<div class='clear' />"
+            div.append column
 
-		if firstDraw
-			@_div = div
+        # clear both after last column
+        div.append "<div class='clear' />"
 
-		return @
+        if firstDraw
+            @_div = div
 
-	remove: () ->
-		@_drumMachine.removeMeasure(@)
-		return @
+        return @
 
-	toggleNote: (x, y) ->
-		if @_data[x][y] instanceof App.Instrument
-			@_data[x][y] = null
-		else
-			@_data[x][y] = @_instruments[y]
+    remove: () ->
+        @_drumMachine.removeMeasure(@)
+        return @
 
-		return @
+    toggleNote: (x, y) ->
+        if @_data[x][y] instanceof App.Instrument
+            @_data[x][y] = null
+        else
+            @_data[x][y] = @_instruments[y]
 
-	noteIsActive: (x, y) ->
-		return @_data[x][y] instanceof App.Instrument
+        return @
 
-	getDiv: () ->
-		return @_div
+    noteIsActive: (x, y) ->
+        return @_data[x][y] instanceof App.Instrument
 
-	getNextColumn: (activeNotes = true, cycle = false) ->
-		if @_noteIndex is @_data.length - 1
-			if not cycle
-				return @getColumnAtIndex(activeNotes, -1)
-			# first column again
-			else
-				@_noteIndex = 0
-		else
-			@_noteIndex += @_stepSize
+    getDiv: () ->
+        return @_div
 
-		return @getCurrentColumn(activeNotes)
+    getNextColumn: (activeNotes = true, cycle = false) ->
+        if @_noteIndex is @_data.length - 1
+            if not cycle
+                return @getColumnAtIndex(activeNotes, -1)
+            # first column again
+            else
+                @_noteIndex = 0
+        else
+            @_noteIndex += @_stepSize
 
-	resetPosition: () ->
-		@_noteIndex = 0
-		return @
+        return @getCurrentColumn(activeNotes)
 
-	getCurrentColumn: (activeNotes = true) ->
-		return @getColumnAtIndex activeNotes, @_noteIndex
+    resetPosition: () ->
+        @_noteIndex = 0
+        return @
 
-	getColumnAtIndex: (activeNotes, idx) ->
-		# invalid index
-		if idx < 0 or idx >= @_data.length
-			return null
-		# filter active notes
-		if activeNotes is true
-			return (instrument for instrument in @_data[idx] when instrument?)
-		# entire column
-		return @_data[idx]
+    getCurrentColumn: (activeNotes = true) ->
+        return @getColumnAtIndex activeNotes, @_noteIndex
 
-	getIntervalDelay: () ->
-		return ((@_beats * 60000) / @_bpm) / @getVisibleLength()
+    getColumnAtIndex: (activeNotes, idx) ->
+        # invalid index
+        if idx < 0 or idx >= @_data.length
+            return null
+        # filter active notes
+        if activeNotes is true
+            return (instrument for instrument in @_data[idx] when instrument?)
+        # entire column
+        return @_data[idx]
 
-	getColumnDivs: () ->
-		return @_div.find(".column")
+    getIntervalDelay: () ->
+        return ((@_beats * 60000) / @_bpm) / @getVisibleLength()
 
-	getCurrentColumnDiv: () ->
-		# noteIndex is the index in @_data => adjust index for visible notes
-		return @getColumnDivs().eq( @_noteIndex / @_stepSize )
+    getColumnDivs: () ->
+        return @_div.find(".column")
 
-	addInstumentToData: (instrument) ->
-		# @_instruments.push instrument
-		for col in @_data
-			col.push null
-		return @
+    getCurrentColumnDiv: () ->
+        # noteIndex is the index in @_data => adjust index for visible notes
+        return @getColumnDivs().eq( @_noteIndex / @_stepSize )
 
-	removeInstrumentFromData: (index) ->
-		# the following is not necessary because the measure's instruments are just a reference to the drummachine's instrumens
-		# @_instruments.splice index, 1
-		for col in @_data
-			col.splice index, 1
-		return @
+    addInstumentToData: (instrument) ->
+        # @_instruments.push instrument
+        for col in @_data
+            col.push null
+        return @
 
-	serialize: () ->
-		data = []
-		for col in @_data
-			temp = []
-			for note in col
-				if note?
-					temp.push 1
-				else
-					temp.push 0
-			data.push temp
+    removeInstrumentFromData: (index) ->
+        # the following is not necessary because the measure's instruments are just a reference to the drummachine's instrumens
+        # @_instruments.splice index, 1
+        for col in @_data
+            col.splice index, 1
+        return @
 
-		return {
-			beats:	@_beats
-			bpm:	@_bpm
-			data:	data
-		}
+    serialize: () ->
+        data = []
+        for col in @_data
+            temp = []
+            for note in col
+                if note?
+                    temp.push 1
+                else
+                    temp.push 0
+            data.push temp
 
-	########################
-	# SETTERS
-	setBPM: (bpm) ->
-		if 1 <= bpm <= App.Measure.maxBPM
-			@_bpm = Math.floor bpm
-		else
-			@_bpm = 120
-		return @
+        return {
+            beats:    @_beats
+            bpm:    @_bpm
+            data:    data
+        }
 
-	setStepSize: (stepSize) ->
-		if stepSize in App.Measure.stepSizes
-			@_stepSize = stepSize
-		else
-			@_stepSize = 2 # default is 8th notes
-		return @
+    ########################
+    # SETTERS
+    setBPM: (bpm) ->
+        if 1 <= bpm <= App.Measure.maxBPM
+            @_bpm = Math.floor bpm
+        else
+            @_bpm = 120
+        return @
 
-	setInstruments: (instruments) ->
-		@_instruments = instruments
-		return @
+    setStepSize: (stepSize) ->
+        if stepSize in App.Measure.stepSizes
+            @_stepSize = stepSize
+        else
+            @_stepSize = 2 # default is 8th notes
+        return @
 
-	setData: (data) ->
-		@_data = data
-		return @
+    setInstruments: (instruments) ->
+        @_instruments = instruments
+        return @
 
-	# GETTERS
-	getDrumMachine: () ->
-		return @_drumMachine
+    setData: (data) ->
+        @_data = data
+        return @
 
-	getInstruments: () ->
-		return @_instruments
+    # GETTERS
+    getDrumMachine: () ->
+        return @_drumMachine
 
-	getVisibleLength: () ->
-		return @_data.length / @_stepSize
+    getInstruments: () ->
+        return @_instruments
 
-	getBeats: () ->
-		return @_beats
+    getVisibleLength: () ->
+        return @_data.length / @_stepSize
 
-	getLength: () ->
-		return @_data.length
+    getBeats: () ->
+        return @_beats
 
-	getID: () ->
-		return @_id
+    getLength: () ->
+        return @_data.length
 
-	getNoteIndex: () ->
-		return @_noteIndex
+    getID: () ->
+        return @_id
 
-	getBPM: () ->
-		return @_bpm
+    getNoteIndex: () ->
+        return @_noteIndex
+
+    getBPM: () ->
+        return @_bpm

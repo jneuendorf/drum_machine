@@ -1,55 +1,55 @@
 isNumber = (n) ->
-	if n instanceof Number
-		n = n.valueOf()
+    if n instanceof Number
+        n = n.valueOf()
 
-	return typeof n is "number" and not isNaN(n) and isFinite(n)
+    return typeof n is "number" and not isNaN(n) and isFinite(n)
 
 
 class App.Instrument
-	count = 0
-	@getID: () ->
-		return count++
+    count = 0
+    @getID: () ->
+        return "id#{count++}"
 
-	# CONSTRUCTOR
-	constructor: (name, kitName, pathToSound, volume = 50) ->
-		@_name = name.toString()
-		@_kitName = kitName.toString()
+    # CONSTRUCTOR
+    constructor: (name, kitName, pathToSound, volume = 50) ->
+        @_name = name.toString()
+        @_kitName = kitName.toString()
 
-		# create sound from path
-		sound = soundManager.createSound
-			id:				@generateID()
-			url:			pathToSound
-			autoLoad:		true
-			volume:			(if isNumber(volume) then volume else 50)
+        # create sound from path
+        sound = soundManager.createSound
+            id:          @generateID()
+            url:         pathToSound
+            autoLoad:    true
+            volume:      (if isNumber(volume) then volume else 50)
 
-		@_sound = sound
+        @_sound = sound
 
-	# METHODS
+    # METHODS
 
-	generateID: () ->
-		return App.Instrument.getID()
+    generateID: () ->
+        return App.Instrument.getID()
 
-	# GETTERS & SETTERS
+    # GETTERS & SETTERS
 
-	setName: (name) ->
-		@_name = name
-		return @
+    setName: (name) ->
+        @_name = name
+        return @
 
-	getName: () ->
-		return @_name
+    getName: () ->
+        return @_name
 
-	setSound: (sound) ->
-		if sound is null or (sound isnt null and sound.bytesLoaded?)
-			@_sound = sound
-		return @
+    setSound: (sound) ->
+        if sound is null or (sound isnt null and sound.bytesLoaded?)
+            @_sound = sound
+        return @
 
-	getSound: () ->
-		return @_sound
+    getSound: () ->
+        return @_sound
 
-	serialize: () ->
+    serialize: () ->
 
-		return {
-			name: @_name
-			kitName: @_kitName
-			volume: @_sound.volume
-		}
+        return {
+            name: @_name
+            kitName: @_kitName
+            volume: @_sound.volume
+        }
