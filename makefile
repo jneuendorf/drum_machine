@@ -6,7 +6,10 @@ INCLUDES = $(JQUERY) $(NUMERAL)
 
 
 PROJECT_NAME = DrumMachine
-FILES = js/setup.coffee js/drumkits.coffee js/Instrument.coffee js/Measure.coffee js/Parts.coffee js/DrumMachine.coffee js/init.coffee
+FILES = js/setup.coffee js/drumkits.coffee js/Instrument.coffee js/Measure.coffee \
+		js/Parts/Part.coffee js/Parts/PartInstruments.coffee js/Parts/PartImportExport.coffee js/Parts/PartUsedInstruments.coffee \
+		js/Parts/PartNotes.coffee js/Parts/PartPlayButtons.coffee \
+		js/DrumMachine.coffee js/init.coffee
 
 make:
 	cat $(FILES) | coffee --compile --stdio > $(PROJECT_NAME).js

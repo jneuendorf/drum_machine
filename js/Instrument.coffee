@@ -8,12 +8,12 @@ isNumber = (n) ->
 class App.Instrument
     count = 0
     @getID: () ->
-        return "id#{count++}"
+        return "instrument#{count++}"
 
     # CONSTRUCTOR
-    constructor: (name, kitName, pathToSound, volume = 50) ->
-        @_name = name.toString()
-        @_kitName = kitName.toString()
+    constructor: (name, pathToSound, volume = 50) ->
+        @name = name.toString()
+        # @_kitName = kitName.toString()
 
         # create sound from path
         sound = soundManager.createSound
@@ -32,11 +32,11 @@ class App.Instrument
     # GETTERS & SETTERS
 
     setName: (name) ->
-        @_name = name
+        @name = name
         return @
 
     getName: () ->
-        return @_name
+        return @name
 
     setSound: (sound) ->
         if sound is null or (sound isnt null and sound.bytesLoaded?)
@@ -47,9 +47,8 @@ class App.Instrument
         return @_sound
 
     serialize: () ->
-
         return {
-            name: @_name
-            kitName: @_kitName
+            name: @name
+            # kitName: @_kitName
             volume: @_sound.volume
         }

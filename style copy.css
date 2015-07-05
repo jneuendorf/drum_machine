@@ -3,27 +3,27 @@ body {
     font-size: 16px;
 }
 
-.clear {
+.clear    {
     clear: both;
 }
 
-/*#drumkits {
+/*#drumkits    {
     float: left;
     width: 220px;
 }
-#drumkits > .instrument {
+#drumkits > .instrument    {
     cursor: pointer;
     width: 190px;
     z-index: 10;
 }
-#drumkits > .instrument:hover {
+#drumkits > .instrument:hover    {
     background-color: #cccccc;
 }
-#drumkits > .instrument.dragging {
+#drumkits > .instrument.dragging    {
     background-color: #cccccc;
 }*/
 
-#instruments {
+#instruments    {
     float: left;
     /*height: 100%;*/
     padding: 2px;
@@ -38,14 +38,14 @@ body {
 	background-color: gray;
 }
 
-#notes {
+#notes    {
     float: left;
     min-height: 50px;
     overflow-x: auto;
     width: 800px;
 }
 
-.instrument {
+.instrument    {
     border-radius: 4px;
     border: 1px solid black;
     height: 24px;
@@ -54,29 +54,29 @@ body {
     position: relative;
     width: 95%;
 }
-.instrument:hover > span {
+.instrument:hover > span    {
     display: block;
 }
-.instrument.add {
+.instrument.add    {
     box-shadow: 0px 0px 6px darkgray inset;
 }
-.instrument.add:hover {
+.instrument.add:hover    {
     box-shadow: 0px 0px 12px gray inset;
 }
-.instrument.note.active {
+.instrument.note.active    {
     background-color: black;
 }
-.instrument .label {
+.instrument .label    {
     border: none;
     color: black;
     font-size: 13px;
     padding: 3px;
     outline: none;
 }
-/*.instrument .label:hover {
+/*.instrument .label:hover    {
     background-color: #cccccc;
 }*/
-.instrument > span {
+.instrument > span    {
     cursor: pointer;
     border-radius: 4px;
     display: none;
@@ -86,37 +86,37 @@ body {
     top: 7px;
     width: 16px;
 }
-/*.instrument > span:hover {
+/*.instrument > span:hover    {
     background-color: #dddddd;
 }*/
-/*.instrument .edit {
+/*.instrument .edit    {
     right: 24px;
     background: url("pencil.png") 50% 50% / 80% auto no-repeat transparent;
 }*/
-.instrument .close {
+.instrument .close    {
     right: 4px;
 }
 
-.measure {
+.measure    {
     border-left-color: black;
 }
 
-.measureSettings > .setting {
+.measureSettings > .setting    {
     float: left;
     margin: 4px 30px 4px 4px;
     font-size: 14px;
     height: 24px;
 }
-.measureSettings > .bpm {
+.measureSettings > .bpm    {
     width: 100px;
 }
-.measureSettings input.bpm {
+.measureSettings input.bpm    {
     width: 50px;
 }
-.measureSettings input.bpm {
+.measureSettings input.bpm    {
     width: 50px;
 }
-.measureSettings input.timeSignatureValue {
+.measureSettings input.timeSignatureValue    {
     width: 30px;
 }
 .measureSettings > .close {
@@ -127,7 +127,7 @@ body {
 .measureSettings:hover > .close {
     display: block;
 }
-.column {
+.column    {
     /*border-radius: 4px;*/
     border-left: 2px solid transparent;
     float: left;
@@ -135,20 +135,20 @@ body {
     padding: 2px;
     position: relative;
 }
-.column:hover {
+.column:hover    {
     background-color: #C7F2FF;
 }
-.column.current {
+.column.current    {
     border-left-color: black;
 }
 
-.instrument.note {
+.instrument.note    {
     width: 24px;
 }
-.instrument.note:hover {
+.instrument.note:hover    {
     background-color: #DEF7FF;
 }
-.instrument.note.selected {
+.instrument.note.selected    {
     border-color: blue;
 }
 .addMeasure {
@@ -156,11 +156,11 @@ body {
 }
 
 /* PLAY BUTTONS */
-/*#playbuttons {
+#playbuttons    {
     float: left;
     margin: 2px;
 }
-.playbutton {
+.playbutton    {
     cursor: pointer;
     float: left;
     height: 20px;
@@ -168,17 +168,17 @@ body {
     padding: 4px;
     width: 20px;
 }
-.play {
+.play    {
     background: url("playbuttons.png") -30px 0px / auto 26px no-repeat transparent;
 }
-.play.pause {
+.play.pause    {
     background: url("playbuttons.png") 2px 0px / auto 26px no-repeat transparent;
 }
-.stop {
+.stop    {
     background: url("playbuttons.png") -64px 0px / auto 26px no-repeat transparent;
-}*/
+}
 
-#importExport {
+#importExport    {
     background-color: white;
     box-shadow: 0px 0px 50px black;
     border-radius: 10px;
@@ -191,7 +191,7 @@ body {
     width: 60%;
     z-index: 9999999;
 }
-.text {
+.text    {
     border: none;
     border-radius: 10px;
     font-family: monaco, lucida grande, arial, sans-serif;
@@ -202,7 +202,7 @@ body {
     resize: none;
     width: 98%;
 }
-.playbuttons .import, .playbuttons .export {
+.playbuttons .import, .playbuttons .export    {
     cursor: pointer;
     height: 26px;
     margin: 5px 0px 0px 0px;

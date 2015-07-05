@@ -1,26 +1,23 @@
-getCompletePath = (kitName, instrumentPath) ->
-    getPathFromKitName = (name) ->
-        return name.replace(" ", "_").toLowerCase()
-
-    return "kits/" + getPathFromKitName(kitName) + "/" + instrumentPath
+# getCompletePath = (kitName, instrumentPath) ->
+#     getPathFromKitName = (name) ->
+#         return name.replace(" ", "_").toLowerCase()
+#
+#     return "kits/" + getPathFromKitName(kitName) + "/" + instrumentPath
 
 $(document).ready () ->
-    console.log "asdf"
-    makeInstruments = (drumkits) ->
-        res = $("<div class='drumkits' />")
-        for kitName, kitFiles of drumkits
-            drumkitDiv = $ "<div class='drumkit' />"
-            for instrumentName, instrumentPath of kitFiles
-                instrumentDiv = $ "<div class='instrument' />"
-                instrumentDiv.text(instrumentName)
-                drumkitDiv.append(instrumentDiv)
+    # makeInstruments = (drumkits) ->
 
-                # modify drumkits object
-                kitFiles[instrumentName] = new App.Instrument(instrumentName, kitName, getCompletePath(kitName, instrumentPath), 80)
-
-            res.append(drumkitDiv)
-
-        return drumkits
+        # for kitName, kitFiles of drumkits
+        #     for instrumentName, instrumentPath of kitFiles
+        #         # modify drumkits object
+        #         kitFiles[instrumentName] = new App.Instrument(instrumentName, kitName, getCompletePath(kitName, instrumentPath), 80)
+        # return drumkits
+    makeInstruments = (instruments) ->
+        res = {}
+        for instrumentName, instrumentPath of instruments
+            # modify drumkits object
+            res[instrumentName] = new App.Instrument(instrumentName, instrumentPath, 80)
+        return res
 
 
     soundManager.setup {
@@ -28,14 +25,24 @@ $(document).ready () ->
         onready: ()	->
             console.log("soundmanager is ready")
 
-            dm = new App.DrumMachine($(document.body), makeInstruments(App.drumkits), [
-                App.drumkits.Rock["Bass Kick Default"],
-                App.drumkits.Rock["Snare Default"],
-                App.drumkits.Rock["Hihat Default"],
-                null
+            timer = performance or Date
+
+            start = timer.now()
+
+            App.instruments = makeInstruments(App.instruments)
+
+            dm = new App.DrumMachine(document.body, App.instruments, [
+                App.instruments["Hihat Default"]
+                App.instruments["High tom"]
+                App.instruments["Mid tom"]
+                App.instruments["Snare Default"]
+                App.instruments["Low tom"]
+                App.instruments["Bass Kick Default"]
             ])
 
             dm.draw()
 
             window.dm = dm
+
+            console.log "time to create drum machine was #{timer.now() - start} ms"
     }
