@@ -1,6 +1,6 @@
 #################
 # IMPORT / EXPORT
-class App.PartImportExport extends App.Part
+class DM.PartImportExport extends DM.Part
     constructor: (master, container, className, id) ->
         super(master, container, className, id)
         @_div = null

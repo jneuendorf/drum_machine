@@ -1,5 +1,5 @@
-class App.Measure
-    @MAX_BPM    = 480
+class DM.Measure
+    @MAX_BPM    = 240
     MAX_BPM     = @MAX_BPM
     @MAX_BEATS  = 20
     MAX_BEATS   = @MAX_BEATS
@@ -19,15 +19,16 @@ class App.Measure
     @getID: () ->
         return "measure" + count++
 
-    constructor: (drumMachine, instruments, timeSignature, mode, bpm) ->
-        @drumMachine    = drumMachine
-        @instruments    = instruments
-        @timeSignature  = timeSignature
-        @bpm            = bpm
+    constructor: (drumMachine, timeSignature, mode, bpm) ->
+        @drumMachine            = drumMachine
+        [@beats, @noteValue]    = timeSignature
+        @bpm                    = bpm
+        @instruments            = drumMachine.parts.instruments.used
+        @container              = drumMachine.parts.measures.svg
+        @svg                    = null
 
         @noteIndex      = 0
-        @div            = null
-        @id             = App.Measure.getID()
+        @id             = DM.Measure.getID()
 
         idx = MODES.indexOf mode
         # set default to 8th notes
@@ -35,20 +36,17 @@ class App.Measure
             idx = 3
         @mode = MODES[idx]
 
-        # init data
-        data = []
-
-        # init with null values
-        xMax = @timeSignature[0] * MODES.LAST
-        yMax = @instruments.length
-        for x in [0...xMax]
-            # init column
-            # col = []
-            # col.push(null) for y in [0...yMax]
-            # data[x] = col
-            data[x] = (null for y in [0...yMax])
-
+        # init data with null values
+        data = {}
+        measureLength = @_maxNumNotes()
+        for instrument in @instruments
+            data[instrument] = (null for i in [0...measureLength])
         @data = data
+
+        # @_updateData()
+
+    _maxNumNotes: () ->
+        return @mode / @noteValue * @beats
 
     drawSettings: () ->
         self = @
@@ -120,18 +118,51 @@ class App.Measure
 
         return settings
 
-    draw: () ->
-        self        = @
-        div         = @div
-        firstDraw   = div not instanceof jQuery
+    addInstruments: (instrumentNames...) ->
+        console.log "DM.Measure::addInstruments: adding instruments", instrumentNames
+        data            = @data
+        measureLength   = @_maxNumNotes()
+        for instrumentName in instrumentNames
+            data[instrumentName] = (null for i in [0...measureLength])
+        return @
 
-        if firstDraw
-            div = $ "<div class='measure' id='#{@id}' />"
-        else
-            div.empty()
+    removeInstruments: (instrumentNames...) ->
+        console.log "DM.Measure::removeInstruments: removing instruments", instrumentNames
+        for instrumentName in instrumentNames
+            delete @data[instrumentName]
+        return @
+
+    draw: (container) ->
+        self        = @
+
+        group = container.append "g"
+                        .classed "measure", true
+
+        stepSize = @mode / @noteValue
+
+        console.log @data, stepSize, @mode
+
+        rowIdx = 0
+        for instrumentName, notes of @data
+            row = group.append "g"
+                        .classed "row", true
+                        .attr "transform", "translate(0,#{rowIdx * 20})"
+
+            for note, idx in notes by stepSize
+                row.append "rect"
+                    .attr "x", idx * 20
+                    .attr "y", 0
+                    .attr "width", 20
+                    .attr "height", 20
+                    .attr "stroke", "black"
+                    .attr "stroke-width", 1
+                    .style "fill", "white"
+
+            rowIdx++
+
 
         # draw measure settings
-        div.append @drawSettings()
+        # div.append @drawSettings()
 
         # 4/4; 8th notes
         # for each beat => 2 (8/note value = 8/4 = 2)
@@ -140,50 +171,47 @@ class App.Measure
         # (modes.last / note value) / (mode/note_value)
         # modes.last / mode (here: 64/16 = 4)
 
-        
+
 
         # stepSize = MODES.LAST / @mode
-        stepSize = STEPSIZES[MODES.indexOf(@mode)]
-        console.log stepSize
-
-        for col, idx in @data by stepSize
-            # clone = instruments.clone()
-            column = $ "<div class='column' data-colidx='#{idx}' />"
-
-            # ignore last instrument because it's a pseudo instrument (drop area for new instruments)
-            for i in [0...(col.length - 1)]
-                note = col[i]
-                note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
-                # click on note
-                do (i, note, idx) ->
-                    instrumentDiv = $("#instruments .instrument").eq(i)
-                    note
-                        .mouseenter () ->
-                            instrumentDiv
-                                .addClass("hovered")
-                                .siblings(".hovered")
-                                .removeClass("hovered")
-                            return true
-                        .mouseleave () ->
-                            instrumentDiv
-                                .removeClass("hovered")
-                            return true
-                        .click () ->
-                            self.toggleNote(idx, i)
-                            if self.noteIsActive(idx, i)
-                                note.addClass "active"
-                            else
-                                note.removeClass "active"
-                            return true
-                column.append note
-
-            div.append column
-
-        # clear both after last column
-        div.append "<div class='clear' />"
-
-        if firstDraw
-            @div = div
+        # stepSize = STEPSIZES[MODES.indexOf(@mode)]
+        # console.log stepSize
+        #
+        # for col, idx in @data by stepSize
+        #     # clone = instruments.clone()
+        #     column = $ "<div class='column' data-colidx='#{idx}' />"
+        #
+        #     # ignore last instrument because it's a pseudo instrument (drop area for new instruments)
+        #     for i in [0...(col.length - 1)]
+        #         note = col[i]
+        #         note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
+        #         # click on note
+        #         do (i, note, idx) ->
+        #             instrumentDiv = $("#instruments .instrument").eq(i)
+        #             note
+        #                 .mouseenter () ->
+        #                     instrumentDiv
+        #                         .addClass("hovered")
+        #                         .siblings(".hovered")
+        #                         .removeClass("hovered")
+        #                     return true
+        #                 .mouseleave () ->
+        #                     instrumentDiv
+        #                         .removeClass("hovered")
+        #                     return true
+        #                 .click () ->
+        #                     self.toggleNote(idx, i)
+        #                     if self.noteIsActive(idx, i)
+        #                         note.addClass "active"
+        #                     else
+        #                         note.removeClass "active"
+        #                     return true
+        #         column.append note
+        #
+        #     div.append column
+        #
+        # # clear both after last column
+        # div.append "<div class='clear' />"
 
         return @
 
@@ -192,7 +220,7 @@ class App.Measure
         return @
 
     toggleNote: (x, y) ->
-        if @data[x][y] instanceof App.Instrument
+        if @data[x][y] instanceof DM.Instrument
             @data[x][y] = null
         else
             @data[x][y] = @instruments[y]
@@ -200,10 +228,7 @@ class App.Measure
         return @
 
     noteIsActive: (x, y) ->
-        return @data[x][y] instanceof App.Instrument
-
-    getDiv: () ->
-        return @div
+        return @data[x][y] instanceof DM.Instrument
 
     getNextColumn: (activeNotes = true, cycle = false) ->
         if @noteIndex is @data.length - 1
@@ -244,19 +269,6 @@ class App.Measure
         # noteIndex is the index in @data => adjust index for visible notes
         return @getColumnDivs().eq( @noteIndex / @stepSize )
 
-    addInstumentToData: (instrument) ->
-        # @instruments.push instrument
-        for col in @data
-            col.push null
-        return @
-
-    removeInstrumentFromData: (index) ->
-        # the following is not necessary because the measure's instruments are just a reference to the drummachine's instrumens
-        # @instruments.splice index, 1
-        for col in @data
-            col.splice index, 1
-        return @
-
     serialize: () ->
         data = []
         for col in @data
@@ -277,10 +289,11 @@ class App.Measure
     ########################
     # SETTERS
     setBPM: (bpm) ->
-        if 1 <= bpm <= App.Measure.maxBPM
-            @bpm = Math.floor bpm
-        else
-            @bpm = 120
+        if 1 <= bpm <= DM.Measure.maxBPM
+            @bpm = ~~bpm
+            return @
+
+        @bpm = 120
         return @
 
     setStepSize: (stepSize) ->
@@ -289,36 +302,3 @@ class App.Measure
         else
             @stepSize = 2 # default is 8th notes
         return @
-
-    # setInstruments: (instruments) ->
-    #     @instruments = instruments
-    #     return @
-    #
-    # setData: (data) ->
-    #     @data = data
-    #     return @
-
-    # GETTERS
-    # getDrumMachine: () ->
-    #     return @drumMachine
-    #
-    # getInstruments: () ->
-    #     return @instruments
-    #
-    # getVisibleLength: () ->
-    #     return @data.length / @stepSize
-    #
-    # getBeats: () ->
-    #     return @timeSignature[0]
-    #
-    # getLength: () ->
-    #     return @data.length
-    #
-    # getID: () ->
-    #     return @id
-    #
-    # getNoteIndex: () ->
-    #     return @noteIndex
-    #
-    # getBPM: () ->
-    #     return @bpm

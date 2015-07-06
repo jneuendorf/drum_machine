@@ -1,6 +1,6 @@
 ##############################
 # PLAY BUTTONS & EXPORT BUTTON
-class App.PartPlayButtons extends App.Part
+class DM.PartPlayButtons extends DM.Part
     # constructor: (drumMachine, container, className, id) ->
     #     super(drumMachine, container, className, id)
 

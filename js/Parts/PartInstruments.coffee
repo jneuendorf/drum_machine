@@ -1,106 +1,114 @@
 ##########
 # DRUMKITS
-class App.PartInstruments extends App.Part
-    # constructor: (drumMachine, container, className, id) ->
-    #     super(drumMachine, container, className, id)
+class DM.PartInstruments extends DM.Part
+
+    constructor: (drumMachine, container, className, id) ->
+        super(drumMachine, container, className, id)
+        @instruments    = []
+        # create property that makes sure that assignment does not change the pointer of the property
+        @_used          = []
+        Object.defineProperty @, "used", {
+            get: () ->
+                return @_used
+            set: (arr) ->
+                if arr instanceof Array
+                    @_used.length = arr.length
+                    for elem, idx in arr
+                        @_used[idx] = elem
+                return @
+        }
 
     draw: () ->
-        # div         = @container.find(".#{@_id}")
-        # firstDraw   = @svg is null
-        drumMachine   = @drumMachine
+        self            = @
+        drumMachine     = @drumMachine
+        @instruments    = DM.instruments
+        @svg            = @makeContainer(10, 10)
+        instrumentIdx   = 0
 
-        @svg = @makeContainer(10, 10)
+        for drumkitName, drumKit of drumMachine.loader.sprites
+            for instrumentName, instrument of drumKit
+                do (instrumentName, instrument, instrumentIdx) =>
+                    group = @svg.append "g"
+                                .classed "instrumentButton", true
+                                .attr "data-idx", instrumentIdx
+                                .style "cursor", "pointer"
 
-        instrumentIdx = 0
-        # instruments = $.extend({}, App.instruments)
-        # instruments["Add instrument..."] = ""
-        for instrumentName, instrument of App.instruments
+                    group.append "rect"
+                        .attr "class", "instrument"
+                        .attr "data-instrumentname", instrumentName
+                        .attr "x", 10
+                        .attr "y", instrumentIdx * 60
+                        .attr "width", 200
+                        .attr "height", 40
+                        .attr "rx", 6
+                        .attr "ry", 6
+                        .style "stroke", "black"
+                        .style "stroke-width", 2
+                    group.append "text"
+                        .text instrumentName
+                        .attr "x", 111
+                        .attr "y", instrumentIdx * 60 + 26
+                        .style "text-anchor", "middle"
+                    group.append "text"
+                        .attr "class", "checkmark"
+                        .text "✓"
+                        .attr "x", 192
+                        .attr "y", instrumentIdx * 60 + 26
+                        .style "text-anchor", "middle"
 
-            do (instrumentName, instrument, instrumentIdx) =>
+                    removeButton = group.append "g"
+                                        .classed "remove", true
+                                        .attr "transform", "translate(200, #{instrumentIdx * 60 - 5})"
+                                        .style "display", "none"
+                    removeButton.append "circle"
+                        .attr "r", 8
+                        .attr "cx", 8
+                        .attr "cy", 8
+                        .style "fill", "black"
+                        .style "stroke", "black"
+                        .style "stroke-width", 2
+                    removeButton.append "text"
+                        .html "&times;"
+                        .attr "x", 8
+                        .attr "y", 13
+                        .style "fill", "white"
+                        .style "text-anchor", "middle"
+                    removeButton.on "click", () ->
+                        d3.event.stopPropagation()
+                        if confirm "This deletes the instrument permanently for this session. Sure??"
+                            drumMachine.removeInstrument(instrument)
+                        return false
 
-                # @svg.append """<div class="instrument" data-kitname="#{kitName}" data-instrumentname="#{instrumentName}">
-                #                 <div class="label" style="margin-top: 2px;">#{instrumentName}</div>
-                #             </div>"""
-                group = @svg.append "g"
-                            .attr "data-idx", instrumentIdx
-                            .style "cursor", "pointer"
+                    group
+                        .on "click", () ->
+                            group = d3.select(@)
+                            if instrumentName not in self.used
+                                self.used.push instrumentName
+                                group.classed "clicked", true
+                                drumMachine.addInstrumentsToMeasures instrumentName
+                            else
+                                self.used = (i for i in self.used when i isnt instrumentName)
+                                group.classed "clicked", false
+                                drumMachine.removeInstrumentsFromMeasures instrumentName
 
-                group.append "rect"
-                    .attr "class", "instrument"
-                    .attr "data-instrumentname", instrumentName
-                    .attr "x", 10
-                    .attr "y", instrumentIdx * 60
-                    .attr "width", 200
-                    .attr "height", 40
-                    .attr "rx", 6
-                    .attr "ry", 6
-                    .style "fill", "transparent"
-                    .style "stroke", "black"
-                    .style "stroke-width", 2
-                group.append "text"
-                    .text instrumentName
-                    .attr "x", 111
-                    .attr "y", instrumentIdx * 60 + 26
-                    .style "text-anchor", "middle"
-                group.append "text"
-                    .attr "class", "checkmark"
-                    .text "✓"
-                    .attr "x", 192
-                    .attr "y", instrumentIdx * 60 + 26
-                    .style "text-anchor", "middle"
-                    .style "display", "none"
+                            console.log self.used
+                            return true
+                        .on "mouseenter", () ->
+                            d3.select(@).select(".remove").style("display", "block")
+                            return true
+                        .on "mouseleave", () ->
+                            d3.select(@).select(".remove").style("display", "none")
+                            return true
 
-                removeButton = group.append "g"
-                                    .classed "remove", true
-                                    .attr "transform", "translate(200, #{instrumentIdx * 60 - 5})"
-                                    .style "display", "none"
-                removeButton.append "circle"
-                    .attr "r", 8
-                    .attr "cx", 8
-                    .attr "cy", 8
-                    .style "fill", "black"
-                    .style "stroke", "black"
-                    .style "stroke-width", 2
-                removeButton.append "text"
-                    .html "&times;"
-                    .attr "x", 8
-                    .attr "y", 13
-                    .style "fill", "white"
-                    .style "text-anchor", "middle"
-                removeButton.on "click", () ->
-                    console.log d3.event
-                    d3.event.stopPropagation()
-                    # drumMachine.removeInstrument(instrument)
-                    return false
+                    # for initial draw only
+                    if instrumentName in @used
+                        group.classed "clicked", true
 
+                    instrument.svg = group
 
-                group
-                    .on "click", () ->
-                        group       = d3.select(@)
-                        rect        = group.select(".instrument")
-                        checkmark   = group.select(".checkmark")
-                        if checkmark.style("display") is "none"
-                            checkmark.style("display", "block")
-                        else
-                            checkmark.style("display", "none")
+                instrumentIdx++
 
-                        if rect.style("fill") is "transparent"
-                            rect.style("fill", "lightgray")
-                        else
-                            rect.style("fill", "transparent")
-                        return true
-                    .on "mouseenter", () ->
-                        d3.select(@).select(".remove").style("display", "block")
-                        return true
-                    .on "mouseleave", () ->
-                        d3.select(@).select(".remove").style("display", "none")
-                        return true
-
-                instrument.svg = group
-
-
-            instrumentIdx++
-
+        # ADD-INSTRUMENT BUTTON
         group = @svg.append "g"
                     .attr "data-idx", instrumentIdx
                     .style "cursor", "pointer"
@@ -122,17 +130,8 @@ class App.PartInstruments extends App.Part
             .attr "y", instrumentIdx * 60 + 26
             .style "text-anchor", "middle"
 
-        instrument.svg = group
+        # instrument.svg = group
 
         console.log "drumkits done"
-
-        # div.find(".instrument").draggable {
-        #     cursor: "move"
-        #     revert: "invalid"
-        #     revertDuration: 200
-        # }
-
-        # if firstDraw
-        #     @container.append @svg
 
         return @

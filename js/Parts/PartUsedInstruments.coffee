@@ -1,6 +1,6 @@
 #############
 # INSTRUMENTS
-class App.PartUsedInstruments extends App.Part
+class DM.PartUsedInstruments extends DM.Part
 
     @new = (subClassName, drumMachine, container, usedInstruments) ->
         str = subClassName[0].toLowerCase() + subClassName.slice(1)

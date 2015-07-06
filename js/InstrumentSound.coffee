@@ -1,4 +1,4 @@
-class InstrumentSound extends App.Sound
+class InstrumentSound extends DM.Sound
 
     constructor: () ->
         # ...

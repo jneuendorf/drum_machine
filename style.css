@@ -23,9 +23,8 @@ body {
     background-color: #cccccc;
 }*/
 
-#instruments {
+/*#instruments {
     float: left;
-    /*height: 100%;*/
     padding: 2px;
     margin: 2px;
     width: 200px;
@@ -35,8 +34,9 @@ body {
     background-color: gray;
 }
 #instruments .instrument.hovered .label {
-	background-color: gray;
+    background-color: gray;
 }
+*/
 
 #notes {
     float: left;
@@ -45,7 +45,7 @@ body {
     width: 800px;
 }
 
-.instrument {
+/*.instrument {
     border-radius: 4px;
     border: 1px solid black;
     height: 24px;
@@ -53,8 +53,8 @@ body {
     padding: 4px;
     position: relative;
     width: 95%;
-}
-.instrument:hover > span {
+}*/
+/*.instrument:hover > span {
     display: block;
 }
 .instrument.add {
@@ -72,11 +72,11 @@ body {
     font-size: 13px;
     padding: 3px;
     outline: none;
-}
+}*/
 /*.instrument .label:hover {
     background-color: #cccccc;
 }*/
-.instrument > span {
+/*.instrument > span {
     cursor: pointer;
     border-radius: 4px;
     display: none;
@@ -85,7 +85,7 @@ body {
     position: absolute;
     top: 7px;
     width: 16px;
-}
+}*/
 /*.instrument > span:hover {
     background-color: #dddddd;
 }*/
@@ -93,8 +93,22 @@ body {
     right: 24px;
     background: url("pencil.png") 50% 50% / 80% auto no-repeat transparent;
 }*/
-.instrument .close {
+/*.instrument .close {
     right: 4px;
+}*/
+
+.instrumentButton .instrument {
+    fill: transparent;
+}
+.instrumentButton.clicked .instrument {
+    fill: lightgray;
+}
+
+.instrumentButton .checkmark {
+    display: none;
+}
+.instrumentButton.clicked .checkmark {
+    display: block;
 }
 
 .measure {

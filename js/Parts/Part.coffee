@@ -1,8 +1,8 @@
-class App.Part
+class DM.Part
 
     @new = (subClassName, drumMachine, container, params...) ->
         str = subClassName[0].toLowerCase() + subClassName.slice(1)
-        return new App["Part" + subClassName](drumMachine, container, str, str, params...)
+        return new DM["Part" + subClassName](drumMachine, container, str, str, params...)
 
     constructor: (drumMachine, container, className, id) ->
         @drumMachine    = drumMachine
@@ -11,8 +11,7 @@ class App.Part
         @id             = id
         @svg            = null
 
-    makeContainer: (x, y, width, height) ->
-        # return $ "<div id='#{@id}' class='#{@className}' />"
+    makeContainer: (x, y) ->
         if @svg?
             @container.select(".#{@className}").remove()
         return @container.append("g")
