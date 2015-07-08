@@ -1,8 +1,10 @@
 class DM.Measure
-    @MAX_BPM    = 240
-    MAX_BPM     = @MAX_BPM
-    @MAX_BEATS  = 20
-    MAX_BEATS   = @MAX_BEATS
+    @MAX_BPM        = 240
+    MAX_BPM         = @MAX_BPM
+    @MAX_BEATS      = 20
+    MAX_BEATS       = @MAX_BEATS
+    @MAX_NOTE_VALUE = 64
+    MAX_NOTE_VALUE  = @MAX_NOTE_VALUE
     # how much will a quarter note be split? (4ths, 8ths, 16ths, 32nds, 64ths)
     # @MODES      = [1, 2, 4, 8, 16]
     @STEPSIZES  = [64, 32, 16, 8, 4, 2, 1]
@@ -24,11 +26,16 @@ class DM.Measure
         [@beats, @noteValue]    = timeSignature
         @bpm                    = bpm
         @instruments            = drumMachine.parts.instruments.used
-        @container              = drumMachine.parts.measures.svg
+        # @container              = drumMachine.parts.measures.svg
         @svg                    = null
 
-        @noteIndex      = 0
-        @id             = DM.Measure.getID()
+        @noteIndex  = 0
+        @id         = DM.Measure.getID()
+
+        @container  = null
+        @x          = null
+        @y          = null
+        @drawDot    = null
 
         idx = MODES.indexOf mode
         # set default to 8th notes
@@ -36,94 +43,31 @@ class DM.Measure
             idx = 3
         @mode = MODES[idx]
 
-        # init data with null values
-        data = {}
-        measureLength = @_maxNumNotes()
+        # init data with boolean values
+        data        = {}
+        dataLength  = @_maxNumNotes()
         for instrument in @instruments
-            data[instrument] = (null for i in [0...measureLength])
+            data[instrument] = (false for i in [0...dataLength])
         @data = data
 
-        # @_updateData()
+        Object.defineProperty @, "dataLength", {
+            get: () ->
+                keys = Object.keys(@data)
+                return @data[keys[0]]?.length or 0
+            set: () ->
+                console.warn "Cannnot set DM.Measure::dataLength!"
+                return @
+        }
 
     _maxNumNotes: () ->
-        return @mode / @noteValue * @beats
-
-    drawSettings: () ->
-        self = @
-        # inner functions
-        # resetBPM = (ev, textfield) ->
-        #     self.setBPM parseInt(textfield.value, 10)
-        #     return self
-
-        # resetStepSize = (ev, select) ->
-        #     self.setStepSize parseInt(select.value, 10)
-        #     self.draw()
-        #     return self
-
-        drawOptions = () ->
-            res = ""
-            for val, i in MODES
-                res += "<option value=\"#{val}\"#{if self.mode isnt val then "" else " selected"}>#{MODE_NAMES[i]}</option>"
-            return res
-        # end of inner functions
-
-
-        settings = $ """<div class="measureSettings">
-                            <div class="split setting">
-                                <select class="select">
-                                    #{drawOptions()}
-                                </select>
-                                notes,
-                            </div>
-                            <div class="bpm setting">
-                                BPM: <input class="bpm" type="number" value="#{@bpm}" min="1" max="#{MAX_BPM}" />
-                            </div>
-                            <div class="timeSignature setting">
-                                Time signature:
-                                <input class="timeSignatureValue" data-type="numBeats" type="number" value="#{@timeSignature[0]}" min="1" max="#{MAX_BEATS}" />
-                                /
-                                <input class="timeSignatureValue" data-type="beatValue" type="number" value="#{@timeSignature[1]}" min="1" max="#{MAX_BEATS}" />
-                            </div>
-                            <div class="close setting">
-                                &#10006;
-                            </div>
-                            <div class="clear" />
-                        </div>"""
-
-        settings.find(".select").change (ev) ->
-            # return resetStepSize(ev, @)
-            self.setStepSize parseInt(@value, 10)
-            return self.draw()
-
-        settings.find("input.bpm").change (ev) ->
-            # return resetBPM(ev, @)
-            return self.setBPM parseInt(@value, 10)
-
-        settings.find("input.timeSignatureValue").change (ev) ->
-            value = parseInt(@value, 10)
-            if $(@).attr("data-type") is "numBeats"
-                # TODO
-                # more beats
-                if value > self.timeSignature[0]
-                    true
-                # less beats
-                else
-                    true
-            else
-                true
-            return true
-
-        settings.find(".close").click (ev) ->
-            return self.remove()
-
-        return settings
+        return (@mode / @noteValue) * @beats
 
     addInstruments: (instrumentNames...) ->
         console.log "DM.Measure::addInstruments: adding instruments", instrumentNames
         data            = @data
-        measureLength   = @_maxNumNotes()
+        # measureLength   = @_maxNumNotes()
         for instrumentName in instrumentNames
-            data[instrumentName] = (null for i in [0...measureLength])
+            data[instrumentName] = (false for i in [0...@dataLength])
         return @
 
     removeInstruments: (instrumentNames...) ->
@@ -132,103 +76,224 @@ class DM.Measure
             delete @data[instrumentName]
         return @
 
-    draw: (container) ->
+    _updateMusicValues: (bpm, beats, noteValue, mode) ->
+        # lessNotes = false
+        if beats < @beats
+            # lessNotes = true
+            if not confirm "Shrinking the measure will result in loss of data!"
+                return @
+
+        @bpm        = bpm
+        @beats      = beats
+        @noteValue  = noteValue
+        @mode       = mode
+
+        data        = {}
+        dataLength  = @_maxNumNotes()
+        for instrument in @instruments
+            data[instrument] = (@data[instrument][i] or false for i in [0...dataLength])
+        @data = data
+
+        @drumMachine.parts.measures.draw()
+
+        return @
+
+
+    # DRAW STUFF
+    draw: (container = @container, x = @x, y = @y, drawDot = @drawDot or false) ->
         self        = @
+        drumMachine = @drumMachine
+
+        if arguments.length > 0
+            @container  = container
+            @x          = x
+            @y          = y
+            @drawDot    = drawDot
+
+
+        hSpacing    = 10
+        vSpacing    = 10
+        width       = 30
+        height      = 30
+        # inner offset ... aka padding ;)
+        offsetTop   = 35
+        offsetLeft  = 30
 
         group = container.append "g"
                         .classed "measure", true
+                        .attr "transform", "translate(#{x},#{y})"
+        @svg  = group
 
-        stepSize = @mode / @noteValue
+        if drawDot
+            @appendDot()
 
-        console.log @data, stepSize, @mode
+        stepSize    = Math.ceil(@dataLength / @mode)
+        @stepSize   = stepSize
 
         rowIdx = 0
         for instrumentName, notes of @data
             row = group.append "g"
                         .classed "row", true
-                        .attr "transform", "translate(0,#{rowIdx * 20})"
+                        .attr "transform", "translate(#{offsetLeft} ,#{rowIdx * (height + vSpacing) + offsetTop})"
+            group.append "text"
+                .text DM.Utils.getInstrumentAbbreviation(instrumentName)
+                .attr "x", 15
+                .attr "y", rowIdx * (height + vSpacing) + offsetTop + 20
+                .style "text-anchor", "middle"
 
+            noteIndex = 0
+            lastX = 0
             for note, idx in notes by stepSize
-                row.append "rect"
-                    .attr "x", idx * 20
+                lastX = noteIndex * (width + hSpacing)
+                noteRect = row.append "rect"
+                    .classed "note", true
+                    # set as active
+                    .classed "active", note
+                    .attr "x", lastX
                     .attr "y", 0
-                    .attr "width", 20
-                    .attr "height", 20
+                    .attr "width", width
+                    .attr "height", height
                     .attr "stroke", "black"
                     .attr "stroke-width", 1
-                    .style "fill", "white"
+                    .attr "rx", 3
+                    .attr "ry", 3
+                noteRect.on "click", do (noteRect, instrumentName, noteIndex) ->
+                    return () ->
+                        if self.toggleNote(instrumentName, noteIndex) is true
+                            noteRect.classed "active", true
+                        else
+                            noteRect.classed "active", false
+                        return true
+
+                noteIndex++
 
             rowIdx++
 
+        group.append "text"
+            .classed "bpm", true
+            .text "#{@bpm} BPM"
+            .attr "x", 0
+            .attr "y", 10
 
-        # draw measure settings
-        # div.append @drawSettings()
+        group.append "text"
+            .classed "timeSignature", true
+            .text "(#{@beats}/#{@noteValue}) time"
+            .attr "x", 100
+            .attr "y", 10
 
-        # 4/4; 8th notes
-        # for each beat => 2 (8/note value = 8/4 = 2)
-        # max for each beat = 16 (modes.last / note value)
-        # => stepsize = max / current = 16 / 4 = 4
-        # (modes.last / note value) / (mode/note_value)
-        # modes.last / mode (here: 64/16 = 4)
+        # settings button
+        group.append "text"
+            .classed "edit", true
+            .text "⚙"
+            .attr "x", lastX + width + 15
+            .attr "y", 10
+            .style "cursor", "pointer"
+            .style "text-anchor", "middle"
+            .on "click", () ->
+                div = drumMachine.popup.find(".content")
+                div.empty().append self.popupContent()
+                drumMachine.showPopup () ->
+                    data        = div.find(".data")
+                    bpm         = parseInt(data.filter(".bpm").val(), 10)
+                    beats       = parseInt(data.filter(".beats").val(), 10)
+                    noteValue   = parseInt(data.filter(".noteValue").val(), 10)
+                    mode        = parseInt(data.filter(".mode").val(), 10)
+                    if not isNaN(bpm) and not isNaN(beats) and not isNaN(noteValue) and not isNaN(mode)
+                        self._updateMusicValues(bpm, beats, noteValue, mode)
+                        return true
+                    return false
+                return true
 
 
+        return {
+            width:  lastX + width
+            height: rowIdx * height + offsetTop + hSpacing * rowIdx
+        }
 
-        # stepSize = MODES.LAST / @mode
-        # stepSize = STEPSIZES[MODES.indexOf(@mode)]
-        # console.log stepSize
-        #
-        # for col, idx in @data by stepSize
-        #     # clone = instruments.clone()
-        #     column = $ "<div class='column' data-colidx='#{idx}' />"
-        #
-        #     # ignore last instrument because it's a pseudo instrument (drop area for new instruments)
-        #     for i in [0...(col.length - 1)]
-        #         note = col[i]
-        #         note = $ "<div class='instrument note#{if note? then " active" else ""}' />"
-        #         # click on note
-        #         do (i, note, idx) ->
-        #             instrumentDiv = $("#instruments .instrument").eq(i)
-        #             note
-        #                 .mouseenter () ->
-        #                     instrumentDiv
-        #                         .addClass("hovered")
-        #                         .siblings(".hovered")
-        #                         .removeClass("hovered")
-        #                     return true
-        #                 .mouseleave () ->
-        #                     instrumentDiv
-        #                         .removeClass("hovered")
-        #                     return true
-        #                 .click () ->
-        #                     self.toggleNote(idx, i)
-        #                     if self.noteIsActive(idx, i)
-        #                         note.addClass "active"
-        #                     else
-        #                         note.removeClass "active"
-        #                     return true
-        #         column.append note
-        #
-        #     div.append column
-        #
-        # # clear both after last column
-        # div.append "<div class='clear' />"
+    popupContent: () ->
+        drumMachine = @drumMachine
+        res = $ """<div>
+                        <div>
+                            <span style="display:inline-block; width: 100px;">BPM:</span>
+                            <input class="data bpm" type="number" min="1" max="#{MAX_BPM}" value="#{@bpm}" />
+                        </div>
+                        <div>
+                            <span style="display:inline-block; width: 100px;">beats:</span>
+                            <input class="data beats" type="number" min="1" max="#{MAX_BEATS}" value="#{@beats}" />
+                        </div>
+                        <div>
+                            <span style="display:inline-block; width: 100px;">note value:</span>
+                            <input class="data noteValue" type="number" min="1" max="#{MAX_NOTE_VALUE}" value="#{@noteValue}" />
+                        </div>
+                        <div>
+                            <select class="data mode">
+                                #{"<option value=\"#{mode}\"#{if mode is @mode then " selected" else ""}>#{MODE_NAMES[idx]}</option>" for mode, idx in MODES}
+                            </select>
+                        </div>
+                        <button>OK</button>
+                    </div>"""
 
+        res.find("button").click () ->
+            drumMachine.hidePopup()
+            return true
+
+        return res
+
+
+    ######################################################################################################
+    # DOT FUNCTIONS
+    appendDot: () ->
+        width       = 30
+        height      = 30
+        # inner offset ... aka padding ;)
+        offsetTop   = 35
+        offsetLeft  = 30
+        @svg.append "circle"
+            .classed "dot", true
+            .attr "r", 4
+            .attr "cx", offsetLeft + width / 2
+            .attr "cy", offsetTop / 2 + 8
+            .style "fill", "black"
+        return @
+
+    moveDot: (duration) ->
+        noteIndex   = @noteIndex
+        hSpacing    = 10
+        vSpacing    = 10
+        width       = 30
+        height      = 30
+        # inner offset ... aka padding ;)
+        offsetTop   = 35
+        offsetLeft  = 30
+
+        dot = @svg.select(".dot")
+
+        dot.transition()
+            # .attr "cx", offsetLeft + (noteIndex + 1) * (width + hSpacing * noteIndex)
+            .attr "cx", parseInt(dot.attr("cx"), 10) + width + hSpacing
+            .duration duration
+        return @
+
+    removeDot: () ->
+        @svg.select(".dot").remove()
         return @
 
     remove: () ->
         @drumMachine.removeMeasure(@)
         return @
 
-    toggleNote: (x, y) ->
-        if @data[x][y] instanceof DM.Instrument
-            @data[x][y] = null
-        else
-            @data[x][y] = @instruments[y]
+    # NOTE: returns the current state of the note
+    toggleNote: (instrumentName, noteIndex) ->
+        notes = @data[instrumentName]
+        if notes[noteIndex] is false
+            notes[noteIndex] = true
+            return true
 
-        return @
+        notes[noteIndex] = false
+        return false
 
-    noteIsActive: (x, y) ->
-        return @data[x][y] instanceof DM.Instrument
+    noteIsActive: (instrumentName, noteIndex) ->
+        return @data[instrumentName][noteIndex] is true
 
     getNextColumn: (activeNotes = true, cycle = false) ->
         if @noteIndex is @data.length - 1
@@ -259,8 +324,10 @@ class DM.Measure
         # entire column
         return @data[idx]
 
-    getIntervalDelay: () ->
-        return ((@timeSignature[0] * 60000) / @bpm) / @getVisibleLength()
+    getDelay: () ->
+        # return ((@timeSignature[0] * 60000) / @bpm) / @getVisibleLength()
+        visibleLength = @dataLength / @stepSize
+        return ((@beats * 60000) / @bpm) / visibleLength
 
     getColumnDivs: () ->
         return @div.find(".column")
@@ -288,17 +355,3 @@ class DM.Measure
 
     ########################
     # SETTERS
-    setBPM: (bpm) ->
-        if 1 <= bpm <= DM.Measure.maxBPM
-            @bpm = ~~bpm
-            return @
-
-        @bpm = 120
-        return @
-
-    setStepSize: (stepSize) ->
-        if stepSize in STEPSIZES
-            @stepSize = stepSize
-        else
-            @stepSize = 2 # default is 8th notes
-        return @

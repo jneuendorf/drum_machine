@@ -97,6 +97,13 @@ body {
     right: 4px;
 }*/
 
+.measures .note {
+    fill: transparent;
+}
+.measures .note.active {
+    fill: black;
+}
+
 .instrumentButton .instrument {
     fill: transparent;
 }
@@ -221,4 +228,30 @@ body {
     height: 26px;
     margin: 5px 0px 0px 0px;
     width: 100%;
+}
+
+/* POPUP */
+.popup {
+    display: none;
+    left: 50%;
+    position: absolute;
+    top: 100px;
+}
+.popup .overlay {
+    background-color: rgba(255, 255, 255, 0.7);
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+.popup .content {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.2);
+    height: 400px;
+    padding: 10px;
+    position: relative;
+    left: -50%;
+    width: 500px;
 }

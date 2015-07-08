@@ -10,13 +10,11 @@ class DM.DrumMachine
 
         @loader = loader
 
-        @measureIdx     = 0
+        @measureIndex   = 0
         @noteIdx        = 0
         @position       = 0
         # save a reference to window.setInterval
         @interval       = null
-        # save the import-export popup; it is set from the according part itself
-        @popup          = null
         @svg            = @container
                             .append("svg")
                             .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -24,15 +22,26 @@ class DM.DrumMachine
                             .attr("width", 1000)
                             .attr("height", 1000)
 
+        self        = @
+        jContainer  = $(@container[0][0])
+        @popup = $ """<div class="popup">
+                                 <div class="overlay" />
+                                 <div class="content" />
+                             </div>"""
+        @popup.find(".overlay").click () ->
+            self.hidePopup()
+            return true
+        jContainer.append @popup
+
         @parts =
             instruments:    DM.Part.new("Instruments", @, @svg)
             playButtons:    DM.Part.new("PlayButtons", @, @svg)
             measures:       DM.Part.new("Measures", @, @svg)
-            # DM.Part.new("ImportExport", @, @svg, "importExport", "importExport")
+            io:             DM.Part.new("IO", @, @svg)
 
         @measures = []
         @measures.push new DM.Measure(@, [4, 4], 8, 120)
-        # @measures.push new DM.Measure(@, [3, 4], 8, 120)
+        @measures.push new DM.Measure(@, [3, 4], 8, 120)
 
         console.log @
 
@@ -61,11 +70,14 @@ class DM.DrumMachine
 
     ###########################
     # EXPORT / IMPORT FUNCTIONS
-    showPopup: () ->
+    showPopup: (onClose) ->
         @popup.fadeIn 200
+        @popup.onClose = onClose
         return @
 
     hidePopup: () ->
+        if @popup.onClose?() is false
+            return @
         @popup.fadeOut 200
         return @
 
@@ -183,14 +195,6 @@ class DM.DrumMachine
             instrumentNames.push redraw
             redraw = true
 
-        # @instruments.splice index, 1
-        #
-        # for measure in @measures
-        #     measure.removeInstrumentFromData index
-        #
-        # # @drawPartial [DM.PartDrumkits, DM.PartImportExport]
-        # @drawPartial ["drumkits", "importExport"]
-
         for measure in @measures
             measure.removeInstruments instrumentNames...
 
@@ -212,94 +216,64 @@ class DM.DrumMachine
         @draw()
         return @
 
-
-    ################
+    ################################################################################################
     # PLAY FUNCTIONS
-    getCurrentMeasure: () ->
-        return @measures[@measureIdx]
-
-    nextMeasure: () ->
-        # not last measure => increment measureIdx, position
-        if 0 <= @measureIdx < @measures.length - 1
-            @measureIdx++
-        # last measure => go to the first again
-        else
-            @measureIdx = 0
-
-        return @
-
-    getIntervalDelay: (measure) ->
-        if not measure?
-            measure = @getCurrentMeasure()
-
-        return measure.getIntervalDelay()
-
     startPlaying: () ->
-        currentMeasure    = @getCurrentMeasure()
-        currentColumn    = currentMeasure.getCurrentColumn()
-        colDiv            = currentMeasure.getCurrentColumnDiv()
-        prevDiv            = colDiv.prev()
+        self            = @
+        currentMeasure  = @measures[@measureIndex]
+        resetInterval   = false
+        delay           = currentMeasure.getDelay()
 
         # inner function
-        playColumn = () =>
-            # remove mark from previous column
-            prevDiv?.removeClass "current"
-            # set mark for current column
-            colDiv.addClass "current"
+        playColumn = () ->
+            if resetInterval is true
+                delay = currentMeasure.getDelay()
+                window.clearInterval self.interval
+                self.interval   = window.setInterval(playColumn, delay)
+                resetInterval   = false
 
-            instrument.getSound().play() for instrument in currentColumn
 
-            # prepare for next call
-            currentColumn    = currentMeasure.getNextColumn()
-            prevDiv            = colDiv
+            noteIndex = currentMeasure.noteIndex
+            for instrumentName, data of currentMeasure.data when data[noteIndex] is true
+                dm.loader.drumkits["rock-drumkit"].play(instrumentName)
 
-            # if the next note is in the next measure (with another speed) adjust the interval
-            if not currentColumn?
-                currentMeasure    = @nextMeasure().getCurrentMeasure().resetPosition()
-                currentColumn    = currentMeasure.getCurrentColumn()
-                colDiv            = currentMeasure.getColumnDivs().eq(0)
+            # played noteIndex was last note in current measure => go to next measure
+            if noteIndex is currentMeasure.dataLength - 1
+                currentMeasure.noteIndex = 0
+                currentMeasure.removeDot()
 
-                window.clearInterval @interval
-                @interval        = window.setInterval( playColumn, @getIntervalDelay(currentMeasure) )
+                if self.measureIndex < self.measures.length - 1
+                    self.measureIndex++
+                else
+                    self.measureIndex = 0
+
+                currentMeasure  = self.measures[self.measureIndex]
+                currentMeasure.appendDot()
+
+                # set flag to reset and create new interval on next call
+                resetInterval   = true
             else
-                colDiv = colDiv.next()
-
+                currentMeasure.noteIndex++
+                currentMeasure.moveDot(delay / 4)
 
             return true
         # end of inner function
 
-        @interval    = window.setInterval( playColumn, @getIntervalDelay(currentMeasure) )
+        @interval = window.setInterval(playColumn, delay)
+        return @
 
     pause: () ->
         window.clearInterval(@interval)
         @interval = null
+        return @
 
     # pause + reset
     stop: () ->
         @pause()
         for measure in @measures
-            measure.resetPosition()
-        @measureIdx = 0
-        @removeCurrentColumnIndicator()
+            measure.noteIndex = 0
+        @measureIndex = 0
+        return @
 
     isPlaying: () ->
         return @interval?
-
-    removeCurrentColumnIndicator: () ->
-        $(".column.current").removeClass "current"
-        return @
-
-    ###################
-    # GETTERS & SETTERS
-    getDrumkits: () ->
-        return @drumkits
-
-    getInstruments: () ->
-        return @instruments
-
-    getMeasures: () ->
-        return @measures
-
-    setPopup: (div) ->
-        @popup = div
-        return @

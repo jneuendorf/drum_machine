@@ -21,3 +21,9 @@ DM.Utils =
         res.added = arr2
 
         return res
+    getInstrumentAbbreviation: (instrumentName) ->
+        words = instrumentName.split " "
+        res = ""
+        for word in words when isNaN(parseInt(word, 10))
+            res += word.charAt(0).toUpperCase()
+        return res

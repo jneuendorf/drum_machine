@@ -13,10 +13,10 @@ class DM.Part
 
     makeContainer: (x, y) ->
         if @svg?
-            @container.select(".#{@className}").remove()
-        return @container.append("g")
-            .attr("id", @id)
-            .attr("class", @className)
+            @svg.remove()
+        return @svg = @container.append("g")
+            .attr "id", @id
+            .attr "class", @className
             .attr "transform", "translate(#{x},#{y})"
 
     draw: () ->

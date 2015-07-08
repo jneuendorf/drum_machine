@@ -7,7 +7,7 @@ INCLUDES = $(JQUERY) $(NUMERAL)
 
 PROJECT_NAME = DrumMachine
 FILES = js/setup.coffee js/Utils.coffee js/drumkits.coffee js/Instrument.coffee js/Measure.coffee \
-		js/Parts/Part.coffee js/Parts/PartInstruments.coffee js/Parts/PartImportExport.coffee js/Parts/PartUsedInstruments.coffee \
+		js/Parts/Part.coffee js/Parts/PartInstruments.coffee js/Parts/PartIO.coffee \
 		js/Parts/PartMeasures.coffee js/Parts/PartPlayButtons.coffee \
 		js/SpriteLoader.coffee js/DrumMachine.coffee js/init.coffee
 

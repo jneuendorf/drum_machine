@@ -2,9 +2,9 @@
 (function() {
   var isNumber,
     slice = [].slice,
-    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+    hasProp = {}.hasOwnProperty,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   window.DM = {};
 
@@ -29,6 +29,18 @@
         }
       }
       res.added = arr2;
+      return res;
+    },
+    getInstrumentAbbreviation: function(instrumentName) {
+      var j, len, res, word, words;
+      words = instrumentName.split(" ");
+      res = "";
+      for (j = 0, len = words.length; j < len; j++) {
+        word = words[j];
+        if (isNaN(parseInt(word, 10))) {
+          res += word.charAt(0).toUpperCase();
+        }
+      }
       return res;
     }
   };
@@ -77,7 +89,7 @@
   })();
 
   DM.Measure = (function() {
-    var MAX_BEATS, MAX_BPM, MODES, MODE_NAMES, STEPSIZES, count;
+    var MAX_BEATS, MAX_BPM, MAX_NOTE_VALUE, MODES, MODE_NAMES, STEPSIZES, count;
 
     Measure.MAX_BPM = 240;
 
@@ -86,6 +98,10 @@
     Measure.MAX_BEATS = 20;
 
     MAX_BEATS = Measure.MAX_BEATS;
+
+    Measure.MAX_NOTE_VALUE = 64;
+
+    MAX_NOTE_VALUE = Measure.MAX_NOTE_VALUE;
 
     Measure.STEPSIZES = [64, 32, 16, 8, 4, 2, 1];
 
@@ -108,79 +124,53 @@
     };
 
     function Measure(drumMachine, timeSignature, mode, bpm) {
-      var data, i, idx, instrument, j, len, measureLength, ref;
+      var data, dataLength, i, idx, instrument, j, len, ref;
       this.drumMachine = drumMachine;
       this.beats = timeSignature[0], this.noteValue = timeSignature[1];
       this.bpm = bpm;
       this.instruments = drumMachine.parts.instruments.used;
-      this.container = drumMachine.parts.measures.svg;
       this.svg = null;
       this.noteIndex = 0;
       this.id = DM.Measure.getID();
+      this.container = null;
+      this.x = null;
+      this.y = null;
+      this.drawDot = null;
       idx = MODES.indexOf(mode);
       if (idx < 0) {
         idx = 3;
       }
       this.mode = MODES[idx];
       data = {};
-      measureLength = this._maxNumNotes();
+      dataLength = this._maxNumNotes();
       ref = this.instruments;
       for (j = 0, len = ref.length; j < len; j++) {
         instrument = ref[j];
         data[instrument] = (function() {
           var k, ref1, results;
           results = [];
-          for (i = k = 0, ref1 = measureLength; 0 <= ref1 ? k < ref1 : k > ref1; i = 0 <= ref1 ? ++k : --k) {
-            results.push(null);
+          for (i = k = 0, ref1 = dataLength; 0 <= ref1 ? k < ref1 : k > ref1; i = 0 <= ref1 ? ++k : --k) {
+            results.push(false);
           }
           return results;
         })();
       }
       this.data = data;
+      Object.defineProperty(this, "dataLength", {
+        get: function() {
+          var keys;
+          keys = Object.keys(this.data);
+          return this.data[keys[0]].length;
+        },
+        set: function() {
+          console.warn("Cannnot set DM.Measure::dataLength!");
+          return this;
+        }
+      });
     }
 
     Measure.prototype._maxNumNotes = function() {
-      return this.mode / this.noteValue * this.beats;
-    };
-
-    Measure.prototype.drawSettings = function() {
-      var drawOptions, self, settings;
-      self = this;
-      drawOptions = function() {
-        var i, j, len, res, val;
-        res = "";
-        for (i = j = 0, len = MODES.length; j < len; i = ++j) {
-          val = MODES[i];
-          res += "<option value=\"" + val + "\"" + (self.mode !== val ? "" : " selected") + ">" + MODE_NAMES[i] + "</option>";
-        }
-        return res;
-      };
-      settings = $("<div class=\"measureSettings\">\n    <div class=\"split setting\">\n        <select class=\"select\">\n            " + (drawOptions()) + "\n        </select>\n        notes,\n    </div>\n    <div class=\"bpm setting\">\n        BPM: <input class=\"bpm\" type=\"number\" value=\"" + this.bpm + "\" min=\"1\" max=\"" + MAX_BPM + "\" />\n    </div>\n    <div class=\"timeSignature setting\">\n        Time signature:\n        <input class=\"timeSignatureValue\" data-type=\"numBeats\" type=\"number\" value=\"" + this.timeSignature[0] + "\" min=\"1\" max=\"" + MAX_BEATS + "\" />\n        /\n        <input class=\"timeSignatureValue\" data-type=\"beatValue\" type=\"number\" value=\"" + this.timeSignature[1] + "\" min=\"1\" max=\"" + MAX_BEATS + "\" />\n    </div>\n    <div class=\"close setting\">\n        &#10006;\n    </div>\n    <div class=\"clear\" />\n</div>");
-      settings.find(".select").change(function(ev) {
-        self.setStepSize(parseInt(this.value, 10));
-        return self.draw();
-      });
-      settings.find("input.bpm").change(function(ev) {
-        return self.setBPM(parseInt(this.value, 10));
-      });
-      settings.find("input.timeSignatureValue").change(function(ev) {
-        var value;
-        value = parseInt(this.value, 10);
-        if ($(this).attr("data-type") === "numBeats") {
-          if (value > self.timeSignature[0]) {
-            true;
-          } else {
-            true;
-          }
-        } else {
-          true;
-        }
-        return true;
-      });
-      settings.find(".close").click(function(ev) {
-        return self.remove();
-      });
-      return settings;
+      return (this.mode / this.noteValue) * this.beats;
     };
 
     Measure.prototype.addInstruments = function() {
@@ -195,7 +185,7 @@
           var k, ref, results;
           results = [];
           for (i = k = 0, ref = measureLength; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
-            results.push(null);
+            results.push(false);
           }
           return results;
         })();
@@ -214,24 +204,170 @@
       return this;
     };
 
-    Measure.prototype.draw = function(container) {
-      var group, idx, instrumentName, j, len, note, notes, ref, ref1, row, rowIdx, self, stepSize;
+    Measure.prototype._updateMusicValues = function(bpm, beats, noteValue, mode) {
+      var data, dataLength, i, instrument, j, len, ref;
+      if (beats < this.beats) {
+        if (!confirm("Shrinking the measure will result in loss of data!")) {
+          return this;
+        }
+      }
+      this.bpm = bpm;
+      this.beats = beats;
+      this.noteValue = noteValue;
+      this.mode = mode;
+      data = {};
+      dataLength = this._maxNumNotes();
+      ref = this.instruments;
+      for (j = 0, len = ref.length; j < len; j++) {
+        instrument = ref[j];
+        data[instrument] = (function() {
+          var k, ref1, results;
+          results = [];
+          for (i = k = 0, ref1 = dataLength; 0 <= ref1 ? k < ref1 : k > ref1; i = 0 <= ref1 ? ++k : --k) {
+            results.push(this.data[instrument][i] || false);
+          }
+          return results;
+        }).call(this);
+      }
+      this.data = data;
+      this.drumMachine.parts.measures.draw();
+      return this;
+    };
+
+    Measure.prototype.draw = function(container, x, y, drawDot) {
+      var drumMachine, group, hSpacing, height, idx, instrumentName, j, lastX, len, note, noteIndex, noteRect, notes, offsetLeft, offsetTop, ref, ref1, row, rowIdx, self, stepSize, vSpacing, width;
+      if (container == null) {
+        container = this.container;
+      }
+      if (x == null) {
+        x = this.x;
+      }
+      if (y == null) {
+        y = this.y;
+      }
+      if (drawDot == null) {
+        drawDot = this.drawDot || false;
+      }
       self = this;
-      group = container.append("g").classed("measure", true);
-      stepSize = this.mode / this.noteValue;
-      console.log(this.data, stepSize, this.mode);
+      drumMachine = this.drumMachine;
+      if (arguments.length > 0) {
+        this.container = container;
+        this.x = x;
+        this.y = y;
+        this.drawDot = drawDot;
+      }
+      hSpacing = 10;
+      vSpacing = 10;
+      width = 30;
+      height = 30;
+      offsetTop = 35;
+      offsetLeft = 30;
+      group = container.append("g").classed("measure", true).attr("transform", "translate(" + x + "," + y + ")");
+      this.svg = group;
+      if (drawDot) {
+        this.appendDot();
+      }
+      stepSize = Math.ceil(this.dataLength / this.mode);
+      this.stepSize = stepSize;
       rowIdx = 0;
       ref = this.data;
       for (instrumentName in ref) {
         notes = ref[instrumentName];
-        row = group.append("g").classed("row", true).attr("transform", "translate(0," + (rowIdx * 20) + ")");
+        row = group.append("g").classed("row", true).attr("transform", "translate(" + offsetLeft + " ," + (rowIdx * (height + vSpacing) + offsetTop) + ")");
+        group.append("text").text(DM.Utils.getInstrumentAbbreviation(instrumentName)).attr("x", 15).attr("y", rowIdx * (height + vSpacing) + offsetTop + 20).style("text-anchor", "middle");
+        noteIndex = 0;
+        lastX = 0;
         ref1 = stepSize;
         for ((ref1 > 0 ? (idx = j = 0, len = notes.length) : idx = j = notes.length - 1); ref1 > 0 ? j < len : j >= 0; idx = j += ref1) {
           note = notes[idx];
-          row.append("rect").attr("x", idx * 20).attr("y", 0).attr("width", 20).attr("height", 20).attr("stroke", "black").attr("stroke-width", 1).style("fill", "white");
+          lastX = noteIndex * (width + hSpacing);
+          noteRect = row.append("rect").classed("note", true).classed("active", note).attr("x", lastX).attr("y", 0).attr("width", width).attr("height", height).attr("stroke", "black").attr("stroke-width", 1).attr("rx", 3).attr("ry", 3);
+          noteRect.on("click", (function(noteRect, instrumentName, noteIndex) {
+            return function() {
+              if (self.toggleNote(instrumentName, noteIndex) === true) {
+                noteRect.classed("active", true);
+              } else {
+                noteRect.classed("active", false);
+              }
+              return true;
+            };
+          })(noteRect, instrumentName, noteIndex));
+          noteIndex++;
         }
         rowIdx++;
       }
+      group.append("text").classed("bpm", true).text(this.bpm + " BPM").attr("x", 0).attr("y", 10);
+      group.append("text").classed("timeSignature", true).text("(" + this.beats + "/" + this.noteValue + ") time").attr("x", 100).attr("y", 10);
+      group.append("text").classed("edit", true).text("⚙").attr("x", lastX + width + 15).attr("y", 10).style("cursor", "pointer").style("text-anchor", "middle").on("click", function() {
+        var div;
+        div = drumMachine.popup.find(".content");
+        div.empty().append(self.popupContent());
+        drumMachine.showPopup(function() {
+          var beats, bpm, data, mode, noteValue;
+          data = div.find(".data");
+          bpm = parseInt(data.filter(".bpm").val(), 10);
+          beats = parseInt(data.filter(".beats").val(), 10);
+          noteValue = parseInt(data.filter(".noteValue").val(), 10);
+          mode = parseInt(data.filter(".mode").val(), 10);
+          if (!isNaN(bpm) && !isNaN(beats) && !isNaN(noteValue) && !isNaN(mode)) {
+            self._updateMusicValues(bpm, beats, noteValue, mode);
+            return true;
+          }
+          return false;
+        });
+        return true;
+      });
+      return {
+        width: lastX + width,
+        height: rowIdx * height + offsetTop + hSpacing * rowIdx
+      };
+    };
+
+    Measure.prototype.popupContent = function() {
+      var drumMachine, idx, mode, res;
+      drumMachine = this.drumMachine;
+      res = $("<div>\n    <div>\n        <span style=\"display:inline-block; width: 100px;\">BPM:</span>\n        <input class=\"data bpm\" type=\"number\" min=\"1\" max=\"" + MAX_BPM + "\" value=\"" + this.bpm + "\" />\n    </div>\n    <div>\n        <span style=\"display:inline-block; width: 100px;\">beats:</span>\n        <input class=\"data beats\" type=\"number\" min=\"1\" max=\"" + MAX_BEATS + "\" value=\"" + this.beats + "\" />\n    </div>\n    <div>\n        <span style=\"display:inline-block; width: 100px;\">note value:</span>\n        <input class=\"data noteValue\" type=\"number\" min=\"1\" max=\"" + MAX_NOTE_VALUE + "\" value=\"" + this.noteValue + "\" />\n    </div>\n    <div>\n        <select class=\"data mode\">\n            " + ((function() {
+        var j, len, results;
+        results = [];
+        for (idx = j = 0, len = MODES.length; j < len; idx = ++j) {
+          mode = MODES[idx];
+          results.push("<option value=\"" + mode + "\"" + (mode === this.mode ? " selected" : "") + ">" + MODE_NAMES[idx] + "</option>");
+        }
+        return results;
+      }).call(this)) + "\n        </select>\n    </div>\n    <button>OK</button>\n</div>");
+      res.find("button").click(function() {
+        drumMachine.hidePopup();
+        return true;
+      });
+      return res;
+    };
+
+    Measure.prototype.appendDot = function() {
+      var height, offsetLeft, offsetTop, width;
+      width = 30;
+      height = 30;
+      offsetTop = 35;
+      offsetLeft = 30;
+      this.svg.append("circle").classed("dot", true).attr("r", 4).attr("cx", offsetLeft + width / 2).attr("cy", offsetTop / 2 + 8).style("fill", "black");
+      return this;
+    };
+
+    Measure.prototype.moveDot = function(duration) {
+      var dot, hSpacing, height, noteIndex, offsetLeft, offsetTop, vSpacing, width;
+      noteIndex = this.noteIndex;
+      hSpacing = 10;
+      vSpacing = 10;
+      width = 30;
+      height = 30;
+      offsetTop = 35;
+      offsetLeft = 30;
+      dot = this.svg.select(".dot");
+      dot.transition().attr("cx", parseInt(dot.attr("cx"), 10) + width + hSpacing).duration(duration);
+      return this;
+    };
+
+    Measure.prototype.removeDot = function() {
+      this.svg.select(".dot").remove();
       return this;
     };
 
@@ -240,17 +376,19 @@
       return this;
     };
 
-    Measure.prototype.toggleNote = function(x, y) {
-      if (this.data[x][y] instanceof DM.Instrument) {
-        this.data[x][y] = null;
-      } else {
-        this.data[x][y] = this.instruments[y];
+    Measure.prototype.toggleNote = function(instrumentName, noteIndex) {
+      var notes;
+      notes = this.data[instrumentName];
+      if (notes[noteIndex] === false) {
+        notes[noteIndex] = true;
+        return true;
       }
-      return this;
+      notes[noteIndex] = false;
+      return false;
     };
 
-    Measure.prototype.noteIsActive = function(x, y) {
-      return this.data[x][y] instanceof DM.Instrument;
+    Measure.prototype.noteIsActive = function(instrumentName, noteIndex) {
+      return this.data[instrumentName][noteIndex] === true;
     };
 
     Measure.prototype.getNextColumn = function(activeNotes, cycle) {
@@ -306,8 +444,10 @@
       return this.data[idx];
     };
 
-    Measure.prototype.getIntervalDelay = function() {
-      return ((this.timeSignature[0] * 60000) / this.bpm) / this.getVisibleLength();
+    Measure.prototype.getDelay = function() {
+      var visibleLength;
+      visibleLength = this.dataLength / this.stepSize;
+      return ((this.beats * 60000) / this.bpm) / visibleLength;
     };
 
     Measure.prototype.getColumnDivs = function() {
@@ -342,24 +482,6 @@
       };
     };
 
-    Measure.prototype.setBPM = function(bpm) {
-      if ((1 <= bpm && bpm <= DM.Measure.maxBPM)) {
-        this.bpm = ~~bpm;
-        return this;
-      }
-      this.bpm = 120;
-      return this;
-    };
-
-    Measure.prototype.setStepSize = function(stepSize) {
-      if (indexOf.call(STEPSIZES, stepSize) >= 0) {
-        this.stepSize = stepSize;
-      } else {
-        this.stepSize = 2;
-      }
-      return this;
-    };
-
     return Measure;
 
   })();
@@ -386,9 +508,9 @@
 
     Part.prototype.makeContainer = function(x, y) {
       if (this.svg != null) {
-        this.container.select("." + this.className).remove();
+        this.svg.remove();
       }
-      return this.container.append("g").attr("id", this.id).attr("class", this.className).attr("transform", "translate(" + x + "," + y + ")");
+      return this.svg = this.container.append("g").attr("id", this.id).attr("class", this.className).attr("transform", "translate(" + x + "," + y + ")");
     };
 
     Part.prototype.draw = function() {
@@ -506,94 +628,86 @@
 
   })(DM.Part);
 
-  DM.PartImportExport = (function(superClass) {
-    extend(PartImportExport, superClass);
+  DM.PartIO = (function(superClass) {
+    extend(PartIO, superClass);
 
-    function PartImportExport(master, container, className, id) {
-      PartImportExport.__super__.constructor.call(this, master, container, className, id);
-      this._div = null;
-      this._text = "";
+    function PartIO(drumMachine, container, className, id) {
+      PartIO.__super__.constructor.call(this, drumMachine, container, className, id);
+      this.text = null;
     }
 
-    PartImportExport.prototype.draw = function() {
-      var div, firstDraw, master;
-      div = this._container.find("." + this._id);
-      firstDraw = div.length === 0;
-      master = this._master;
-      if (firstDraw) {
-        div = this.makeContainer().append("<textarea id=\"copyFrom\" class=\"text\" />\n<!--button class=\"copy\" data-clipboard-target=\"copyFrom\" title=\"Click to copy data\">copy</button-->\n<button class=\"import\" title=\"import\">import</button>\n<button class=\"close\" title=\"close popup\">close</button>");
-        div.find("button.import").click((function(_this) {
-          return function() {
-            master["import"]();
-            return _this;
-          };
-        })(this));
-        div.find("button.close").click(function() {
-          master.hidePopup();
-          return this;
-        });
-        this._div = div;
-        master.setPopup(this._div);
-        this._container.append(div);
-      }
-      return this;
-    };
-
-    PartImportExport.prototype.getDiv = function() {
-      return this._div;
-    };
-
-    PartImportExport.prototype.setText = function(text, updateButton) {
-      if (updateButton == null) {
-        updateButton = true;
-      }
-      this._text = text;
-      if (updateButton === true) {
-        this._div.find(".copy").attr("data-clipboard-text", this._text);
-      }
-      return this;
-    };
-
-    return PartImportExport;
-
-  })(DM.Part);
-
-  DM.PartUsedInstruments = (function(superClass) {
-    extend(PartUsedInstruments, superClass);
-
-    PartUsedInstruments["new"] = function(subClassName, drumMachine, container, usedInstruments) {
-      var str;
-      str = subClassName[0].toLowerCase() + subClassName.slice(1);
-      return new App["Part" + subClassName](drumMachine, container, str, str, usedInstruments);
-    };
-
-    function PartUsedInstruments(drumMachine, container, className, id, usedInstruments) {
-      PartUsedInstruments.__super__.constructor.call(this, drumMachine, container, className, id);
-      this.usedInstruments = usedInstruments;
-    }
-
-    PartUsedInstruments.prototype.draw = function() {
-      var div, drumMachine, group, instrument, instrumentIdx, instrumentName, j, len, ref;
-      div = this.container.select("." + this.className);
+    PartIO.prototype.draw = function() {
+      var drumMachine, group, halfRadius, offset, radius, textLength;
       drumMachine = this.drumMachine;
-      this.svg = this.makeContainer(270, 50);
-      instrumentIdx = 0;
-      ref = this.usedInstruments;
-      for (instrumentIdx = j = 0, len = ref.length; j < len; instrumentIdx = ++j) {
-        instrument = ref[instrumentIdx];
-        console.log(instrument);
-        instrumentName = instrument.name;
-        group = this.svg.append("g").attr("data-idx", instrumentIdx).style("cursor", "pointer");
-        group.append("rect").attr("class", "instrument").attr("data-instrumentname", instrumentName).attr("x", 10).attr("y", instrumentIdx * 60).attr("width", 200).attr("height", 40).attr("rx", 6).attr("ry", 6).style("fill", "transparent").style("stroke", "black").style("stroke-width", 2);
-        group.append("text").text(instrumentName).attr("x", 111).attr("y", instrumentIdx * 60 + 26).style("text-anchor", "middle");
-        instrument.svg = group;
-        instrumentIdx++;
-      }
-      console.log("used instruments done");
+      this.svg = this.makeContainer(400, 19);
+      radius = 24;
+      halfRadius = Math.ceil(radius / 2);
+      offset = 0;
+      textLength = 100;
+      this.svg.append("text").text("Export as:").attr("x", offset).attr("y", radius - 8);
+      group = this.svg.append("g").classed("ioButton export", true).attr("transform", "translate(" + (offset + textLength) + ",0)").style("cursor", "pointer");
+      group.append("circle").classed("circle", true).attr("r", radius).attr("cx", halfRadius).attr("cy", halfRadius).style("fill", "transparent").style("stroke", "black").style("stroke-width", 2);
+      group.append("text").text("TXT").attr("x", halfRadius).attr("y", halfRadius + 4).style("text-anchor", "middle");
+      group.on("click", function() {
+        console.log("export to text file");
+        return true;
+      }).on("mouseenter", function() {
+        d3.select(this).select("circle").style("fill", "lightgray");
+        return true;
+      }).on("mouseleave", function() {
+        d3.select(this).select("circle").style("fill", "transparent");
+        return true;
+      });
+      group = this.svg.append("g").classed("ioButton stop", true).attr("transform", "translate(" + (offset + textLength + 2 * radius + 10) + ",0)").style("cursor", "pointer");
+      group.append("circle").classed("circle", true).attr("r", radius).attr("cx", halfRadius).attr("cy", halfRadius).style("fill", "transparent").style("stroke", "black").style("stroke-width", 2);
+      group.append("text").text("JSON").attr("x", halfRadius).attr("y", halfRadius + 4).style("text-anchor", "middle");
+      group.on("click", function() {
+        console.log("export to json");
+        return true;
+      }).on("mouseenter", function() {
+        d3.select(this).select("circle").style("fill", "lightgray");
+        return true;
+      }).on("mouseleave", function() {
+        d3.select(this).select("circle").style("fill", "transparent");
+        return true;
+      });
+      offset += 4 * radius + textLength + 50;
+      textLength = 120;
+      this.svg.append("text").text("Import from:").attr("x", offset).attr("y", radius - 8);
+      group = this.svg.append("g").classed("ioButton export", true).attr("transform", "translate(" + (offset + textLength) + ",0)").style("cursor", "pointer");
+      group.append("circle").classed("circle", true).attr("r", radius).attr("cx", halfRadius).attr("cy", halfRadius).style("fill", "transparent").style("stroke", "black").style("stroke-width", 2);
+      group.append("text").text("TXT").attr("x", halfRadius).attr("y", halfRadius + 4).style("text-anchor", "middle");
+      group.on("click", function() {
+        console.log("import from text file");
+        return true;
+      }).on("mouseenter", function() {
+        d3.select(this).select("circle").style("fill", "lightgray");
+        return true;
+      }).on("mouseleave", function() {
+        d3.select(this).select("circle").style("fill", "transparent");
+        return true;
+      });
+      group = this.svg.append("g").classed("ioButton stop", true).attr("transform", "translate(" + (offset + textLength + 2 * radius + 10) + ",0)").style("cursor", "pointer");
+      group.append("circle").classed("circle", true).attr("r", radius).attr("cx", halfRadius).attr("cy", halfRadius).style("fill", "transparent").style("stroke", "black").style("stroke-width", 2);
+      group.append("text").text("JSON").attr("x", halfRadius).attr("y", halfRadius + 4).style("text-anchor", "middle");
+      group.on("click", function() {
+        console.log("import from json");
+        return true;
+      }).on("mouseenter", function() {
+        d3.select(this).select("circle").style("fill", "lightgray");
+        return true;
+      }).on("mouseleave", function() {
+        d3.select(this).select("circle").style("fill", "transparent");
+        return true;
+      });
       return this;
     };
 
-    return PartUsedInstruments;
+    PartIO.prototype["import"] = function() {};
+
+    PartIO.prototype["export"] = function() {};
+
+    return PartIO;
 
   })(DM.Part);
 
@@ -605,13 +719,16 @@
     }
 
     PartMeasures.prototype.draw = function() {
-      var drumMachine, j, len, measure, ref;
+      var drumMachine, index, info, j, len, measure, ref, x, y;
       drumMachine = this.drumMachine;
       this.svg = this.makeContainer(260, 70);
+      x = 0;
+      y = 0;
       ref = drumMachine.measures;
-      for (j = 0, len = ref.length; j < len; j++) {
-        measure = ref[j];
-        measure.draw(this.svg);
+      for (index = j = 0, len = ref.length; j < len; index = ++j) {
+        measure = ref[index];
+        info = measure.draw(this.svg, x, y, index === 0);
+        y = info.height + 20;
       }
       return this;
     };
@@ -745,24 +862,34 @@
     };
 
     function DrumMachine(container, loader) {
+      var jContainer, self;
       if (container instanceof jQuery) {
         container = container[0];
       }
       this.container = d3.select(container);
       this.loader = loader;
-      this.measureIdx = 0;
+      this.measureIndex = 0;
       this.noteIdx = 0;
       this.position = 0;
       this.interval = null;
-      this.popup = null;
       this.svg = this.container.append("svg").attr("xmlns", "http://www.w3.org/2000/svg").attr("class", "drumMachine").attr("width", 1000).attr("height", 1000);
+      self = this;
+      jContainer = $(this.container[0][0]);
+      this.popup = $("<div class=\"popup\">\n    <div class=\"overlay\" />\n    <div class=\"content\" />\n</div>");
+      this.popup.find(".overlay").click(function() {
+        self.hidePopup();
+        return true;
+      });
+      jContainer.append(this.popup);
       this.parts = {
         instruments: DM.Part["new"]("Instruments", this, this.svg),
         playButtons: DM.Part["new"]("PlayButtons", this, this.svg),
-        measures: DM.Part["new"]("Measures", this, this.svg)
+        measures: DM.Part["new"]("Measures", this, this.svg),
+        io: DM.Part["new"]("IO", this, this.svg)
       };
       this.measures = [];
       this.measures.push(new DM.Measure(this, [4, 4], 8, 120));
+      this.measures.push(new DM.Measure(this, [3, 4], 8, 120));
       console.log(this);
     }
 
@@ -800,12 +927,17 @@
       return this;
     };
 
-    DrumMachine.prototype.showPopup = function() {
+    DrumMachine.prototype.showPopup = function(onClose) {
       this.popup.fadeIn(200);
+      this.popup.onClose = onClose;
       return this;
     };
 
     DrumMachine.prototype.hidePopup = function() {
+      var base;
+      if ((typeof (base = this.popup).onClose === "function" ? base.onClose() : void 0) === false) {
+        return this;
+      }
       this.popup.fadeOut(200);
       return this;
     };
@@ -894,64 +1026,53 @@
       return this;
     };
 
-    DrumMachine.prototype.getCurrentMeasure = function() {
-      return this.measures[this.measureIdx];
-    };
-
-    DrumMachine.prototype.nextMeasure = function() {
-      var ref;
-      if ((0 <= (ref = this.measureIdx) && ref < this.measures.length - 1)) {
-        this.measureIdx++;
-      } else {
-        this.measureIdx = 0;
-      }
-      return this;
-    };
-
-    DrumMachine.prototype.getIntervalDelay = function(measure) {
-      if (measure == null) {
-        measure = this.getCurrentMeasure();
-      }
-      return measure.getIntervalDelay();
-    };
-
     DrumMachine.prototype.startPlaying = function() {
-      var colDiv, currentColumn, currentMeasure, playColumn, prevDiv;
-      currentMeasure = this.getCurrentMeasure();
-      currentColumn = currentMeasure.getCurrentColumn();
-      colDiv = currentMeasure.getCurrentColumnDiv();
-      prevDiv = colDiv.prev();
-      playColumn = (function(_this) {
-        return function() {
-          var instrument, j, len;
-          if (prevDiv != null) {
-            prevDiv.removeClass("current");
+      var currentMeasure, delay, playColumn, resetInterval, self;
+      self = this;
+      currentMeasure = this.measures[this.measureIndex];
+      resetInterval = false;
+      delay = currentMeasure.getDelay();
+      playColumn = function() {
+        var data, instrumentName, noteIndex, ref;
+        if (resetInterval === true) {
+          delay = currentMeasure.getDelay();
+          window.clearInterval(self.interval);
+          self.interval = window.setInterval(playColumn, delay);
+          resetInterval = false;
+        }
+        noteIndex = currentMeasure.noteIndex;
+        ref = currentMeasure.data;
+        for (instrumentName in ref) {
+          data = ref[instrumentName];
+          if (data[noteIndex] === true) {
+            dm.loader.drumkits["rock-drumkit"].play(instrumentName);
           }
-          colDiv.addClass("current");
-          for (j = 0, len = currentColumn.length; j < len; j++) {
-            instrument = currentColumn[j];
-            instrument.getSound().play();
-          }
-          currentColumn = currentMeasure.getNextColumn();
-          prevDiv = colDiv;
-          if (currentColumn == null) {
-            currentMeasure = _this.nextMeasure().getCurrentMeasure().resetPosition();
-            currentColumn = currentMeasure.getCurrentColumn();
-            colDiv = currentMeasure.getColumnDivs().eq(0);
-            window.clearInterval(_this.interval);
-            _this.interval = window.setInterval(playColumn, _this.getIntervalDelay(currentMeasure));
+        }
+        if (noteIndex === currentMeasure.dataLength - 1) {
+          currentMeasure.noteIndex = 0;
+          currentMeasure.removeDot();
+          if (self.measureIndex < self.measures.length - 1) {
+            self.measureIndex++;
           } else {
-            colDiv = colDiv.next();
+            self.measureIndex = 0;
           }
-          return true;
-        };
-      })(this);
-      return this.interval = window.setInterval(playColumn, this.getIntervalDelay(currentMeasure));
+          currentMeasure = self.measures[self.measureIndex];
+          currentMeasure.appendDot();
+          resetInterval = true;
+        } else {
+          currentMeasure.noteIndex++;
+          currentMeasure.moveDot(delay / 4);
+        }
+        return true;
+      };
+      this.interval = window.setInterval(playColumn, delay);
+      return this;
     };
 
     DrumMachine.prototype.pause = function() {
       window.clearInterval(this.interval);
-      return this.interval = null;
+      this.interval = null;
+      return this;
     };
 
     DrumMachine.prototype.stop = function() {
@@ -960,36 +1081,14 @@
       ref = this.measures;
       for (j = 0, len = ref.length; j < len; j++) {
         measure = ref[j];
-        measure.resetPosition();
+        measure.noteIndex = 0;
       }
-      this.measureIdx = 0;
-      return this.removeCurrentColumnIndicator();
+      this.measureIndex = 0;
+      return this;
     };
 
     DrumMachine.prototype.isPlaying = function() {
       return this.interval != null;
-    };
-
-    DrumMachine.prototype.removeCurrentColumnIndicator = function() {
-      $(".column.current").removeClass("current");
-      return this;
-    };
-
-    DrumMachine.prototype.getDrumkits = function() {
-      return this.drumkits;
-    };
-
-    DrumMachine.prototype.getInstruments = function() {
-      return this.instruments;
-    };
-
-    DrumMachine.prototype.getMeasures = function() {
-      return this.measures;
-    };
-
-    DrumMachine.prototype.setPopup = function(div) {
-      this.popup = div;
-      return this;
     };
 
     return DrumMachine;

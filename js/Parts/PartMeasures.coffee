@@ -9,28 +9,16 @@ class DM.PartMeasures extends DM.Part
     #         return @
 
     draw: () ->
-        # div            = @container.find(".#{@_id}")
-        # firstDraw    = div.length is 0
-        drumMachine     = @drumMachine
-        @svg            = @makeContainer(260, 70)
+        drumMachine = @drumMachine
+        @svg        = @makeContainer(260, 70)
 
-        for measure in drumMachine.measures
-            measure.draw(@svg)
+        x = 0
+        y = 0
 
-        # if firstDraw
-        #     div = @makeContainer()
-        #
-        # div.empty()
+        for measure, index in drumMachine.measures
+            info = measure.draw(@svg, x, y, index is 0)
+            y = info.height + 20
 
-        # idx = 0
-        # for measure in drumMachine.getMeasures()
-        #     mDiv = measure.draw().getDiv()
-        #
-        #     mDiv.find(".column").each () ->
-        #         $(@).attr("data-absidx", idx++)
-        #
-        #     div.append mDiv
-        #
         # # draw "add measure" button
         # addMeasureBtn = $ "<button class='addMeasure'>add meausure</button>"
         # addMeasureBtn.click () ->
