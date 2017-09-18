@@ -1,6 +1,9 @@
 Drum Machine
 ============
 
+## See `refurbishment` branch for latest changes.
+
+
 A simple drum machine for the web.
 
 See demo at http://jneuendorf.github.io/drum_machine/
