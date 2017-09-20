@@ -88,7 +88,11 @@ const tab = function(state=initialTab, action) {
     switch (action.type) {
         case ActionTypes.ADD_MEASURE:
         case ActionTypes.ADD_CLONED_MEASURE:
-            return measures(state, action)
+        case ActionTypes.TOGGLE_NOTE:
+        case ActionTypes.SET_VOLUME:
+            return Object.assign({}, state, {
+                measures: measures(state.measures, action)
+            })
         default:
             return state
     }
@@ -99,23 +103,58 @@ const tab = function(state=initialTab, action) {
 const measures = function(state=[], action) {
     switch (action.type) {
         case ActionTypes.ADD_MEASURE: {
-            return Object.assign({}, state, {
-                measures: [
-                    ...state.measures,
-                    action.measure
-                ]
-            })
+            return [
+                ...state,
+                action.measure
+            ]
         }
         case ActionTypes.ADD_CLONED_MEASURE: {
             const {drumkit} = action
-            const lastMeasure = last(state.measures)
+            const lastMeasure = last(state)
             const clonedMeasure = lastMeasure ? cloneDeep(lastMeasure) : createDefaultMeasure(drumkit)
-            return Object.assign({}, state, {
-                measures: [
-                    ...state.measures,
-                    clonedMeasure
-                ]
+            return [
+                ...state,
+                clonedMeasure
+            ]
+        }
+        case ActionTypes.TOGGLE_NOTE: {
+            const {measureIndex, instrument, noteIndex} = action
+            const measure = state[measureIndex]
+            const {notes} = measure
+            const newMeasure = Object.assign({}, measure, {
+                notes: {
+                    ...notes,
+                    [instrument]: notes[instrument].map((volume, index) => {
+                        if (index !== noteIndex) {
+                            return volume
+                        }
+                        // toggle between 0 and 1
+                        return volume^1
+                    })
+                }
             })
+            return state.slice(0, measureIndex)
+                .concat([newMeasure])
+                .concat(state.slice(measureIndex + 1))
+        }
+        case ActionTypes.SET_VOLUME: {
+            const {measureIndex, instrument, noteIndex, volume: newVolume} = action
+            const measure = state[measureIndex]
+            const {notes} = measure
+            const newMeasure = Object.assign({}, measure, {
+                notes: {
+                    ...notes,
+                    [instrument]: notes[instrument].map((volume, index) => {
+                        if (index !== noteIndex) {
+                            return volume
+                        }
+                        return newVolume
+                    })
+                }
+            })
+            return state.slice(0, measureIndex)
+                .concat([newMeasure])
+                .concat(state.slice(measureIndex + 1))
         }
         default:
             return state
@@ -125,7 +164,6 @@ const measures = function(state=[], action) {
 const createMeasure = function(numberOfBeats, noteValue, drumkit) {
     const notesByInstrument = {}
     // TODO: use drumkit of previous measure for convenience
-    // const drumkit = null
     const measure = {
         numberOfBeats,
         noteValue,
@@ -137,7 +175,7 @@ const createMeasure = function(numberOfBeats, noteValue, drumkit) {
         notesByInstrument[instrument] = filledArray(
             // 4/4 => 8, 6/8 => 12, 3/4 => 6
             numberOfBeats * 2,
-            null
+            0
         )
     }
     return measure
@@ -161,7 +199,36 @@ const initialMenu = [
                 ],
             },
         ]
-    }
+    },
+    {
+        label: 'Sound Controls',
+        children: [
+            {
+                label: 'Play',
+                showLabel: false,
+                isActive: false,
+                childComponents: [
+                    'PlayButton'
+                ],
+            },
+            {
+                label: 'Pause',
+                showLabel: false,
+                isActive: false,
+                childComponents: [
+                    'PauseButton'
+                ],
+            },
+            {
+                label: 'Stop',
+                showLabel: false,
+                isActive: false,
+                childComponents: [
+                    'StopButton'
+                ],
+            },
+        ]
+    },
 ]
 const menu = function(state=initialMenu, action) {
     switch (action.type) {

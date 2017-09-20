@@ -5,6 +5,7 @@ export class MenuItem extends React.Component {
     render() {
         const {
             isActive,
+            showLabel=true,
             label,
             children,
             selectMenuItem
@@ -12,7 +13,7 @@ export class MenuItem extends React.Component {
         return (
             <li>
                 <a className={isActive ? 'is-active' : ''} onClick={selectMenuItem}>
-                    {label}
+                    {showLabel ? label : null}
                     {children}
                 </a>
             </li>

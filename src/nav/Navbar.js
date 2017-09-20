@@ -1,51 +1,24 @@
 import React from 'react'
 
 import Dropdown from './Dropdown'
-import {defaultConnect, filledArray} from "../utils"
+import {defaultConnect} from "../utils"
 
 
 class Navbar extends React.Component {
     render() {
-        console.log(this.props)
-        const {actions, tab} = this.props
-
-        const addMeasure = function(numberOfBeats, noteValue) {
-            const notesByInstrument = {}
-            // TODO: use drumkit of previous measure for convenience
-            const drumkit = null
-            const measure = {
-                numberOfBeats,
-                noteValue,
-                drumkit,
-                notes: notesByInstrument,
-            }
-            const instruments = tab[drumkit]
-            for (const instrument in instruments) {
-                notesByInstrument[instrument] = filledArray(
-                    // 4/4 => 8, 6/8 => 12, 3/4 => 6
-                    numberOfBeats * 2,
-                    null
-                )
-            }
-            return actions.addMeasure(measure)
-        }
         return (
-            <nav className="navbar is-transparent">
+            <nav className="navbar is-transparent has-border-bottom">
                 <div className="navbar-brand">
-                        {/* <a className="navbar-item" href="http://bulma.io">
-                            <img src="images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/>
-                        </a> */}
                     <div className="navbar-item">
-                        DrumMachine
+                        <h1 className="title is-5">DrumMachine</h1>
                     </div>
                 </div>
 
                 <div className="navbar-menu">
                     <div className="navbar-start">
-                        <Dropdown label="Tab" items={[
+                        {/* <Dropdown label="Tab" items={[
                             {
                                 label: "Add measure 4/4",
-                                onClick: () => addMeasure(4, 4),
                             },
                             {
                                 label: "Add measure x/y",
@@ -53,24 +26,11 @@ class Navbar extends React.Component {
                             "divider",
                             {
                                 label: "Pick a drumset",
-                                onClick: () => {
-                                    if (drumkit.isLoaded) {
-
-                                    }
-                                    else {
-                                        actions.loadDrumkit(drumkit)
-                                    }
-                                    // TODO: show modal which sets instruments on click
-                                    // const drumkit = new Howl({
-                                    //     src: ['path1'],
-                                    //     onload: () => {},
-                                    // })
-                                }
                             },
                             "divider",
                             {label: "Export"},
                             {label: "Import"},
-                        ]} />
+                        ]} /> */}
                         <Dropdown label="Docs" items={[
                             {
                                 label: "Overview",

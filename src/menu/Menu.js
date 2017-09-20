@@ -39,7 +39,6 @@ class Menu extends React.Component {
                     }
                     const children = (item.childComponents || []).map(componentName =>
                         this[`get${componentName}`](props, componentName)
-                        // <Component {...props} />
                     )
                     return (
                         <MenuItem {...props} key={label}>
@@ -54,6 +53,39 @@ class Menu extends React.Component {
     // component getters
     getDrumkitManagementModal(props, componentName) {
         return <DrumkitManagementModal {...props} key={componentName} />
+    }
+
+    getPlayButton(props, componentName) {
+        return (
+            <span key={componentName}>
+                <span>Play</span>
+                <span className="icon">
+                    <i className="fa fa-play-circle" />
+                </span>
+            </span>
+        )
+    }
+
+    getPauseButton(props, componentName) {
+        return (
+            <span key={componentName}>
+                <span>Pause</span>
+                <span className="icon">
+                    <i className="fa fa-pause-circle" />
+                </span>
+            </span>
+        )
+    }
+
+    getStopButton(props, componentName) {
+        return (
+            <span key={componentName}>
+                <span>Stop</span>
+                <span className="icon">
+                    <i className="fa fa-stop-circle" />
+                </span>
+            </span>
+        )
     }
 }
 

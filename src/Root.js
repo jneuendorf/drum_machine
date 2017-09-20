@@ -10,11 +10,11 @@ export class Root extends React.Component {
         return (
             <div className="container">
                 <Navbar />
-                <div className="columns">
+                <div className="columns main">
                     <div className="column is-one-quarter">
                         <Menu />
                     </div>
-                    <div className="column" style={{borderLeft: '1px solid gray'}}>
+                    <div className="column has-border-left measures-container">
                         <h5 className="is-size-5 is-uppercase has-text-weight-light">Measures</h5>
                         <Measures />
                     </div>

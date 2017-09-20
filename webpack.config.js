@@ -11,7 +11,7 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
     entry: {
-        "main.js": "./js/main.js",
+        "main.js": "./src/main.js",
         "style.css": "./style/main.sass"
     },
     output: {
