@@ -1,6 +1,7 @@
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {Howl} from 'howler'
+import {fromJS} from 'immutable'
 
 import * as Actions from '../Actions'
 
@@ -24,6 +25,16 @@ export const defaultConnect = function(component, storeKey) {
 }
 
 
+export const mergeDeep = function(...args) {
+    const [first, ...rest] = args
+    return fromJS(first).mergeDeep(...rest).toJS()
+}
+
+export const cloneDeep = function(arg) {
+    return mergeDeep(arg instanceof Array ? [] : {}, arg)
+}
+
+
 export const filledArray = function(length, value) {
     return (new Array(length)).fill(value)
 }
@@ -36,6 +47,10 @@ export const chunkArray = function(array, chunkSize=1) {
         chunks.push(array.splice(0, chunkSize))
     }
     return chunks
+}
+
+export const last = function(array) {
+    return array[array.length - 1]
 }
 
 
@@ -53,6 +68,7 @@ export const defineDrumkit = function(name, sourceFiles, spriteData, options={})
             src: sourceFiles,
             sprite: sprite,
         }),
+        name,
         // same as howl.state() but this prop is changed by actions
         loadingState: "unloaded",
         instruments: formatInstruments(Object.keys(sprite)),

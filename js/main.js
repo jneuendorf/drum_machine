@@ -6,9 +6,6 @@ import Root from "./Root"
 import store from "./store"
 
 
-import {addMeasure} from "./Actions"
-store.dispatch(addMeasure({a:1}))
-
 ReactDOM.render(
     <Provider store={store}>
         <Root />

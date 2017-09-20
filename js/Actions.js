@@ -4,6 +4,7 @@ import Enum from "./utils/Enum"
 // action type
 export const ActionTypes = Enum([
     'ADD_MEASURE',
+    'ADD_CLONED_MEASURE',
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
     'SELECT_MENU_ITEM',
@@ -14,6 +15,11 @@ export const ActionTypes = Enum([
 export const addMeasure = (measure) => ({
     type: ActionTypes.ADD_MEASURE,
     measure,
+})
+
+export const addClonedMeasure = (drumkit) => ({
+    type: ActionTypes.ADD_CLONED_MEASURE,
+    drumkit,
 })
 
 export const loadDrumkit = function(drumkitName, howl) {

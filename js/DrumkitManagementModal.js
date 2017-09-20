@@ -11,7 +11,7 @@ class DrumkitManagementModal extends React.Component {
             // from store indirectly
             deselectMenuItem,
             // from store directly
-            tab: {drumkits},
+            drumkits,
             actions: {loadDrumkit, },
         } = this.props
         const buttonPropsByLoadingState = {
@@ -64,7 +64,6 @@ class DrumkitManagementModal extends React.Component {
                                     const formattedInstruments = chunkArray(instruments, 5).map((chunk, index) =>
                                         <p key={index}>{chunk.join(', ')}</p>
                                     )
-                                    console.log(formattedInstruments);
                                     return (
                                         <tr key={name}>
                                             <td>
