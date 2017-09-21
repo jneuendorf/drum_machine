@@ -28,6 +28,15 @@ class Measures extends React.Component {
                     </span>
                     <span>Add measure</span>
                 </button>
+                <button
+                    className="button is-small add-measure"
+                    onClick={() => addMeasure(drumkit)}
+                >
+                    <span className="icon is-small">
+                        <i className="fa fa-plus" />
+                    </span>
+                    <span>Add different measure</span>
+                </button>
             </div>
         )
     }

@@ -3,6 +3,7 @@ import React from 'react'
 import {defaultConnect} from '../utils'
 import MenuItem from './MenuItem'
 import DrumkitManagementModal from '../DrumkitManagementModal'
+import PlayButton from './PlayButton'
 
 
 class Menu extends React.Component {
@@ -37,9 +38,16 @@ class Menu extends React.Component {
                             selectMenuItem(null)
                         },
                     }
-                    const children = (item.childComponents || []).map(componentName =>
-                        this[`get${componentName}`](props, componentName)
-                    )
+                    const children = (item.childComponents || []).map(componentName => {
+                        // let itemProps = props
+                        // if (this[`get${componentName}Props`]) {
+                        //     itemProps = Object.assign({}, itemProps, this[`get${componentName}Props`]())
+                        // }
+                        return this[`get${componentName}`](
+                            props,
+                            componentName
+                        )
+                    })
                     return (
                         <MenuItem {...props} key={label}>
                             {children}
@@ -56,14 +64,7 @@ class Menu extends React.Component {
     }
 
     getPlayButton(props, componentName) {
-        return (
-            <span key={componentName}>
-                <span>Play</span>
-                <span className="icon">
-                    <i className="fa fa-play-circle" />
-                </span>
-            </span>
-        )
+        return <PlayButton {...props} key={componentName} />
     }
 
     getPauseButton(props, componentName) {
