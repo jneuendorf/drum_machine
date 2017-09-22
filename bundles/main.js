@@ -37907,12 +37907,7 @@ var _drumkits2 = _interopRequireDefault(_drumkits);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import ui from './ui'
-
-
-// import menu from './menu'
 exports.default = (0, _redux.combineReducers)({
-    // menu,
     tab: _tab2.default,
     drumkits: _drumkits2.default,
     ui: _reduxUi.reducer
