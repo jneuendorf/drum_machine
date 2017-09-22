@@ -1,35 +1,39 @@
 import React from 'react'
+import ui from 'redux-ui'
 
-import {defaultConnect, chunkArray} from "./utils"
+import {defaultConnect, chunkArray} from "../utils"
 
 
+const buttonPropsByLoadingState = {
+    unloaded: {
+        className: 'button is-primary',
+        disabled: false,
+        // Callback is set below.
+        // onClick: () => loadDrumkit(name, howl),
+    },
+    loading: {
+        className: 'button is-primary is-loading',
+        disabled: false,
+    },
+    loaded: {
+        className: 'button is-primary',
+        disabled: true,
+    },
+}
+
+
+// inherits ui context from Menu because it's rendered by Menu.
+@ui()
 class DrumkitManagementModal extends React.Component {
     render() {
         const {
-            // direct
-            isActive,
-            // from store indirectly
-            deselectMenuItem,
+            ui,
+            updateUI,
             // from store directly
             drumkits,
             actions: {loadDrumkit, },
         } = this.props
-        const buttonPropsByLoadingState = {
-            unloaded: {
-                className: 'button is-primary',
-                disabled: false,
-                // Callback is set below.
-                // onClick: () => loadDrumkit(name, howl),
-            },
-            loading: {
-                className: 'button is-primary is-loading',
-                disabled: false,
-            },
-            loaded: {
-                className: 'button is-primary',
-                disabled: true,
-            },
-        }
+        const isActive = ui.activeItem === 'Manage Drumkits'
         const buttonContentByLoadingState = {
             unloaded: 'Fetch',
             loading: 'Loading',
@@ -45,7 +49,7 @@ class DrumkitManagementModal extends React.Component {
 
         const close = (event) => {
             event.stopPropagation()
-            deselectMenuItem()
+            updateUI('activeItem', null)
         }
         return (
             <div className={`modal ${isActive ? 'is-active' : ''}`}>

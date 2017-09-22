@@ -1,91 +1,48 @@
 import React from 'react'
+import ui from 'redux-ui'
 
 import {defaultConnect} from '../utils'
+import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
-import DrumkitManagementModal from '../DrumkitManagementModal'
-import PlayButton from './PlayButton'
+import DrumkitManagementModal from './DrumkitManagementModal'
 
 
+@ui({
+    state: {
+        activeItem: null,
+    },
+})
 class Menu extends React.Component {
     render() {
-        const {menu} = this.props
+        // const {menu} = this.props
+        console.log('menu props', this.props);
         return (
             <aside className="menu">
-                {menu.map(({label, children: list}) => (
-                    <span key={label}>
-                        <p className="menu-label">
-                            {label}
-                        </p>
-                        {this.renderList(list)}
-                    </span>
-                ))}
+                <MenuSection label="General">
+                    <MenuItem label="Manage Drumkits" />
+                </MenuSection>
+                <MenuSection label="Sound Controls">
+                    <MenuItem label="Play">
+                        <span>Play</span>
+                        <span className="icon">
+                            <i className="fa fa-play-circle" />
+                        </span>
+                    </MenuItem>
+                    <MenuItem label="Pause">
+                        <span>Pause</span>
+                        <span className="icon">
+                            <i className="fa fa-pause-circle" />
+                        </span>
+                    </MenuItem>
+                    <MenuItem label="Stop">
+                        <span>Stop</span>
+                        <span className="icon">
+                            <i className="fa fa-stop-circle" />
+                        </span>
+                    </MenuItem>
+                </MenuSection>
+                <DrumkitManagementModal />
             </aside>
-        )
-    }
-
-    renderList(list) {
-        const {actions: {selectMenuItem}} = this.props
-        return (
-            <ul className="menu-list">
-                {list.map(item => {
-                    const {label} = item
-                    const props = {
-                        ...item,
-                        selectMenuItem: function() {
-                            selectMenuItem(label)
-                        },
-                        deselectMenuItem: function() {
-                            selectMenuItem(null)
-                        },
-                    }
-                    const children = (item.childComponents || []).map(componentName => {
-                        // let itemProps = props
-                        // if (this[`get${componentName}Props`]) {
-                        //     itemProps = Object.assign({}, itemProps, this[`get${componentName}Props`]())
-                        // }
-                        return this[`get${componentName}`](
-                            props,
-                            componentName
-                        )
-                    })
-                    return (
-                        <MenuItem {...props} key={label}>
-                            {children}
-                        </MenuItem>
-                    )
-                })}
-            </ul>
-        )
-    }
-
-    // component getters
-    getDrumkitManagementModal(props, componentName) {
-        return <DrumkitManagementModal {...props} key={componentName} />
-    }
-
-    getPlayButton(props, componentName) {
-        return <PlayButton {...props} key={componentName} />
-    }
-
-    getPauseButton(props, componentName) {
-        return (
-            <span key={componentName}>
-                <span>Pause</span>
-                <span className="icon">
-                    <i className="fa fa-pause-circle" />
-                </span>
-            </span>
-        )
-    }
-
-    getStopButton(props, componentName) {
-        return (
-            <span key={componentName}>
-                <span>Stop</span>
-                <span className="icon">
-                    <i className="fa fa-stop-circle" />
-                </span>
-            </span>
         )
     }
 }

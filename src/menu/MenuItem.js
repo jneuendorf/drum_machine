@@ -1,20 +1,25 @@
 import React from 'react'
+import ui from 'redux-ui'
 
 
+// inherits ui context from Menu because it's rendered by Menu.
+@ui()
 export class MenuItem extends React.Component {
     render() {
         const {
-            isActive,
-            showLabel=true,
             label,
+            ui,
+            updateUI,
             children,
-            selectMenuItem
         } = this.props
+        const isActive = ui.activeItem === label
         return (
             <li>
-                <a className={isActive ? 'is-active' : ''} onClick={selectMenuItem}>
-                    {showLabel ? label : null}
-                    {children}
+                <a
+                    className={isActive ? 'is-active' : ''}
+                    onClick={() => updateUI('activeItem', label)}
+                >
+                    {children || label}
                 </a>
             </li>
         )
