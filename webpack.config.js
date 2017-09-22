@@ -50,7 +50,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['react', 'env', 'stage-0'],
-                        plugins: ['transform-runtime'],
+                        plugins: ['transform-runtime', 'transform-decorators-legacy'],
                         cacheDirectory: true,
                     },
                 },

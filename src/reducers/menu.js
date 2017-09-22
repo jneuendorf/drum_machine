@@ -10,7 +10,7 @@ const initialMenu = [
                 label: 'Manage Drumkits',
                 isActive: false,
                 childComponents: [
-                    'DrumkitManagementModal'
+                    'DrumkitManagementModal': {}
                 ],
             },
         ]
@@ -23,7 +23,7 @@ const initialMenu = [
                 showLabel: false,
                 isActive: false,
                 childComponents: [
-                    'PlayButton'
+                    'PlayButton': {}
                 ],
             },
             {
@@ -31,7 +31,7 @@ const initialMenu = [
                 showLabel: false,
                 isActive: false,
                 childComponents: [
-                    'PauseButton'
+                    'PauseButton': {}
                 ],
             },
             {
@@ -39,7 +39,7 @@ const initialMenu = [
                 showLabel: false,
                 isActive: false,
                 childComponents: [
-                    'StopButton'
+                    'StopButton': {}
                 ],
             },
         ]

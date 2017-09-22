@@ -6,6 +6,8 @@ import Root from "./Root"
 import store from "./store"
 
 
+console.log('initial state', store.getState())
+
 ReactDOM.render(
     <Provider store={store}>
         <Root />

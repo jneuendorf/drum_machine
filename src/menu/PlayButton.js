@@ -1,11 +1,17 @@
 import React from 'react'
+import ui from 'redux-ui'
 
 import {defaultConnect} from '../utils'
 
-
+@ui({
+    state: {
+        isPlaying: false
+    },
+})
 class PlayButton extends React.Component {
     render() {
         const {isActive} = this.props
+        console.log(this.props);
         if (isActive) {
             this.play()
         }
