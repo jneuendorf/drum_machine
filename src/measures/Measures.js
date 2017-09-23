@@ -1,12 +1,21 @@
 import React from 'react'
+// import ui from 'redux-ui'
 
 import Measure from './Measure'
 import {defaultConnect} from '../utils'
 
 
+// @ui({
+//     state: {
+//
+//     },
+// })
 class Measures extends React.Component {
     render() {
-        const {tab: {measures}, drumkits, actions: {addClonedMeasure}} = this.props
+        const {
+            tab: {measures}, drumkits,
+            actions: {addClonedMeasure, addMeasure}
+        } = this.props
         const lastMeasure = measures[measures.length - 1]
         const drumkitName = lastMeasure ? lastMeasure.drumkit : 'default'
         const drumkit = drumkits[drumkitName]
@@ -17,6 +26,7 @@ class Measures extends React.Component {
                         measure={measure}
                         index={index}
                         key={index}
+                        uiKey={`Measure${index}`}
                     />
                 )}
                 <button

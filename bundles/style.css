@@ -9867,6 +9867,7 @@ label.panel-block:hover {
 .measures .measure {
   padding-bottom: 10px;
   padding-top: 17px;
+  position: relative;
 }
 
 .measures .measure .columns {
