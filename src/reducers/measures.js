@@ -1,16 +1,14 @@
 import {initialDrumkits} from './drumkits'
 import {ActionTypes} from '../Actions'
 import {listReducer} from './ListReducer'
-import {cloneDeep, last, filledArray, arrayChangedSize} from '../utils'
+import {
+    getNumberOfNotes,
+    cloneDeep,
+    last,
+    filledArray,
+    arrayChangedSize
+} from '../utils'
 
-
-console.log("arrayChangedSize", arrayChangedSize([1,2,3], 12))
-console.log("arrayChangedSize", arrayChangedSize([1,2,3,4], 2))
-
-
-const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue) {
-    return numberOfBeats * (minNoteValue / noteValue)
-}
 
 const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, drumkit='default', bpm=120) {
     const notesByInstrument = {}

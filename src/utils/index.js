@@ -91,6 +91,17 @@ export const unique = function(iterable) {
 }
 
 
+export const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue) {
+    return numberOfBeats * (minNoteValue / noteValue)
+}
+
+export const getMsBetweenNotes = function(measure) {
+    const {noteValue, minNoteValue, bpm} = measure
+    // return ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    return (noteValue * 60000) / bpm / minNoteValue
+}
+
+
 export const defineDrumkit = function(name, sourceFiles, spriteData, options={}) {
     const sprite = {}
     let prevTime = 0
