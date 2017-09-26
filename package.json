@@ -19,7 +19,8 @@
         "machine",
         "audio",
         "tab",
-        "react"
+        "react",
+        "redux"
     ],
     "author": "Jim Neuendorf",
     "license": "MIT",
@@ -34,6 +35,7 @@
         "font-awesome": "^4.7.0",
         "howler": "^2.0.4",
         "immutable": "^3.8.1",
+        "jquery": "^3.2.1",
         "prop-types": "^15.5.10",
         "react": "^15.6.1",
         "react-dom": "^15.6.1",

@@ -18,9 +18,6 @@ class Menu extends React.Component {
         console.log('menu props', this.props);
         return (
             <aside className="menu">
-                <MenuSection label="General">
-                    <MenuItem label="Manage Drumkits" />
-                </MenuSection>
                 <MenuSection label="Sound Controls">
                     <MenuItem label="Play">
                         <span>Play</span>
@@ -40,6 +37,12 @@ class Menu extends React.Component {
                             <i className="fa fa-stop-circle" />
                         </span>
                     </MenuItem>
+                </MenuSection>
+                <MenuSection label="Notes">
+                    <MenuItem label="Add triplet" />
+                </MenuSection>
+                <MenuSection label="Drumkits">
+                    <MenuItem label="Manage Drumkits" />
                 </MenuSection>
                 <DrumkitManagementModal />
             </aside>

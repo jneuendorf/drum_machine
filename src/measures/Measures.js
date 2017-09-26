@@ -31,7 +31,7 @@ class Measures extends React.Component {
                 )}
                 <button
                     className="button is-primary is-small add-measure"
-                    onClick={() => addClonedMeasure(drumkit)}
+                    onClick={() => addClonedMeasure()}
                 >
                     <span className="icon is-small">
                         <i className="fa fa-plus" />

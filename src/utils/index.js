@@ -53,6 +53,39 @@ export const last = function(array) {
     return array[array.length - 1]
 }
 
+export const isInt = function(n) {
+    const x = parseFloat(n)
+    return !isNaN(n) && (x | 0) === x
+}
+
+// ...while keeping old values when extending.
+// Not in place.
+export const arrayChangedSize = function(array, newSize, nullValue=null) {
+    const length = array.length
+    if (newSize === length) {
+        return array
+    }
+
+    if (!isInt(Math.log2(length / newSize))) {
+        throw new Error('newSize must be a multiple of the array\'s size.')
+    }
+
+    if (newSize < length) {
+        const factor = length / newSize
+        return array.filter((item, index) => index % factor === 0)
+    }
+    else {
+        const factor = newSize / length
+        return array
+            // map to [item, null, null, null, ...] with length 'factor'
+            .map((item, index) =>
+                [item, ...filledArray(factor - 1, nullValue)]
+            )
+            // flatten
+            .reduce((acc, arr) => [...acc, ...arr])
+    }
+}
+
 
 export const defineDrumkit = function(name, sourceFiles, spriteData, options={}) {
     const sprite = {}

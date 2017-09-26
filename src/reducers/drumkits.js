@@ -2,7 +2,7 @@ import {ActionTypes} from '../Actions'
 import {defineDrumkit} from '../utils'
 
 
-const initialDrumkits = {
+export const initialDrumkits = {
     // drumkits.default.howl.play('Bass')
     default: defineDrumkit(
         'default',

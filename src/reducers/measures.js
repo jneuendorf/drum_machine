@@ -1,54 +1,53 @@
+import {initialDrumkits} from './drumkits'
 import {ActionTypes} from '../Actions'
-import {cloneDeep, last, filledArray} from '../utils'
+import {listReducer} from './ListReducer'
+import {cloneDeep, last, filledArray, arrayChangedSize} from '../utils'
 
 
-const createMeasure = function(numberOfBeats, noteValue, drumkit) {
+console.log("arrayChangedSize", arrayChangedSize([1,2,3], 12))
+console.log("arrayChangedSize", arrayChangedSize([1,2,3,4], 2))
+
+
+const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue) {
+    return numberOfBeats * (minNoteValue / noteValue)
+}
+
+const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, drumkit='default', bpm=120) {
     const notesByInstrument = {}
-    // TODO: use drumkit of previous measure for convenience
     const measure = {
         numberOfBeats,
         noteValue,
-        drumkit: drumkit.name,
+        minNoteValue,
+        drumkit,
         notes: notesByInstrument,
+        bpm,
     }
-    const {instruments} = drumkit
+    const {instruments} = initialDrumkits[drumkit]
+    const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
     for (const instrument of instruments) {
         notesByInstrument[instrument] = filledArray(
             // 4/4 => 8, 6/8 => 12, 3/4 => 6
-            numberOfBeats * 2,
+            numberOfNotes,
             0
         )
     }
     return measure
 }
 
-const createDefaultMeasure = function(drumkit) {
-    return createMeasure(4, 4, drumkit)
-}
-
-
-export const measures = function(state=[], action) {
+const measure = function(state, action, meta) {
     switch (action.type) {
-        case ActionTypes.ADD_MEASURE: {
-            return [
-                ...state,
-                action.measure
-            ]
-        }
+        case ActionTypes.ADD_MEASURE:
+            return action.measure
         case ActionTypes.ADD_CLONED_MEASURE: {
-            const {drumkit} = action
-            const lastMeasure = last(state)
-            const clonedMeasure = lastMeasure ? cloneDeep(lastMeasure) : createDefaultMeasure(drumkit)
-            return [
-                ...state,
-                clonedMeasure
-            ]
+            // const {drumkit} = action
+            // const lastMeasure = last(state)
+            const lastMeasure = last(meta.list)
+            return lastMeasure ? cloneDeep(lastMeasure) : createMeasure()
         }
         case ActionTypes.TOGGLE_NOTE: {
-            const {measureIndex, instrument, noteIndex} = action
-            const measure = state[measureIndex]
-            const {notes} = measure
-            const newMeasure = Object.assign({}, measure, {
+            const {instrument, noteIndex} = action
+            const {notes} = state
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
                     [instrument]: notes[instrument].map((volume, index) => {
@@ -60,15 +59,11 @@ export const measures = function(state=[], action) {
                     })
                 }
             })
-            return state.slice(0, measureIndex)
-                .concat([newMeasure])
-                .concat(state.slice(measureIndex + 1))
         }
         case ActionTypes.SET_VOLUME: {
-            const {measureIndex, instrument, noteIndex, volume: newVolume} = action
-            const measure = state[measureIndex]
-            const {notes} = measure
-            const newMeasure = Object.assign({}, measure, {
+            const {instrument, noteIndex, volume: newVolume} = action
+            const {notes} = state
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
                     [instrument]: notes[instrument].map((volume, index) => {
@@ -79,12 +74,44 @@ export const measures = function(state=[], action) {
                     })
                 }
             })
-            return state.slice(0, measureIndex)
-                .concat([newMeasure])
-                .concat(state.slice(measureIndex + 1))
+        }
+        case ActionTypes.SET_BPM: {
+            const {bpm} = action
+            return Object.assign({}, state, {bpm})
+        }
+        case ActionTypes.SET_NUMBER_OF_BEATS: {
+            const {numberOfBeats} = action
+            return Object.assign({}, state, {numberOfBeats})
+        }
+        case ActionTypes.SET_NOTE_VALUE: {
+            const {noteValue} = action
+            return Object.assign({}, state, {noteValue})
+        }
+        case ActionTypes.SET_MIN_NOTE_VALUE: {
+            const {minNoteValue} = action
+            const {numberOfBeats, noteValue, notes: oldNotes} = state
+            const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+            const notes = {}
+            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+                notes[instrument] = arrayChangedSize(instrumentNotes, numberOfNotes, 0)
+            }
+            return Object.assign({}, state, {minNoteValue, notes})
+        }
+        case ActionTypes.CLEAR_MEASURE: {
+            const {notes: oldNotes} = state
+            const notes = {}
+            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+                notes[instrument] = instrumentNotes.map(item => 0)
+            }
+            return Object.assign({}, state, {notes})
         }
         default:
+            console.warn('should not happen');
             return state
     }
 }
+
+
+const measures = listReducer(measure)
+
 export default measures

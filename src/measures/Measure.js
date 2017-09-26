@@ -3,6 +3,7 @@ import ui from 'redux-ui'
 
 import {defaultConnect} from '../utils'
 import Note from './Note'
+import MeasureSettings from './MeasureSettings'
 
 
 @ui({
@@ -14,7 +15,7 @@ import Note from './Note'
 class Measure extends React.Component {
     render() {
         const {
-            measure, index: measureIndex,
+            measure,
             drumkits,
             ui,
             updateUI,
@@ -34,10 +35,10 @@ class Measure extends React.Component {
                             <Note
                                 volume={volume}
                                 toggle={() =>
-                                    toggleNote(measureIndex, instrument, index)
+                                    toggleNote(measure, instrument, index)
                                 }
                                 setVolume={(newVolume) =>
-                                    setVolume(measureIndex, instrument, index, newVolume)
+                                    setVolume(measure, instrument, index, newVolume)
                                 }
                                 key={index}
                             />
@@ -55,7 +56,7 @@ class Measure extends React.Component {
                     onClick={() => updateUI('showSettings', !ui.showSettings)}
                 >
                     <span className="icon is-small">
-                        <i className="fa fa-cogs" />
+                        <i className={`fa ${ui.showSettings ? 'fa-close' : 'fa-cogs'}`} />
                     </span>
                 </a>
                 {ui.showSettings ? this.renderSettings() : null}
@@ -65,18 +66,7 @@ class Measure extends React.Component {
 
     renderSettings() {
         return (
-            <div
-                style={{
-                    backgroundColor: 'white',
-                    bottom: 0,
-                    position: 'absolute',
-                    left: 0,
-                    right: '36px',
-                    top: 0,
-                }}
-            >
-                Settings...
-            </div>
+            <MeasureSettings {...this.props} />
         )
     }
 }
