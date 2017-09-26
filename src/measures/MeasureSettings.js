@@ -2,7 +2,6 @@ import React from 'react'
 
 
 class MeasureSettings extends React.Component {
-
     render() {
         const {
             measure,
@@ -160,7 +159,6 @@ class MeasureSettings extends React.Component {
             </div>
         )
     }
-
 }
 
 export default MeasureSettings

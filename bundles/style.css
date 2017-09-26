@@ -9843,6 +9843,10 @@ label.panel-block:hover {
   position: relative;
 }
 
+.menu .menu-list li a.has-error {
+  color: #ff3860;
+}
+
 .menu .menu-list li a .icon {
   position: absolute;
   right: 10px;

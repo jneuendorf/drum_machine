@@ -4,6 +4,7 @@ import ui from 'redux-ui'
 import {defaultConnect} from '../utils'
 import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
+import MenuItemPlay from './MenuItemPlay'
 import DrumkitManagementModal from './DrumkitManagementModal'
 
 
@@ -14,17 +15,12 @@ import DrumkitManagementModal from './DrumkitManagementModal'
 })
 class Menu extends React.Component {
     render() {
-        // const {menu} = this.props
-        console.log('menu props', this.props);
+        const {tab: {measures}, drumkits} = this.props
+        // console.log('menu props', this.props);
         return (
             <aside className="menu">
                 <MenuSection label="Sound Controls">
-                    <MenuItem label="Play">
-                        <span>Play</span>
-                        <span className="icon">
-                            <i className="fa fa-play-circle" />
-                        </span>
-                    </MenuItem>
+                    <MenuItemPlay measures={measures} drumkits={drumkits} />
                     <MenuItem label="Pause">
                         <span>Pause</span>
                         <span className="icon">

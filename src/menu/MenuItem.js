@@ -6,23 +6,42 @@ import ui from 'redux-ui'
 @ui()
 export class MenuItem extends React.Component {
     render() {
-        const {
+        let {
             label,
             ui,
-            updateUI,
             children,
+            className='',
+            title,
         } = this.props
         const isActive = ui.activeItem === label
+        if (isActive) {
+            className += ' is-active'
+        }
         return (
             <li>
                 <a
-                    className={isActive ? 'is-active' : ''}
-                    onClick={() => updateUI('activeItem', label)}
+                    className={className}
+                    title={title}
+                    onClick={() => this.handleOnClick()}
                 >
                     {children || label}
                 </a>
             </li>
         )
+    }
+
+    handleOnClick() {
+        const {
+            label,
+            onClick,
+            updateUI,
+        } = this.props
+        if (typeof(onClick) === 'function') {
+            onClick()
+        }
+        else {
+            updateUI('activeItem', label)
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {Howl} from 'howler'
-import {fromJS} from 'immutable'
+import {fromJS, Set} from 'immutable'
 
 import * as Actions from '../Actions'
 
@@ -84,6 +84,10 @@ export const arrayChangedSize = function(array, newSize, nullValue=null) {
             // flatten
             .reduce((acc, arr) => [...acc, ...arr])
     }
+}
+
+export const unique = function(iterable) {
+    return Set(iterable).toArray()
 }
 
 
