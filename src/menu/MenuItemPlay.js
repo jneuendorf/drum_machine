@@ -121,7 +121,7 @@ class MenuItemPlay extends React.Component {
                     }
                     else {
                         clock.reset()
-                        clocks[index + 1 % clocks.length].start()
+                        clocks[(index + 1) % clocks.length].start()
                         console.log(`stopped playing measure #${index}`, clocks[index + 1 % clocks.length] === clock)
                     }
                 },

@@ -12,14 +12,6 @@ import {
 
 const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, drumkit='default', bpm=120) {
     const notesByInstrument = {}
-    const measure = {
-        numberOfBeats,
-        noteValue,
-        minNoteValue,
-        drumkit,
-        notes: notesByInstrument,
-        bpm,
-    }
     const {instruments} = initialDrumkits[drumkit]
     const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
     for (const instrument of instruments) {
@@ -29,7 +21,14 @@ const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, dru
             0
         )
     }
-    return measure
+    return {
+        numberOfBeats,
+        noteValue,
+        minNoteValue,
+        drumkit,
+        notes: notesByInstrument,
+        bpm,
+    }
 }
 
 const measure = function(state, action, meta) {

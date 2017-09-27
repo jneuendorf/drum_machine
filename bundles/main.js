@@ -2270,25 +2270,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.defineDrumkit = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.unique = exports.arrayChangedSize = exports.isInt = exports.last = exports.chunkArray = exports.filledArray = exports.cloneDeep = exports.mergeDeep = exports.defaultConnect = undefined;
 
-var _entries = __webpack_require__(52);
-
-var _entries2 = _interopRequireDefault(_entries);
-
-var _getIterator2 = __webpack_require__(53);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _keys = __webpack_require__(356);
-
-var _keys2 = _interopRequireDefault(_keys);
-
 var _extends2 = __webpack_require__(51);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _slicedToArray2 = __webpack_require__(54);
+var _keys = __webpack_require__(356);
 
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+var _keys2 = _interopRequireDefault(_keys);
 
 var _log = __webpack_require__(362);
 
@@ -2421,42 +2409,10 @@ var getMsBetweenNotes = exports.getMsBetweenNotes = function getMsBetweenNotes(m
     return noteValue * 60000 / bpm / minNoteValue;
 };
 
-var defineDrumkit = exports.defineDrumkit = function defineDrumkit(name, sourceFiles, spriteData) {
+var defineDrumkit = exports.defineDrumkit = function defineDrumkit(name, sourceFiles, sprite) {
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-    var sprite = {};
-    var prevTime = 0;
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = (0, _getIterator3.default)((0, _entries2.default)(spriteData)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _ref = _step.value;
-
-            var _ref2 = (0, _slicedToArray3.default)(_ref, 2);
-
-            var _name = _ref2[0];
-            var endTime = _ref2[1];
-
-            sprite[_name] = [prevTime, endTime];
-            prevTime = endTime;
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
+    var instruments = (0, _keys2.default)(sprite);
     return {
         howl: new _howler.Howl((0, _extends3.default)({
             preload: false
@@ -2465,9 +2421,10 @@ var defineDrumkit = exports.defineDrumkit = function defineDrumkit(name, sourceF
             sprite: sprite
         })),
         name: name,
+        instruments: instruments,
         // same as howl.state() but this prop is changed by actions
         loadingState: "unloaded",
-        instruments: formatInstruments((0, _keys2.default)(sprite))
+        formattedInstruments: formatInstruments(instruments)
     };
 };
 
@@ -45410,7 +45367,7 @@ var MenuItemPlay = (_dec = (0, _reduxUi2.default)({
                             }
                         } else {
                             clock.reset();
-                            clocks[index + 1 % clocks.length].start();
+                            clocks[(index + 1) % clocks.length].start();
                             console.log('stopped playing measure #' + index, clocks[index + 1 % clocks.length] === clock);
                         }
                     }
@@ -46328,7 +46285,7 @@ var Note = exports.Note = function (_React$Component) {
                     {
                         className: 'note',
                         style: style,
-                        onDoubleClick: toggle,
+                        onClick: toggle,
                         onMouseMove: function onMouseMove(event) {
                             if (event.shiftKey) {
                                 // using jquery to also work if parents are positioned absolutely/relatively
@@ -57148,14 +57105,6 @@ var createMeasure = function createMeasure() {
     var bpm = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 120;
 
     var notesByInstrument = {};
-    var measure = {
-        numberOfBeats: numberOfBeats,
-        noteValue: noteValue,
-        minNoteValue: minNoteValue,
-        drumkit: drumkit,
-        notes: notesByInstrument,
-        bpm: bpm
-    };
     var instruments = _drumkits.initialDrumkits[drumkit].instruments;
 
     var numberOfNotes = (0, _utils.getNumberOfNotes)(numberOfBeats, noteValue, minNoteValue);
@@ -57186,7 +57135,14 @@ var createMeasure = function createMeasure() {
         }
     }
 
-    return measure;
+    return {
+        numberOfBeats: numberOfBeats,
+        noteValue: noteValue,
+        minNoteValue: minNoteValue,
+        drumkit: drumkit,
+        notes: notesByInstrument,
+        bpm: bpm
+    };
 };
 
 var measure = function measure(state, action, meta) {

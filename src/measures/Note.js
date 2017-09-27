@@ -17,7 +17,7 @@ export class Note extends React.Component {
                 <div
                     className="note"
                     style={style}
-                    onDoubleClick={toggle}
+                    onClick={toggle}
                     onMouseMove={(event) => {
                         if (event.shiftKey) {
                             // using jquery to also work if parents are positioned absolutely/relatively

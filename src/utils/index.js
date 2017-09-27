@@ -102,13 +102,8 @@ export const getMsBetweenNotes = function(measure) {
 }
 
 
-export const defineDrumkit = function(name, sourceFiles, spriteData, options={}) {
-    const sprite = {}
-    let prevTime = 0
-    for (const [name, endTime] of Object.entries(spriteData)) {
-        sprite[name] = [prevTime, endTime]
-        prevTime = endTime
-    }
+export const defineDrumkit = function(name, sourceFiles, sprite, options={}) {
+    const instruments = Object.keys(sprite)
     return {
         howl: new Howl({
             preload: false,
@@ -117,9 +112,10 @@ export const defineDrumkit = function(name, sourceFiles, spriteData, options={})
             sprite: sprite,
         }),
         name,
+        instruments,
         // same as howl.state() but this prop is changed by actions
         loadingState: "unloaded",
-        instruments: formatInstruments(Object.keys(sprite)),
+        formattedInstruments: formatInstruments(instruments),
     }
 }
 
