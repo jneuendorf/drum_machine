@@ -5,6 +5,7 @@
     "main": "src/main.js",
     "scripts": {
         "bundle": "webpack",
+        "bundle_production": "NODE_ENV=production webpack -p --config ./webpack.production.config.js",
         "transpile_redux_ui": "cd node_modules/redux-ui && npm i && babel -d transpiled src",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

@@ -15,12 +15,10 @@ import DrumkitManagementModal from './DrumkitManagementModal'
 })
 class Menu extends React.Component {
     render() {
-        const {tab: {measures}, drumkits} = this.props
-        // console.log('menu props', this.props);
         return (
             <aside className="menu">
                 <MenuSection label="Sound Controls">
-                    <MenuItemPlay measures={measures} drumkits={drumkits} />
+                    <MenuItemPlay />
                     <MenuItem label="Pause">
                         <span>Pause</span>
                         <span className="icon">

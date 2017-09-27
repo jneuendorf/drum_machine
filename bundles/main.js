@@ -1367,7 +1367,7 @@ module.exports = { debugTool: debugTool };
 /***/ (function(module, exports, __webpack_require__) {
 
 var store = __webpack_require__(87)('wks');
-var uid = __webpack_require__(62);
+var uid = __webpack_require__(63);
 var Symbol = __webpack_require__(23).Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
 
@@ -1437,7 +1437,7 @@ var CallbackQueue = __webpack_require__(122);
 var PooledClass = __webpack_require__(27);
 var ReactFeatureFlags = __webpack_require__(123);
 var ReactReconciler = __webpack_require__(35);
-var Transaction = __webpack_require__(57);
+var Transaction = __webpack_require__(58);
 
 var invariant = __webpack_require__(1);
 
@@ -2274,7 +2274,7 @@ var _entries = __webpack_require__(52);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _getIterator2 = __webpack_require__(64);
+var _getIterator2 = __webpack_require__(53);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -2286,7 +2286,7 @@ var _extends2 = __webpack_require__(51);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _slicedToArray2 = __webpack_require__(53);
+var _slicedToArray2 = __webpack_require__(54);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -2499,7 +2499,7 @@ var _assign = __webpack_require__(4);
 var ReactCurrentOwner = __webpack_require__(18);
 
 var warning = __webpack_require__(2);
-var canDefineProperty = __webpack_require__(54);
+var canDefineProperty = __webpack_require__(55);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 var REACT_ELEMENT_TYPE = __webpack_require__(113);
@@ -3045,7 +3045,7 @@ var cloneElement = ReactElement.cloneElement;
 
 if (process.env.NODE_ENV !== 'production') {
   var lowPriorityWarning = __webpack_require__(65);
-  var canDefineProperty = __webpack_require__(54);
+  var canDefineProperty = __webpack_require__(55);
   var ReactElementValidator = __webpack_require__(115);
   var didWarnPropTypesDeprecated = false;
   createElement = ReactElementValidator.createElement;
@@ -3382,7 +3382,7 @@ module.exports = ReactReconciler;
 
 
 var DOMNamespaces = __webpack_require__(73);
-var setInnerHTML = __webpack_require__(59);
+var setInnerHTML = __webpack_require__(60);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(74);
 var setTextContent = __webpack_require__(127);
@@ -3729,7 +3729,7 @@ module.exports = EventPropagators;
 
 var _prodInvariant = __webpack_require__(3);
 
-var EventPluginRegistry = __webpack_require__(56);
+var EventPluginRegistry = __webpack_require__(57);
 var EventPluginUtils = __webpack_require__(67);
 var ReactErrorUtils = __webpack_require__(68);
 
@@ -4213,6 +4213,12 @@ module.exports = { "default": __webpack_require__(351), __esModule: true };
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = { "default": __webpack_require__(354), __esModule: true };
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -4222,7 +4228,7 @@ var _isIterable2 = __webpack_require__(359);
 
 var _isIterable3 = _interopRequireDefault(_isIterable2);
 
-var _getIterator2 = __webpack_require__(64);
+var _getIterator2 = __webpack_require__(53);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -4267,7 +4273,7 @@ exports.default = function () {
 }();
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4299,7 +4305,7 @@ module.exports = canDefineProperty;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4325,7 +4331,7 @@ module.exports = emptyObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4584,7 +4590,7 @@ module.exports = EventPluginRegistry;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4818,7 +4824,7 @@ module.exports = TransactionImpl;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4895,7 +4901,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 module.exports = SyntheticMouseEvent;
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4998,7 +5004,7 @@ if (ExecutionEnvironment.canUseDOM) {
 module.exports = setInnerHTML;
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5125,7 +5131,7 @@ function escapeTextContentForBrowser(text) {
 module.exports = escapeTextContentForBrowser;
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5143,7 +5149,7 @@ module.exports = escapeTextContentForBrowser;
 
 var _assign = __webpack_require__(4);
 
-var EventPluginRegistry = __webpack_require__(56);
+var EventPluginRegistry = __webpack_require__(57);
 var ReactEventEmitterMixin = __webpack_require__(234);
 var ViewportMetrics = __webpack_require__(126);
 
@@ -5454,7 +5460,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 module.exports = ReactBrowserEventEmitter;
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 var id = 0;
@@ -5465,7 +5471,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5487,12 +5493,6 @@ __webpack_require__(159)(String, 'String', function (iterated) {
   return { value: point, done: false };
 });
 
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(354), __esModule: true };
 
 /***/ }),
 /* 65 */
@@ -6076,7 +6076,7 @@ var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInstrumentation = __webpack_require__(16);
 
 var createMicrosoftUnsafeLocalFunction = __webpack_require__(74);
-var setInnerHTML = __webpack_require__(59);
+var setInnerHTML = __webpack_require__(60);
 var setTextContent = __webpack_require__(127);
 
 function getNodeAfter(parentNode, node) {
@@ -7513,7 +7513,7 @@ module.exports = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var shared = __webpack_require__(87)('keys');
-var uid = __webpack_require__(62);
+var uid = __webpack_require__(63);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
 };
@@ -8243,8 +8243,8 @@ var _prodInvariant = __webpack_require__(34),
 
 var ReactNoopUpdateQueue = __webpack_require__(112);
 
-var canDefineProperty = __webpack_require__(54);
-var emptyObject = __webpack_require__(55);
+var canDefineProperty = __webpack_require__(55);
+var emptyObject = __webpack_require__(56);
 var invariant = __webpack_require__(1);
 var lowPriorityWarning = __webpack_require__(65);
 
@@ -8572,7 +8572,7 @@ var ReactElement = __webpack_require__(26);
 
 var checkReactTypeSpec = __webpack_require__(190);
 
-var canDefineProperty = __webpack_require__(54);
+var canDefineProperty = __webpack_require__(55);
 var getIteratorFn = __webpack_require__(114);
 var warning = __webpack_require__(2);
 var lowPriorityWarning = __webpack_require__(65);
@@ -9896,8 +9896,8 @@ module.exports = ViewportMetrics;
 
 
 var ExecutionEnvironment = __webpack_require__(7);
-var escapeTextContentForBrowser = __webpack_require__(60);
-var setInnerHTML = __webpack_require__(59);
+var escapeTextContentForBrowser = __webpack_require__(61);
+var setInnerHTML = __webpack_require__(60);
 
 /**
  * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -11344,7 +11344,7 @@ var _prodInvariant = __webpack_require__(3);
 var DOMLazyTree = __webpack_require__(36);
 var DOMProperty = __webpack_require__(22);
 var React = __webpack_require__(33);
-var ReactBrowserEventEmitter = __webpack_require__(61);
+var ReactBrowserEventEmitter = __webpack_require__(62);
 var ReactCurrentOwner = __webpack_require__(18);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMContainerInfo = __webpack_require__(275);
@@ -11357,10 +11357,10 @@ var ReactReconciler = __webpack_require__(35);
 var ReactUpdateQueue = __webpack_require__(80);
 var ReactUpdates = __webpack_require__(19);
 
-var emptyObject = __webpack_require__(55);
+var emptyObject = __webpack_require__(56);
 var instantiateReactComponent = __webpack_require__(133);
 var invariant = __webpack_require__(1);
-var setInnerHTML = __webpack_require__(59);
+var setInnerHTML = __webpack_require__(60);
 var shouldUpdateReactComponent = __webpack_require__(78);
 var warning = __webpack_require__(2);
 
@@ -12958,7 +12958,7 @@ module.exports = function (it) {
 /* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var META = __webpack_require__(62)('meta');
+var META = __webpack_require__(63)('meta');
 var isObject = __webpack_require__(39);
 var has = __webpack_require__(28);
 var setDesc = __webpack_require__(24).f;
@@ -14556,7 +14556,7 @@ var _Root = __webpack_require__(311);
 
 var _Root2 = _interopRequireDefault(_Root);
 
-var _store = __webpack_require__(420);
+var _store = __webpack_require__(421);
 
 var _store2 = _interopRequireDefault(_store);
 
@@ -15610,7 +15610,7 @@ module.exports = factory(Component, isValidElement, ReactNoopUpdateQueue);
 
 var _assign = __webpack_require__(4);
 
-var emptyObject = __webpack_require__(55);
+var emptyObject = __webpack_require__(56);
 var _invariant = __webpack_require__(1);
 
 if (process.env.NODE_ENV !== 'production') {
@@ -18460,7 +18460,7 @@ module.exports = DefaultEventPluginOrder;
 
 var EventPropagators = __webpack_require__(43);
 var ReactDOMComponentTree = __webpack_require__(5);
-var SyntheticMouseEvent = __webpack_require__(58);
+var SyntheticMouseEvent = __webpack_require__(59);
 
 var eventTypes = {
   mouseEnter: {
@@ -19261,8 +19261,8 @@ var DOMNamespaces = __webpack_require__(73);
 var DOMProperty = __webpack_require__(22);
 var DOMPropertyOperations = __webpack_require__(130);
 var EventPluginHub = __webpack_require__(44);
-var EventPluginRegistry = __webpack_require__(56);
-var ReactBrowserEventEmitter = __webpack_require__(61);
+var EventPluginRegistry = __webpack_require__(57);
+var ReactBrowserEventEmitter = __webpack_require__(62);
 var ReactDOMComponentFlags = __webpack_require__(118);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMInput = __webpack_require__(236);
@@ -19274,7 +19274,7 @@ var ReactMultiChild = __webpack_require__(239);
 var ReactServerRenderingTransaction = __webpack_require__(248);
 
 var emptyFunction = __webpack_require__(15);
-var escapeTextContentForBrowser = __webpack_require__(60);
+var escapeTextContentForBrowser = __webpack_require__(61);
 var invariant = __webpack_require__(1);
 var isEventSupported = __webpack_require__(70);
 var shallowEqual = __webpack_require__(77);
@@ -20799,7 +20799,7 @@ module.exports = memoizeStringOnly;
 
 
 
-var escapeTextContentForBrowser = __webpack_require__(60);
+var escapeTextContentForBrowser = __webpack_require__(61);
 
 /**
  * Escapes attribute value to prevent scripting attacks.
@@ -22187,7 +22187,7 @@ if (process.env.NODE_ENV !== 'production') {
   var checkReactTypeSpec = __webpack_require__(242);
 }
 
-var emptyObject = __webpack_require__(55);
+var emptyObject = __webpack_require__(56);
 var invariant = __webpack_require__(1);
 var shallowEqual = __webpack_require__(77);
 var shouldUpdateReactComponent = __webpack_require__(78);
@@ -23383,7 +23383,7 @@ module.exports = flattenChildren;
 var _assign = __webpack_require__(4);
 
 var PooledClass = __webpack_require__(27);
-var Transaction = __webpack_require__(57);
+var Transaction = __webpack_require__(58);
 var ReactInstrumentation = __webpack_require__(16);
 var ReactServerUpdateQueue = __webpack_require__(249);
 
@@ -23835,7 +23835,7 @@ var DOMChildrenOperations = __webpack_require__(72);
 var DOMLazyTree = __webpack_require__(36);
 var ReactDOMComponentTree = __webpack_require__(5);
 
-var escapeTextContentForBrowser = __webpack_require__(60);
+var escapeTextContentForBrowser = __webpack_require__(61);
 var invariant = __webpack_require__(1);
 var validateDOMNesting = __webpack_require__(81);
 
@@ -23999,7 +23999,7 @@ module.exports = ReactDOMTextComponent;
 var _assign = __webpack_require__(4);
 
 var ReactUpdates = __webpack_require__(19);
-var Transaction = __webpack_require__(57);
+var Transaction = __webpack_require__(58);
 
 var emptyFunction = __webpack_require__(15);
 
@@ -24278,7 +24278,7 @@ var EventPluginHub = __webpack_require__(44);
 var EventPluginUtils = __webpack_require__(67);
 var ReactComponentEnvironment = __webpack_require__(76);
 var ReactEmptyComponent = __webpack_require__(135);
-var ReactBrowserEventEmitter = __webpack_require__(61);
+var ReactBrowserEventEmitter = __webpack_require__(62);
 var ReactHostComponent = __webpack_require__(136);
 var ReactUpdates = __webpack_require__(19);
 
@@ -24316,10 +24316,10 @@ var _assign = __webpack_require__(4);
 
 var CallbackQueue = __webpack_require__(122);
 var PooledClass = __webpack_require__(27);
-var ReactBrowserEventEmitter = __webpack_require__(61);
+var ReactBrowserEventEmitter = __webpack_require__(62);
 var ReactInputSelection = __webpack_require__(139);
 var ReactInstrumentation = __webpack_require__(16);
-var Transaction = __webpack_require__(57);
+var Transaction = __webpack_require__(58);
 var ReactUpdateQueue = __webpack_require__(80);
 
 /**
@@ -25408,7 +25408,7 @@ var SyntheticClipboardEvent = __webpack_require__(267);
 var SyntheticEvent = __webpack_require__(21);
 var SyntheticFocusEvent = __webpack_require__(268);
 var SyntheticKeyboardEvent = __webpack_require__(269);
-var SyntheticMouseEvent = __webpack_require__(58);
+var SyntheticMouseEvent = __webpack_require__(59);
 var SyntheticDragEvent = __webpack_require__(271);
 var SyntheticTouchEvent = __webpack_require__(272);
 var SyntheticTransitionEvent = __webpack_require__(273);
@@ -25963,7 +25963,7 @@ module.exports = getEventKey;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(58);
+var SyntheticMouseEvent = __webpack_require__(59);
 
 /**
  * @interface DragEvent
@@ -26098,7 +26098,7 @@ module.exports = SyntheticTransitionEvent;
 
 
 
-var SyntheticMouseEvent = __webpack_require__(58);
+var SyntheticMouseEvent = __webpack_require__(59);
 
 /**
  * @interface WheelEvent
@@ -26428,7 +26428,7 @@ module.exports = ReactMount.renderSubtreeIntoContainer;
 
 
 var DOMProperty = __webpack_require__(22);
-var EventPluginRegistry = __webpack_require__(56);
+var EventPluginRegistry = __webpack_require__(57);
 var ReactComponentTreeHook = __webpack_require__(9);
 
 var warning = __webpack_require__(2);
@@ -28048,7 +28048,7 @@ var _Menu = __webpack_require__(379);
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
-var _Measures = __webpack_require__(415);
+var _Measures = __webpack_require__(416);
 
 var _Measures2 = _interopRequireDefault(_Measures);
 
@@ -28159,7 +28159,7 @@ module.exports = { "default": __webpack_require__(318), __esModule: true };
 /* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(63);
+__webpack_require__(64);
 __webpack_require__(97);
 module.exports = __webpack_require__(98).f('iterator');
 
@@ -28366,7 +28366,7 @@ var META = __webpack_require__(164).KEY;
 var $fails = __webpack_require__(40);
 var shared = __webpack_require__(87);
 var setToStringTag = __webpack_require__(96);
-var uid = __webpack_require__(62);
+var uid = __webpack_require__(63);
 var wks = __webpack_require__(17);
 var wksExt = __webpack_require__(98);
 var wksDefine = __webpack_require__(99);
@@ -29374,7 +29374,7 @@ module.exports = function (isEntries) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(97);
-__webpack_require__(63);
+__webpack_require__(64);
 module.exports = __webpack_require__(355);
 
 
@@ -29431,7 +29431,7 @@ module.exports = { "default": __webpack_require__(360), __esModule: true };
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(97);
-__webpack_require__(63);
+__webpack_require__(64);
 module.exports = __webpack_require__(361);
 
 
@@ -29516,7 +29516,7 @@ module.exports = { "default": __webpack_require__(367), __esModule: true };
 /* 367 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(63);
+__webpack_require__(64);
 __webpack_require__(368);
 module.exports = __webpack_require__(8).Array.from;
 
@@ -37445,7 +37445,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Enum = undefined;
 
-var _getIterator2 = __webpack_require__(64);
+var _getIterator2 = __webpack_require__(53);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -37572,7 +37572,7 @@ var _MenuItemPlay = __webpack_require__(413);
 
 var _MenuItemPlay2 = _interopRequireDefault(_MenuItemPlay);
 
-var _DrumkitManagementModal = __webpack_require__(414);
+var _DrumkitManagementModal = __webpack_require__(415);
 
 var _DrumkitManagementModal2 = _interopRequireDefault(_DrumkitManagementModal);
 
@@ -37593,18 +37593,13 @@ var Menu = (_dec = (0, _reduxUi2.default)({
     (0, _createClass3.default)(Menu, [{
         key: 'render',
         value: function render() {
-            var _props = this.props,
-                measures = _props.tab.measures,
-                drumkits = _props.drumkits;
-            // console.log('menu props', this.props);
-
             return _react2.default.createElement(
                 'aside',
                 { className: 'menu' },
                 _react2.default.createElement(
                     _MenuSection2.default,
                     { label: 'Sound Controls' },
-                    _react2.default.createElement(_MenuItemPlay2.default, { measures: measures, drumkits: drumkits }),
+                    _react2.default.createElement(_MenuItemPlay2.default, null),
                     _react2.default.createElement(
                         _MenuItem2.default,
                         { label: 'Pause' },
@@ -45139,11 +45134,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MenuItemPlay = undefined;
 
-var _getIterator2 = __webpack_require__(64);
+var _getIterator2 = __webpack_require__(53);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _slicedToArray2 = __webpack_require__(53);
+var _slicedToArray2 = __webpack_require__(54);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -45181,7 +45176,7 @@ var _reduxUi = __webpack_require__(32);
 
 var _reduxUi2 = _interopRequireDefault(_reduxUi);
 
-var _tocktimer = __webpack_require__(427);
+var _tocktimer = __webpack_require__(414);
 
 var _tocktimer2 = _interopRequireDefault(_tocktimer);
 
@@ -45194,36 +45189,56 @@ var _utils = __webpack_require__(25);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // inherits ui context from Menu because it's rendered by Menu.
-var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
+var MenuItemPlay = (_dec = (0, _reduxUi2.default)({
     state: {
         error: null
+        // isLoading: false,
     }
 }), _dec(_class = function (_React$Component) {
     (0, _inherits3.default)(MenuItemPlay, _React$Component);
 
-    function MenuItemPlay(props) {
+    function MenuItemPlay() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         (0, _classCallCheck3.default)(this, MenuItemPlay);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (MenuItemPlay.__proto__ || (0, _getPrototypeOf2.default)(MenuItemPlay)).call(this, props));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
 
-        _this.label = "Play";
-
-        _this.timer = null;
-        return _this;
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItemPlay.__proto__ || (0, _getPrototypeOf2.default)(MenuItemPlay)).call.apply(_ref, [this].concat(args))), _this), _this.label = "Play", _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(MenuItemPlay, [{
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            this.clearTimer();
-        }
-    }, {
         key: 'render',
+
+
+        // constructor(props) {
+        //     super(props)
+        //     this.timer = null
+        // }
+
+        // componentWillUnmount() {
+        //     this.clearTimer()
+        // }
+
         value: function render() {
             var _this2 = this;
 
-            var ui = this.props.ui;
+            var _props = this.props,
+                ui = _props.ui,
+                drumkits = _props.drumkits;
 
+            var drumkitsAreLoading = (0, _entries2.default)(drumkits).reduce(function (acc, _ref2) {
+                var _ref3 = (0, _slicedToArray3.default)(_ref2, 2),
+                    name = _ref3[0],
+                    drumkit = _ref3[1];
+
+                return acc || drumkit.loadingState === 'isLoading';
+            }, false);
+            var className = (ui.error ? 'has-error' : '') + ' ' + (drumkitsAreLoading ? 'is-loading' : '');
             return _react2.default.createElement(
                 _MenuItem2.default,
                 {
@@ -45231,7 +45246,7 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
                     onClick: function onClick() {
                         return _this2.onClick();
                     },
-                    className: ui.error ? 'has-error' : '',
+                    className: className,
                     title: ui.error || null
                 },
                 _react2.default.createElement(
@@ -45246,21 +45261,23 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
                 )
             );
         }
-    }, {
-        key: 'clearTimer',
-        value: function clearTimer() {
-            clearTimeout(this.timer);
-            this.timer = null;
-        }
+
+        // clearTimer() {
+        //     clearTimeout(this.timer)
+        //     this.timer = null
+        // }
+
     }, {
         key: 'onClick',
         value: function onClick() {
-            var _props = this.props,
-                measures = _props.measures,
-                updateUI = _props.updateUI;
+            var _props2 = this.props,
+                measures = _props2.tab.measures,
+                drumkits = _props2.drumkits,
+                updateUI = _props2.updateUI,
+                loadDrumkit = _props2.actions.loadDrumkit;
 
+            // this.clearTimer()
 
-            this.clearTimer();
             if (this.drumkitsAreLoaded()) {
                 updateUI('activeItem', this.label);
                 updateUI('error', null);
@@ -45268,28 +45285,56 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
                     this.startPlaying();
                 }
             } else {
-                updateUI('error', 'Not all drumkits are loaded.');
-                this.timer = setTimeout(function () {
-                    return updateUI('error', null);
-                }, 2500);
+                // updateUI('error', 'Not all drumkits are loaded.')
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)((0, _entries2.default)(drumkits)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _ref4 = _step.value;
+
+                        var _ref5 = (0, _slicedToArray3.default)(_ref4, 2);
+
+                        var name = _ref5[0];
+                        var drumkit = _ref5[1];
+
+                        if (drumkit.loadingState === 'unloaded') {
+                            loadDrumkit(name, drumkit.howl);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
             }
         }
     }, {
         key: 'drumkitsAreLoaded',
         value: function drumkitsAreLoaded() {
-            var _props2 = this.props,
-                measures = _props2.measures,
-                drumkits = _props2.drumkits;
+            var _props3 = this.props,
+                measures = _props3.tab.measures,
+                drumkits = _props3.drumkits;
 
 
             if (measures.length > 0) {
                 var requiredDrumkits = (0, _utils.unique)(measures.map(function (measure) {
                     return measure.drumkit;
                 }));
-                return (0, _entries2.default)(drumkits).reduce(function (acc, _ref) {
-                    var _ref2 = (0, _slicedToArray3.default)(_ref, 2),
-                        name = _ref2[0],
-                        drumkit = _ref2[1];
+                return (0, _entries2.default)(drumkits).reduce(function (acc, _ref6) {
+                    var _ref7 = (0, _slicedToArray3.default)(_ref6, 2),
+                        name = _ref7[0],
+                        drumkit = _ref7[1];
 
                     if (requiredDrumkits.includes(name)) {
                         return acc && drumkit.loadingState === 'loaded';
@@ -45302,9 +45347,9 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
     }, {
         key: 'startPlaying',
         value: function startPlaying() {
-            var _props3 = this.props,
-                measures = _props3.measures,
-                drumkits = _props3.drumkits;
+            var _props4 = this.props,
+                measures = _props4.tab.measures,
+                drumkits = _props4.drumkits;
 
             var clocks = [];
             measures.forEach(function (measure, index) {
@@ -45316,52 +45361,57 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
 
                 var interval = (0, _utils.getMsBetweenNotes)(measure);
                 var numberOfNotes = (0, _utils.getNumberOfNotes)(numberOfBeats, noteValue, minNoteValue);
-                var drumkit = drumkits[drumkitName];
+                var howl = drumkits[drumkitName].howl;
+
                 var clock = new _tocktimer2.default({
                     interval: interval,
                     callback: function callback() {
                         var tick = Math.round(clock.lap() / interval);
                         if (tick < numberOfNotes) {
-                            var instrumentsToPlay = (0, _entries2.default)(notes).filter(function (_ref3) {
-                                var _ref4 = (0, _slicedToArray3.default)(_ref3, 2),
-                                    instrument = _ref4[0],
-                                    notes = _ref4[1];
+                            var instrumentsToPlayWithNotes = (0, _entries2.default)(notes).filter(function (_ref8) {
+                                var _ref9 = (0, _slicedToArray3.default)(_ref8, 2),
+                                    instrument = _ref9[0],
+                                    notes = _ref9[1];
 
                                 return notes[tick] > 0;
-                            }).map(function (_ref5) {
-                                var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
-                                    instrument = _ref6[0],
-                                    notes = _ref6[1];
-
-                                return instrument;
                             });
-                            var _iteratorNormalCompletion = true;
-                            var _didIteratorError = false;
-                            var _iteratorError = undefined;
+
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
 
                             try {
-                                for (var _iterator = (0, _getIterator3.default)(instrumentsToPlay), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                                    var instrumentToPlay = _step.value;
+                                for (var _iterator2 = (0, _getIterator3.default)(instrumentsToPlayWithNotes), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var _ref10 = _step2.value;
 
-                                    drumkit.howl.play(instrumentToPlay);
+                                    var _ref11 = (0, _slicedToArray3.default)(_ref10, 2);
+
+                                    var instrumentToPlay = _ref11[0];
+                                    var _notes = _ref11[1];
+
+                                    var id = howl.play(instrumentToPlay);
+                                    var volume = _notes[tick];
+                                    console.log('playing ' + instrumentToPlay + ' at tick ' + tick + ' with volume ' + volume);
+                                    howl.volume(volume, id);
                                 }
                             } catch (err) {
-                                _didIteratorError = true;
-                                _iteratorError = err;
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
                             } finally {
                                 try {
-                                    if (!_iteratorNormalCompletion && _iterator.return) {
-                                        _iterator.return();
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
                                     }
                                 } finally {
-                                    if (_didIteratorError) {
-                                        throw _iteratorError;
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
                                     }
                                 }
                             }
                         } else {
-                            clocks[index + 1 % clocks.length].start();
                             clock.reset();
+                            clocks[index + 1 % clocks.length].start();
+                            console.log('stopped playing measure #' + index, clocks[index + 1 % clocks.length] === clock);
                         }
                     }
                 });
@@ -45373,10 +45423,360 @@ var MenuItemPlay = exports.MenuItemPlay = (_dec = (0, _reduxUi2.default)({
     }]);
     return MenuItemPlay;
 }(_react2.default.Component)) || _class);
+
+
+exports.MenuItemPlay = MenuItemPlay = (0, _utils.defaultConnect)(MenuItemPlay);
+
+exports.MenuItemPlay = MenuItemPlay;
 exports.default = MenuItemPlay;
 
 /***/ }),
 /* 414 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+* Tock by Mr Chimp - github.com/mrchimp/tock
+* Based on code by James Edwards:
+*    sitepoint.com/creating-accurate-timers-in-javascript/
+*/
+
+// Implements Date.now() for ie lt 9
+Date.now = Date.now || function() { return +new Date(); };
+
+// Polyfills Function.prototype.bind for IE lt 9 and Safari lt 5.1
+if ( typeof Function.prototype.bind != 'function' ) {
+    Function.prototype.bind = function (ctx) {
+        var args = Array.prototype.slice.call(arguments, 1),
+            fn = this;
+        return function () {
+            args.push.apply(args, arguments);
+            return fn.apply(ctx, args);
+        };
+    };
+}
+
+(function (root, factory) {
+  if ( true ) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if ( typeof exports === 'object' ) {
+    module.exports = factory();
+  } else {
+    root.Tock = factory();
+  }
+}(this, function () {
+
+  /**
+   * Called every tick for countdown clocks.
+   * i.e. once every this.interval ms
+   */
+  function _tick () {
+    this.time += this.interval;
+
+    if ( this.countdown && (this.duration_ms - this.time < 0) ) {
+      this.final_time = 0;
+      this.go = false;
+      this.callback(this);
+      clearTimeout(this.timeout);
+      this.complete(this);
+      return;
+    } else {
+      this.callback(this);
+    }
+
+    var diff = (Date.now() - this.start_time) - this.time,
+        next_interval_in = diff > 0 ? this.interval - diff : this.interval;
+
+    if ( next_interval_in <= 0 ) {
+      this.missed_ticks = Math.floor(Math.abs(next_interval_in) / this.interval);
+      this.time += this.missed_ticks * this.interval;
+
+      if ( this.go ) {
+        _tick.call(this);
+      }
+    } else if ( this.go ) {
+      this.timeout = setTimeout(_tick.bind(this), next_interval_in);
+    }
+  }
+
+  /**
+   * Called by Tock internally - use start() instead
+   */
+  function _startCountdown (duration) {
+    this.duration_ms = duration;
+    this.start_time = Date.now();
+    this.time = 0;
+    this.go = true;
+    _tick.call(this);
+  }
+
+  /**
+   * Called by Tock internally - use start() instead
+   */
+  function _startTimer (start_offset) {
+    this.start_time = start_offset || Date.now();
+    this.time = 0;
+    this.go = true;
+    _tick.call(this);
+  }
+
+  var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
+      MM_SS_RE                  = /^(\d{1,2}):(\d{2})$/,
+      MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{1,2}):(\d{2})(?::|\.)(\d{2,3})$/,
+      MS_PER_HOUR               = 3600000,
+      MS_PER_MIN                = 60000,
+      MS_PER_SEC                = 1000,
+      /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
+       * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
+       * and the date string is also suffixed with a `Z` denoting UTC timezone.
+       */
+      yyyy_mm_dd_HH_MM_SS_ms_RE = /^(\d{4})-([0-1]\d)-([0-3]\d)(?:\s|T)(\d{2}):(\d{2}):(\d{2})(?:\.(\d{3})Z?)?$/;
+
+  var Tock = function (options) {
+    options = options || {};
+
+    if ( ! (this instanceof Tock) ) return new Tock(options);
+
+    Tock.instances = (Tock.instances || 0) + 1;
+
+    this.go           = false;
+    this.timeout      = null;
+    this.missed_ticks = null;
+    this.interval     = options.interval || 10;
+    this.countdown    = options.countdown || false;
+    this.start_time   = 0;
+    this.pause_time   = 0;
+    this.final_time   = 0;
+    this.duration_ms  = 0;
+    this.time         = 0;
+    this.callback     = options.callback || function () {};
+    this.complete     = options.complete || function () {};
+  };
+
+  /**
+   * Reset the clock
+   */
+  Tock.prototype.reset = function () {
+    if ( this.countdown ) {
+      return false;
+    }
+
+    this.stop();
+    this.start_time = 0;
+    this.time = 0;
+  };
+
+  /**
+   * Start the clock.
+   * @param {Various} time Accepts a single "time" argument
+   *   which can be in various forms:
+   *   - MM:SS
+   *   - MM:SS:ms or MM:SS.ms
+   *   - HH:MM:SS
+   *   - yyyy-mm-dd HH:MM:SS.ms
+   *   - milliseconds
+   */
+  Tock.prototype.start = function (time) {
+    if (this.go) return false;
+
+    time = time ? this.timeToMS(time) : 0;
+
+    this.start_time = time;
+    this.pause_time = 0;
+
+    if ( this.countdown ) {
+      _startCountdown.call(this, time);
+    } else {
+      _startTimer.call(this, Date.now() - time);
+    }
+  };
+
+  /**
+   * Stop the clock and clear the timeout
+   */
+  Tock.prototype.stop = function () {
+    this.pause_time = this.lap();
+    this.go = false;
+
+    clearTimeout(this.timeout);
+
+    if ( this.countdown ) {
+      this.final_time = this.duration_ms - this.time;
+    } else {
+      this.final_time = (Date.now() - this.start_time);
+    }
+  };
+
+  /**
+   * Stop/start the clock.
+   */
+  Tock.prototype.pause = function () {
+    if ( this.go ) {
+      this.pause_time = this.lap();
+      this.stop();
+    } else {
+      if ( this.pause_time ) {
+        if ( this.countdown ) {
+          _startCountdown.call(this, this.pause_time);
+        } else {
+          _startTimer.call(this, Date.now() - this.pause_time);
+        }
+
+        this.pause_time = 0;
+      }
+    }
+  };
+
+  /**
+   * Get the current clock time in ms.
+   * Use with Tock.msToTime() to make it look nice.
+   * @return {Integer} Number of milliseconds ellapsed/remaining
+   */
+  Tock.prototype.lap = function () {
+    if ( this.go ) {
+      var now;
+
+      if ( this.countdown ) {
+        now = this.duration_ms - (Date.now() - this.start_time);
+      } else {
+        now = (Date.now() - this.start_time);
+      }
+
+      return now;
+    }
+
+    return this.pause_time || this.final_time;
+  };
+
+  /**
+   * Format milliseconds as a MM:SS.ms string.
+   * @param  {Integer} ms Number of milliseconds
+   * @return {String}     String representation of ms in format MM:SS:ms
+   */
+  Tock.prototype.msToTime = function (ms) {
+    var milliseconds = this.zeroPad(ms % MS_PER_SEC, 3),
+        seconds = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
+        minutes = this.zeroPad(Math.floor((ms / (MS_PER_MIN)) % 60), 2);
+
+    return minutes + ':' + seconds + '.' + milliseconds;
+  };
+
+  /**
+   * Pad the left side of a string with zeros up to a given length. I
+   * considered using an NPM package for this but it's probably best not to.
+   * @param  {Various} input  Number to pad. Will be converted to string.
+   * @param  {Integer} length Desired string length
+   * @return {String}         Padding number
+   */
+  Tock.prototype.zeroPad = function (input, length) {
+    input = input.toString();
+
+    while ( input.length < length ) {
+      input = '0' + input;
+    }
+
+    return input;
+  };
+
+  /**
+   * Format milliseconds as HH:MM:SS or HH:MM:SS:mmm
+   * @param  {Integer} ms      Number of milliseconds
+   * @param  {Boolean} show_ms If true, include milliseconds in output
+   * @return {String}          Formatted timecode string
+   */
+  Tock.prototype.msToTimecode = function (ms, show_ms) {
+    var seconds  = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
+        minutes  = this.zeroPad(Math.floor((ms / MS_PER_MIN) % 60), 2),
+        hours    = this.zeroPad(Math.floor((ms / MS_PER_HOUR)), 2),
+        millisec = (show_ms ? ':' + this.zeroPad(Math.floor(ms % MS_PER_SEC), 3) : '');
+
+    return hours + ':' + minutes + ':' + seconds + millisec;
+  };
+
+  /**
+   * Convert a time string to milliseconds
+   *
+   * Possible inputs:
+   * MM:SS
+   * MM:SS:ms or MM:SS.ms
+   * HH:MM:SS
+   * yyyy-mm-dd HH:MM:SS.ms
+   *
+   * A milliseconds input will return it back for safety
+   * If the input cannot be recognized then 0 is returned
+   */
+  Tock.prototype.timeToMS = function (time) {
+    // If input is milliseconds integer then return it back
+    if ( MILLISECONDS_RE.test(String(time)) ) {
+      return time;
+    }
+
+    var ms,
+        time_split,
+        match,
+        date,
+        now = new Date();
+
+    if ( MM_SS_RE.test(time) ) { // If MM:SS
+      time_split = time.split(':');
+      ms = parseInt(time_split[0], 10) * MS_PER_MIN;
+      ms += parseInt(time_split[1], 10) * MS_PER_SEC;
+    } else {
+      match = time.match(MM_SS_ms_OR_HH_MM_SS_RE);
+
+      if ( match ) {
+        if ( match[3].length == 3 || parseInt(match[3], 10) > 59 ) { // If MM:SS:ms or MM:SS.ms (e.g. 10:10:458 or 10:10.458)
+          ms = parseInt(match[1], 10) * MS_PER_MIN;
+          ms += parseInt(match[2], 10) * MS_PER_SEC;
+          ms += parseInt(match[3], 10);
+        } else { // Then it's HH:MM:SS
+          ms = parseInt(match[1], 10) * MS_PER_HOUR;
+          ms += parseInt(match[2], 10) * MS_PER_MIN;
+          ms += parseInt(match[3], 10) * MS_PER_SEC;
+        }
+      } else if ( yyyy_mm_dd_HH_MM_SS_ms_RE.test(time) ) { // If yyyy-mm-dd HH:MM:SS or yyyy-mm-dd HH:MM:SS.ms or yyyy-mm-ddTHH:MM:SS.msZ
+        date = new Date();
+        now = new Date();
+
+        match = time.match(yyyy_mm_dd_HH_MM_SS_ms_RE);
+
+        date.setYear(match[1]);
+        date.setMonth(match[2]);
+        date.setDate(match[3]);
+        date.setHours(match[4]);
+        date.setMinutes(match[5]);
+        date.setSeconds(match[6]);
+
+        if (typeof match[7] !== 'undefined') {
+          date.setMilliseconds(match[7]);
+        }
+
+        ms = Math.max(0, date.getTime() - now.getTime());
+      } else {
+        // Let's try it as a date string
+        now = new Date();
+        ms = Date.parse(time);
+
+        if ( !isNaN(ms) ) { // Looks ok
+          ms = Math.max(0, ms - now.getTime());
+        } else { // Could not recognize input, so start from 0
+          ms = 0;
+        }
+      }
+    }
+
+    return ms;
+  };
+
+  return Tock;
+}));
+
+
+/***/ }),
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45387,7 +45787,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DrumkitManagementModal = undefined;
 
-var _slicedToArray2 = __webpack_require__(53);
+var _slicedToArray2 = __webpack_require__(54);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -45572,7 +45972,7 @@ exports.DrumkitManagementModal = DrumkitManagementModal;
 exports.default = DrumkitManagementModal;
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45607,7 +46007,7 @@ var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Measure = __webpack_require__(416);
+var _Measure = __webpack_require__(417);
 
 var _Measure2 = _interopRequireDefault(_Measure);
 
@@ -45705,7 +46105,7 @@ exports.Measures = Measures;
 exports.default = Measures;
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45748,11 +46148,11 @@ var _reduxUi2 = _interopRequireDefault(_reduxUi);
 
 var _utils = __webpack_require__(25);
 
-var _Note = __webpack_require__(417);
+var _Note = __webpack_require__(418);
 
 var _Note2 = _interopRequireDefault(_Note);
 
-var _MeasureSettings = __webpack_require__(419);
+var _MeasureSettings = __webpack_require__(420);
 
 var _MeasureSettings2 = _interopRequireDefault(_MeasureSettings);
 
@@ -45857,7 +46257,7 @@ exports.Measure = Measure;
 exports.default = Measure;
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45892,7 +46292,7 @@ var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _jquery = __webpack_require__(418);
+var _jquery = __webpack_require__(419);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -45950,7 +46350,7 @@ var Note = exports.Note = function (_React$Component) {
 exports.default = Note;
 
 /***/ }),
-/* 418 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -56210,7 +56610,7 @@ return jQuery;
 
 
 /***/ }),
-/* 419 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56220,7 +56620,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _slicedToArray2 = __webpack_require__(53);
+var _slicedToArray2 = __webpack_require__(54);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -56571,7 +56971,7 @@ var MeasureSettings = function (_React$Component) {
 exports.default = MeasureSettings;
 
 /***/ }),
-/* 420 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56584,15 +56984,15 @@ exports.store = undefined;
 
 var _redux = __webpack_require__(47);
 
-var _reduxThunk = __webpack_require__(421);
+var _reduxThunk = __webpack_require__(422);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _reduxLogger = __webpack_require__(422);
+var _reduxLogger = __webpack_require__(423);
 
 var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
-var _reducers = __webpack_require__(423);
+var _reducers = __webpack_require__(424);
 
 var _reducers2 = _interopRequireDefault(_reducers);
 
@@ -56603,7 +57003,7 @@ var store = exports.store = (0, _redux.createStore)(_reducers2.default, (0, _red
 exports.default = store;
 
 /***/ }),
-/* 421 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56632,7 +57032,7 @@ thunk.withExtraArgument = createThunkMiddleware;
 exports['default'] = thunk;
 
 /***/ }),
-/* 422 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {!function(e,t){ true?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t(e.reduxLogger=e.reduxLogger||{})}(this,function(e){"use strict";function t(e,t){e.super_=t,e.prototype=Object.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}})}function r(e,t){Object.defineProperty(this,"kind",{value:e,enumerable:!0}),t&&t.length&&Object.defineProperty(this,"path",{value:t,enumerable:!0})}function n(e,t,r){n.super_.call(this,"E",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0}),Object.defineProperty(this,"rhs",{value:r,enumerable:!0})}function o(e,t){o.super_.call(this,"N",e),Object.defineProperty(this,"rhs",{value:t,enumerable:!0})}function i(e,t){i.super_.call(this,"D",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0})}function a(e,t,r){a.super_.call(this,"A",e),Object.defineProperty(this,"index",{value:t,enumerable:!0}),Object.defineProperty(this,"item",{value:r,enumerable:!0})}function f(e,t,r){var n=e.slice((r||t)+1||e.length);return e.length=t<0?e.length+t:t,e.push.apply(e,n),e}function u(e){var t="undefined"==typeof e?"undefined":N(e);return"object"!==t?t:e===Math?"math":null===e?"null":Array.isArray(e)?"array":"[object Date]"===Object.prototype.toString.call(e)?"date":"function"==typeof e.toString&&/^\/.*\//.test(e.toString())?"regexp":"object"}function l(e,t,r,c,s,d,p){s=s||[],p=p||[];var g=s.slice(0);if("undefined"!=typeof d){if(c){if("function"==typeof c&&c(g,d))return;if("object"===("undefined"==typeof c?"undefined":N(c))){if(c.prefilter&&c.prefilter(g,d))return;if(c.normalize){var h=c.normalize(g,d,e,t);h&&(e=h[0],t=h[1])}}}g.push(d)}"regexp"===u(e)&&"regexp"===u(t)&&(e=e.toString(),t=t.toString());var y="undefined"==typeof e?"undefined":N(e),v="undefined"==typeof t?"undefined":N(t),b="undefined"!==y||p&&p[p.length-1].lhs&&p[p.length-1].lhs.hasOwnProperty(d),m="undefined"!==v||p&&p[p.length-1].rhs&&p[p.length-1].rhs.hasOwnProperty(d);if(!b&&m)r(new o(g,t));else if(!m&&b)r(new i(g,e));else if(u(e)!==u(t))r(new n(g,e,t));else if("date"===u(e)&&e-t!==0)r(new n(g,e,t));else if("object"===y&&null!==e&&null!==t)if(p.filter(function(t){return t.lhs===e}).length)e!==t&&r(new n(g,e,t));else{if(p.push({lhs:e,rhs:t}),Array.isArray(e)){var w;e.length;for(w=0;w<e.length;w++)w>=t.length?r(new a(g,w,new i(void 0,e[w]))):l(e[w],t[w],r,c,g,w,p);for(;w<t.length;)r(new a(g,w,new o(void 0,t[w++])))}else{var x=Object.keys(e),S=Object.keys(t);x.forEach(function(n,o){var i=S.indexOf(n);i>=0?(l(e[n],t[n],r,c,g,n,p),S=f(S,i)):l(e[n],void 0,r,c,g,n,p)}),S.forEach(function(e){l(void 0,t[e],r,c,g,e,p)})}p.length=p.length-1}else e!==t&&("number"===y&&isNaN(e)&&isNaN(t)||r(new n(g,e,t)))}function c(e,t,r,n){return n=n||[],l(e,t,function(e){e&&n.push(e)},r),n.length?n:void 0}function s(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":s(o[r.path[n]],r.index,r.item);break;case"D":delete o[r.path[n]];break;case"E":case"N":o[r.path[n]]=r.rhs}}else switch(r.kind){case"A":s(e[t],r.index,r.item);break;case"D":e=f(e,t);break;case"E":case"N":e[t]=r.rhs}return e}function d(e,t,r){if(e&&t&&r&&r.kind){for(var n=e,o=-1,i=r.path?r.path.length-1:0;++o<i;)"undefined"==typeof n[r.path[o]]&&(n[r.path[o]]="number"==typeof r.path[o]?[]:{}),n=n[r.path[o]];switch(r.kind){case"A":s(r.path?n[r.path[o]]:n,r.index,r.item);break;case"D":delete n[r.path[o]];break;case"E":case"N":n[r.path[o]]=r.rhs}}}function p(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":p(o[r.path[n]],r.index,r.item);break;case"D":o[r.path[n]]=r.lhs;break;case"E":o[r.path[n]]=r.lhs;break;case"N":delete o[r.path[n]]}}else switch(r.kind){case"A":p(e[t],r.index,r.item);break;case"D":e[t]=r.lhs;break;case"E":e[t]=r.lhs;break;case"N":e=f(e,t)}return e}function g(e,t,r){if(e&&t&&r&&r.kind){var n,o,i=e;for(o=r.path.length-1,n=0;n<o;n++)"undefined"==typeof i[r.path[n]]&&(i[r.path[n]]={}),i=i[r.path[n]];switch(r.kind){case"A":p(i[r.path[n]],r.index,r.item);break;case"D":i[r.path[n]]=r.lhs;break;case"E":i[r.path[n]]=r.lhs;break;case"N":delete i[r.path[n]]}}}function h(e,t,r){if(e&&t){var n=function(n){r&&!r(e,t,n)||d(e,t,n)};l(e,t,n)}}function y(e){return"color: "+F[e].color+"; font-weight: bold"}function v(e){var t=e.kind,r=e.path,n=e.lhs,o=e.rhs,i=e.index,a=e.item;switch(t){case"E":return[r.join("."),n,"→",o];case"N":return[r.join("."),o];case"D":return[r.join(".")];case"A":return[r.join(".")+"["+i+"]",a];default:return[]}}function b(e,t,r,n){var o=c(e,t);try{n?r.groupCollapsed("diff"):r.group("diff")}catch(e){r.log("diff")}o?o.forEach(function(e){var t=e.kind,n=v(e);r.log.apply(r,["%c "+F[t].text,y(t)].concat(P(n)))}):r.log("—— no diff ——");try{r.groupEnd()}catch(e){r.log("—— diff end —— ")}}function m(e,t,r,n){switch("undefined"==typeof e?"undefined":N(e)){case"object":return"function"==typeof e[n]?e[n].apply(e,P(r)):e[n];case"function":return e(t);default:return e}}function w(e){var t=e.timestamp,r=e.duration;return function(e,n,o){var i=["action"];return i.push("%c"+String(e.type)),t&&i.push("%c@ "+n),r&&i.push("%c(in "+o.toFixed(2)+" ms)"),i.join(" ")}}function x(e,t){var r=t.logger,n=t.actionTransformer,o=t.titleFormatter,i=void 0===o?w(t):o,a=t.collapsed,f=t.colors,u=t.level,l=t.diff,c="undefined"==typeof t.titleFormatter;e.forEach(function(o,s){var d=o.started,p=o.startedTime,g=o.action,h=o.prevState,y=o.error,v=o.took,w=o.nextState,x=e[s+1];x&&(w=x.prevState,v=x.started-d);var S=n(g),k="function"==typeof a?a(function(){return w},g,o):a,j=D(p),E=f.title?"color: "+f.title(S)+";":"",A=["color: gray; font-weight: lighter;"];A.push(E),t.timestamp&&A.push("color: gray; font-weight: lighter;"),t.duration&&A.push("color: gray; font-weight: lighter;");var O=i(S,j,v);try{k?f.title&&c?r.groupCollapsed.apply(r,["%c "+O].concat(A)):r.groupCollapsed(O):f.title&&c?r.group.apply(r,["%c "+O].concat(A)):r.group(O)}catch(e){r.log(O)}var N=m(u,S,[h],"prevState"),P=m(u,S,[S],"action"),C=m(u,S,[y,h],"error"),F=m(u,S,[w],"nextState");if(N)if(f.prevState){var L="color: "+f.prevState(h)+"; font-weight: bold";r[N]("%c prev state",L,h)}else r[N]("prev state",h);if(P)if(f.action){var T="color: "+f.action(S)+"; font-weight: bold";r[P]("%c action    ",T,S)}else r[P]("action    ",S);if(y&&C)if(f.error){var M="color: "+f.error(y,h)+"; font-weight: bold;";r[C]("%c error     ",M,y)}else r[C]("error     ",y);if(F)if(f.nextState){var _="color: "+f.nextState(w)+"; font-weight: bold";r[F]("%c next state",_,w)}else r[F]("next state",w);l&&b(h,w,r,k);try{r.groupEnd()}catch(e){r.log("—— log end ——")}})}function S(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=Object.assign({},L,e),r=t.logger,n=t.stateTransformer,o=t.errorTransformer,i=t.predicate,a=t.logErrors,f=t.diffPredicate;if("undefined"==typeof r)return function(){return function(e){return function(t){return e(t)}}};if(e.getState&&e.dispatch)return console.error("[redux-logger] redux-logger not installed. Make sure to pass logger instance as middleware:\n// Logger with default options\nimport { logger } from 'redux-logger'\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n// Or you can create your own logger with custom options http://bit.ly/redux-logger-options\nimport createLogger from 'redux-logger'\nconst logger = createLogger({\n  // ...options\n});\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n"),function(){return function(e){return function(t){return e(t)}}};var u=[];return function(e){var r=e.getState;return function(e){return function(l){if("function"==typeof i&&!i(r,l))return e(l);var c={};u.push(c),c.started=O.now(),c.startedTime=new Date,c.prevState=n(r()),c.action=l;var s=void 0;if(a)try{s=e(l)}catch(e){c.error=o(e)}else s=e(l);c.took=O.now()-c.started,c.nextState=n(r());var d=t.diff&&"function"==typeof f?f(r,l):t.diff;if(x(u,Object.assign({},t,{diff:d})),u.length=0,c.error)throw c.error;return s}}}}var k,j,E=function(e,t){return new Array(t+1).join(e)},A=function(e,t){return E("0",t-e.toString().length)+e},D=function(e){return A(e.getHours(),2)+":"+A(e.getMinutes(),2)+":"+A(e.getSeconds(),2)+"."+A(e.getMilliseconds(),3)},O="undefined"!=typeof performance&&null!==performance&&"function"==typeof performance.now?performance:Date,N="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},P=function(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)},C=[];k="object"===("undefined"==typeof global?"undefined":N(global))&&global?global:"undefined"!=typeof window?window:{},j=k.DeepDiff,j&&C.push(function(){"undefined"!=typeof j&&k.DeepDiff===c&&(k.DeepDiff=j,j=void 0)}),t(n,r),t(o,r),t(i,r),t(a,r),Object.defineProperties(c,{diff:{value:c,enumerable:!0},observableDiff:{value:l,enumerable:!0},applyDiff:{value:h,enumerable:!0},applyChange:{value:d,enumerable:!0},revertChange:{value:g,enumerable:!0},isConflict:{value:function(){return"undefined"!=typeof j},enumerable:!0},noConflict:{value:function(){return C&&(C.forEach(function(e){e()}),C=null),c},enumerable:!0}});var F={E:{color:"#2196F3",text:"CHANGED:"},N:{color:"#4CAF50",text:"ADDED:"},D:{color:"#F44336",text:"DELETED:"},A:{color:"#2196F3",text:"ARRAY:"}},L={level:"log",logger:console,logErrors:!0,collapsed:void 0,predicate:void 0,duration:!1,timestamp:!0,stateTransformer:function(e){return e},actionTransformer:function(e){return e},errorTransformer:function(e){return e},colors:{title:function(){return"inherit"},prevState:function(){return"#9E9E9E"},action:function(){return"#03A9F4"},nextState:function(){return"#4CAF50"},error:function(){return"#F20404"}},diff:!1,diffPredicate:void 0,transformer:void 0},T=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=e.dispatch,r=e.getState;return"function"==typeof t||"function"==typeof r?S()({dispatch:t,getState:r}):void console.error("\n[redux-logger v3] BREAKING CHANGE\n[redux-logger v3] Since 3.0.0 redux-logger exports by default logger with default settings.\n[redux-logger v3] Change\n[redux-logger v3] import createLogger from 'redux-logger'\n[redux-logger v3] to\n[redux-logger v3] import { createLogger } from 'redux-logger'\n")};e.defaults=L,e.createLogger=S,e.logger=T,e.default=T,Object.defineProperty(e,"__esModule",{value:!0})});
@@ -56640,7 +57040,7 @@ exports['default'] = thunk;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37)))
 
 /***/ }),
-/* 423 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56654,7 +57054,7 @@ var _redux = __webpack_require__(47);
 
 var _reduxUi = __webpack_require__(32);
 
-var _tab = __webpack_require__(424);
+var _tab = __webpack_require__(425);
 
 var _tab2 = _interopRequireDefault(_tab);
 
@@ -56671,7 +57071,7 @@ exports.default = (0, _redux.combineReducers)({
 });
 
 /***/ }),
-/* 424 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56684,7 +57084,7 @@ exports.tab = undefined;
 
 var _redux = __webpack_require__(47);
 
-var _measures = __webpack_require__(425);
+var _measures = __webpack_require__(426);
 
 var _measures2 = _interopRequireDefault(_measures);
 
@@ -56696,7 +57096,7 @@ var tab = exports.tab = (0, _redux.combineReducers)({
 exports.default = tab;
 
 /***/ }),
-/* 425 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56710,7 +57110,7 @@ var _entries = __webpack_require__(52);
 
 var _entries2 = _interopRequireDefault(_entries);
 
-var _slicedToArray2 = __webpack_require__(53);
+var _slicedToArray2 = __webpack_require__(54);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
@@ -56726,7 +57126,7 @@ var _assign = __webpack_require__(101);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _getIterator2 = __webpack_require__(64);
+var _getIterator2 = __webpack_require__(53);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -56939,352 +57339,6 @@ var measure = function measure(state, action, meta) {
 var measures = (0, _ListReducer.listReducer)(measure);
 
 exports.default = measures;
-
-/***/ }),
-/* 426 */,
-/* 427 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
-* Tock by Mr Chimp - github.com/mrchimp/tock
-* Based on code by James Edwards:
-*    sitepoint.com/creating-accurate-timers-in-javascript/
-*/
-
-// Implements Date.now() for ie lt 9
-Date.now = Date.now || function() { return +new Date(); };
-
-// Polyfills Function.prototype.bind for IE lt 9 and Safari lt 5.1
-if ( typeof Function.prototype.bind != 'function' ) {
-    Function.prototype.bind = function (ctx) {
-        var args = Array.prototype.slice.call(arguments, 1),
-            fn = this;
-        return function () {
-            args.push.apply(args, arguments);
-            return fn.apply(ctx, args);
-        };
-    };
-}
-
-(function (root, factory) {
-  if ( true ) {
-    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if ( typeof exports === 'object' ) {
-    module.exports = factory();
-  } else {
-    root.Tock = factory();
-  }
-}(this, function () {
-
-  /**
-   * Called every tick for countdown clocks.
-   * i.e. once every this.interval ms
-   */
-  function _tick () {
-    this.time += this.interval;
-
-    if ( this.countdown && (this.duration_ms - this.time < 0) ) {
-      this.final_time = 0;
-      this.go = false;
-      this.callback(this);
-      clearTimeout(this.timeout);
-      this.complete(this);
-      return;
-    } else {
-      this.callback(this);
-    }
-
-    var diff = (Date.now() - this.start_time) - this.time,
-        next_interval_in = diff > 0 ? this.interval - diff : this.interval;
-
-    if ( next_interval_in <= 0 ) {
-      this.missed_ticks = Math.floor(Math.abs(next_interval_in) / this.interval);
-      this.time += this.missed_ticks * this.interval;
-
-      if ( this.go ) {
-        _tick.call(this);
-      }
-    } else if ( this.go ) {
-      this.timeout = setTimeout(_tick.bind(this), next_interval_in);
-    }
-  }
-
-  /**
-   * Called by Tock internally - use start() instead
-   */
-  function _startCountdown (duration) {
-    this.duration_ms = duration;
-    this.start_time = Date.now();
-    this.time = 0;
-    this.go = true;
-    _tick.call(this);
-  }
-
-  /**
-   * Called by Tock internally - use start() instead
-   */
-  function _startTimer (start_offset) {
-    this.start_time = start_offset || Date.now();
-    this.time = 0;
-    this.go = true;
-    _tick.call(this);
-  }
-
-  var MILLISECONDS_RE           = /^\s*(\+|-)?\d+\s*$/,
-      MM_SS_RE                  = /^(\d{1,2}):(\d{2})$/,
-      MM_SS_ms_OR_HH_MM_SS_RE   = /^(\d{1,2}):(\d{2})(?::|\.)(\d{2,3})$/,
-      MS_PER_HOUR               = 3600000,
-      MS_PER_MIN                = 60000,
-      MS_PER_SEC                = 1000,
-      /* The RegExp below will match a date in format `yyyy-mm-dd HH:MM:SS` and optionally with `.ms` at the end.
-       * It will also match ISO date string, i.e. if the whitespace separator in the middle is replaced with a `T`
-       * and the date string is also suffixed with a `Z` denoting UTC timezone.
-       */
-      yyyy_mm_dd_HH_MM_SS_ms_RE = /^(\d{4})-([0-1]\d)-([0-3]\d)(?:\s|T)(\d{2}):(\d{2}):(\d{2})(?:\.(\d{3})Z?)?$/;
-
-  var Tock = function (options) {
-    options = options || {};
-
-    if ( ! (this instanceof Tock) ) return new Tock(options);
-
-    Tock.instances = (Tock.instances || 0) + 1;
-
-    this.go           = false;
-    this.timeout      = null;
-    this.missed_ticks = null;
-    this.interval     = options.interval || 10;
-    this.countdown    = options.countdown || false;
-    this.start_time   = 0;
-    this.pause_time   = 0;
-    this.final_time   = 0;
-    this.duration_ms  = 0;
-    this.time         = 0;
-    this.callback     = options.callback || function () {};
-    this.complete     = options.complete || function () {};
-  };
-
-  /**
-   * Reset the clock
-   */
-  Tock.prototype.reset = function () {
-    if ( this.countdown ) {
-      return false;
-    }
-
-    this.stop();
-    this.start_time = 0;
-    this.time = 0;
-  };
-
-  /**
-   * Start the clock.
-   * @param {Various} time Accepts a single "time" argument
-   *   which can be in various forms:
-   *   - MM:SS
-   *   - MM:SS:ms or MM:SS.ms
-   *   - HH:MM:SS
-   *   - yyyy-mm-dd HH:MM:SS.ms
-   *   - milliseconds
-   */
-  Tock.prototype.start = function (time) {
-    if (this.go) return false;
-
-    time = time ? this.timeToMS(time) : 0;
-
-    this.start_time = time;
-    this.pause_time = 0;
-
-    if ( this.countdown ) {
-      _startCountdown.call(this, time);
-    } else {
-      _startTimer.call(this, Date.now() - time);
-    }
-  };
-
-  /**
-   * Stop the clock and clear the timeout
-   */
-  Tock.prototype.stop = function () {
-    this.pause_time = this.lap();
-    this.go = false;
-
-    clearTimeout(this.timeout);
-
-    if ( this.countdown ) {
-      this.final_time = this.duration_ms - this.time;
-    } else {
-      this.final_time = (Date.now() - this.start_time);
-    }
-  };
-
-  /**
-   * Stop/start the clock.
-   */
-  Tock.prototype.pause = function () {
-    if ( this.go ) {
-      this.pause_time = this.lap();
-      this.stop();
-    } else {
-      if ( this.pause_time ) {
-        if ( this.countdown ) {
-          _startCountdown.call(this, this.pause_time);
-        } else {
-          _startTimer.call(this, Date.now() - this.pause_time);
-        }
-
-        this.pause_time = 0;
-      }
-    }
-  };
-
-  /**
-   * Get the current clock time in ms.
-   * Use with Tock.msToTime() to make it look nice.
-   * @return {Integer} Number of milliseconds ellapsed/remaining
-   */
-  Tock.prototype.lap = function () {
-    if ( this.go ) {
-      var now;
-
-      if ( this.countdown ) {
-        now = this.duration_ms - (Date.now() - this.start_time);
-      } else {
-        now = (Date.now() - this.start_time);
-      }
-
-      return now;
-    }
-
-    return this.pause_time || this.final_time;
-  };
-
-  /**
-   * Format milliseconds as a MM:SS.ms string.
-   * @param  {Integer} ms Number of milliseconds
-   * @return {String}     String representation of ms in format MM:SS:ms
-   */
-  Tock.prototype.msToTime = function (ms) {
-    var milliseconds = this.zeroPad(ms % MS_PER_SEC, 3),
-        seconds = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
-        minutes = this.zeroPad(Math.floor((ms / (MS_PER_MIN)) % 60), 2);
-
-    return minutes + ':' + seconds + '.' + milliseconds;
-  };
-
-  /**
-   * Pad the left side of a string with zeros up to a given length. I
-   * considered using an NPM package for this but it's probably best not to.
-   * @param  {Various} input  Number to pad. Will be converted to string.
-   * @param  {Integer} length Desired string length
-   * @return {String}         Padding number
-   */
-  Tock.prototype.zeroPad = function (input, length) {
-    input = input.toString();
-
-    while ( input.length < length ) {
-      input = '0' + input;
-    }
-
-    return input;
-  };
-
-  /**
-   * Format milliseconds as HH:MM:SS or HH:MM:SS:mmm
-   * @param  {Integer} ms      Number of milliseconds
-   * @param  {Boolean} show_ms If true, include milliseconds in output
-   * @return {String}          Formatted timecode string
-   */
-  Tock.prototype.msToTimecode = function (ms, show_ms) {
-    var seconds  = this.zeroPad(Math.floor((ms / MS_PER_SEC) % 60), 2),
-        minutes  = this.zeroPad(Math.floor((ms / MS_PER_MIN) % 60), 2),
-        hours    = this.zeroPad(Math.floor((ms / MS_PER_HOUR)), 2),
-        millisec = (show_ms ? ':' + this.zeroPad(Math.floor(ms % MS_PER_SEC), 3) : '');
-
-    return hours + ':' + minutes + ':' + seconds + millisec;
-  };
-
-  /**
-   * Convert a time string to milliseconds
-   *
-   * Possible inputs:
-   * MM:SS
-   * MM:SS:ms or MM:SS.ms
-   * HH:MM:SS
-   * yyyy-mm-dd HH:MM:SS.ms
-   *
-   * A milliseconds input will return it back for safety
-   * If the input cannot be recognized then 0 is returned
-   */
-  Tock.prototype.timeToMS = function (time) {
-    // If input is milliseconds integer then return it back
-    if ( MILLISECONDS_RE.test(String(time)) ) {
-      return time;
-    }
-
-    var ms,
-        time_split,
-        match,
-        date,
-        now = new Date();
-
-    if ( MM_SS_RE.test(time) ) { // If MM:SS
-      time_split = time.split(':');
-      ms = parseInt(time_split[0], 10) * MS_PER_MIN;
-      ms += parseInt(time_split[1], 10) * MS_PER_SEC;
-    } else {
-      match = time.match(MM_SS_ms_OR_HH_MM_SS_RE);
-
-      if ( match ) {
-        if ( match[3].length == 3 || parseInt(match[3], 10) > 59 ) { // If MM:SS:ms or MM:SS.ms (e.g. 10:10:458 or 10:10.458)
-          ms = parseInt(match[1], 10) * MS_PER_MIN;
-          ms += parseInt(match[2], 10) * MS_PER_SEC;
-          ms += parseInt(match[3], 10);
-        } else { // Then it's HH:MM:SS
-          ms = parseInt(match[1], 10) * MS_PER_HOUR;
-          ms += parseInt(match[2], 10) * MS_PER_MIN;
-          ms += parseInt(match[3], 10) * MS_PER_SEC;
-        }
-      } else if ( yyyy_mm_dd_HH_MM_SS_ms_RE.test(time) ) { // If yyyy-mm-dd HH:MM:SS or yyyy-mm-dd HH:MM:SS.ms or yyyy-mm-ddTHH:MM:SS.msZ
-        date = new Date();
-        now = new Date();
-
-        match = time.match(yyyy_mm_dd_HH_MM_SS_ms_RE);
-
-        date.setYear(match[1]);
-        date.setMonth(match[2]);
-        date.setDate(match[3]);
-        date.setHours(match[4]);
-        date.setMinutes(match[5]);
-        date.setSeconds(match[6]);
-
-        if (typeof match[7] !== 'undefined') {
-          date.setMilliseconds(match[7]);
-        }
-
-        ms = Math.max(0, date.getTime() - now.getTime());
-      } else {
-        // Let's try it as a date string
-        now = new Date();
-        ms = Date.parse(time);
-
-        if ( !isNaN(ms) ) { // Looks ok
-          ms = Math.max(0, ms - now.getTime());
-        } else { // Could not recognize input, so start from 0
-          ms = 0;
-        }
-      }
-    }
-
-    return ms;
-  };
-
-  return Tock;
-}));
-
 
 /***/ })
 /******/ ]);
