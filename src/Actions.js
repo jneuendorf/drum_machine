@@ -18,7 +18,10 @@ export const ActionTypes = Enum([
     'DONE_LOADING_DRUMKIT',
 
     'SELECT_MENU_ITEM',
+
+    'SET_CURRENT_PLAY_POS',
 ])
+
 
 
 export const addMeasure = (measure) => ({
@@ -79,7 +82,6 @@ export const removeMeasure = (measure) => ({
 })
 
 
-
 export const loadDrumkit = function(drumkitName, howl) {
     return (dispatch, getState) => {
         dispatch(startLoadingDrumkit(drumkitName))
@@ -105,8 +107,13 @@ export const finishLoadingDrumkit = name => ({
 })
 
 
-
 export const selectMenuItem = label => ({
     type: ActionTypes.SELECT_MENU_ITEM,
     label,
+})
+
+
+export const setCurrentPlayPos = (measureIndex, noteIndex) => ({
+    type: ActionTypes.SET_CURRENT_PLAY_POS,
+    measureIndex, noteIndex,
 })

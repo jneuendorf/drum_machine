@@ -16,15 +16,6 @@ import {unique, getMsBetweenNotes, getNumberOfNotes, defaultConnect} from '../ut
 class MenuItemPlay extends React.Component {
     label = "Play"
 
-    // constructor(props) {
-    //     super(props)
-    //     this.timer = null
-    // }
-
-    // componentWillUnmount() {
-    //     this.clearTimer()
-    // }
-
     render() {
         const {
             ui,
@@ -49,11 +40,6 @@ class MenuItemPlay extends React.Component {
             </MenuItem>
         )
     }
-
-    // clearTimer() {
-    //     clearTimeout(this.timer)
-    //     this.timer = null
-    // }
 
     onClick() {
         const {tab: {measures}, drumkits, updateUI, actions: {loadDrumkit}} = this.props

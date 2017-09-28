@@ -7742,7 +7742,7 @@ exports.default = function (obj, keys) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.selectMenuItem = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolume = exports.toggleNote = exports.addClonedMeasure = exports.addMeasure = exports.ActionTypes = undefined;
+exports.setCurrentPlayPos = exports.selectMenuItem = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolume = exports.toggleNote = exports.addClonedMeasure = exports.addMeasure = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(367);
 
@@ -7752,7 +7752,7 @@ var _ListReducer = __webpack_require__(169);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['ADD_MEASURE', 'ADD_CLONED_MEASURE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SELECT_MENU_ITEM']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['ADD_MEASURE', 'ADD_CLONED_MEASURE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SELECT_MENU_ITEM', 'SET_CURRENT_PLAY_POS']);
 
 var addMeasure = exports.addMeasure = function addMeasure(measure) {
     return {
@@ -7863,6 +7863,13 @@ var selectMenuItem = exports.selectMenuItem = function selectMenuItem(label) {
     return {
         type: ActionTypes.SELECT_MENU_ITEM,
         label: label
+    };
+};
+
+var setCurrentPlayPos = exports.setCurrentPlayPos = function setCurrentPlayPos(measureIndex, noteIndex) {
+    return {
+        type: ActionTypes.SET_CURRENT_PLAY_POS,
+        measureIndex: measureIndex, noteIndex: noteIndex
     };
 };
 
@@ -45099,17 +45106,6 @@ var MenuItemPlay = (_dec = (0, _reduxUi2.default)({
 
     (0, _createClass3.default)(MenuItemPlay, [{
         key: 'render',
-
-
-        // constructor(props) {
-        //     super(props)
-        //     this.timer = null
-        // }
-
-        // componentWillUnmount() {
-        //     this.clearTimer()
-        // }
-
         value: function render() {
             var _this2 = this;
 
@@ -45147,12 +45143,6 @@ var MenuItemPlay = (_dec = (0, _reduxUi2.default)({
                 )
             );
         }
-
-        // clearTimer() {
-        //     clearTimeout(this.timer)
-        //     this.timer = null
-        // }
-
     }, {
         key: 'onClick',
         value: function onClick() {
@@ -57024,11 +57014,16 @@ var _drumkits = __webpack_require__(183);
 
 var _drumkits2 = _interopRequireDefault(_drumkits);
 
+var _currentPlayPos = __webpack_require__(428);
+
+var _currentPlayPos2 = _interopRequireDefault(_currentPlayPos);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = (0, _redux.combineReducers)({
     tab: _tab2.default,
     drumkits: _drumkits2.default,
+    currentPlayPos: _currentPlayPos2.default,
     ui: _reduxUi.reducer
 });
 
@@ -57300,6 +57295,40 @@ var measure = function measure(state, action, meta) {
 var measures = (0, _ListReducer.listReducer)(measure);
 
 exports.default = measures;
+
+/***/ }),
+/* 427 */,
+/* 428 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.currentPlayPos = undefined;
+
+var _Actions = __webpack_require__(103);
+
+var currentPlayPos = exports.currentPlayPos = function currentPlayPos() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [-1, -1];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _Actions.ActionTypes.SET_CURRENT_PLAY_POS:
+            {
+                var measureIndex = action.measureIndex,
+                    noteIndex = action.noteIndex;
+
+                return [measureIndex, noteIndex];
+            }
+        default:
+            return state;
+    }
+};
+
+exports.default = currentPlayPos;
 
 /***/ })
 /******/ ]);
