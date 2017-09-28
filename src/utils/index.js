@@ -104,6 +104,9 @@ export const getMsBetweenNotes = function(measure) {
 
 export const defineDrumkit = function(name, sourceFiles, sprite, options={}) {
     const instruments = Object.keys(sprite)
+    // In this case we skip the is 'isLoading' state because drumkits should
+    // load before the user can hit 'play' or 'manage drumkits'
+    const loadingState = options.preload === true ? 'loaded' : 'unloaded'
     return {
         howl: new Howl({
             preload: false,
@@ -114,7 +117,7 @@ export const defineDrumkit = function(name, sourceFiles, sprite, options={}) {
         name,
         instruments,
         // same as howl.state() but this prop is changed by actions
-        loadingState: "unloaded",
+        loadingState,
         formattedInstruments: formatInstruments(instruments),
     }
 }

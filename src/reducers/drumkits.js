@@ -35,6 +35,9 @@ export const initialDrumkits = {
             'tom3': [
                 22000, 875.3514739229012
             ],
+        },
+        {
+            preload: true
         }
     )
 }
