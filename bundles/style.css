@@ -9831,6 +9831,10 @@ label.panel-block:hover {
   border-bottom: 1px solid #7a7a7a;
 }
 
+.navbar .navbar-item .title img {
+  max-height: 2rem;
+}
+
 .menu {
   margin-top: 1rem;
 }

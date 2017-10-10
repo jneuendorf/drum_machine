@@ -10,27 +10,15 @@ class Navbar extends React.Component {
             <nav className="navbar is-transparent has-border-bottom">
                 <div className="navbar-brand">
                     <div className="navbar-item">
-                        <h1 className="title is-5">DrumMachine</h1>
+                        <h1 className="title is-5">
+                            DrumMachine
+                            <img src="images/drum_machine.png" />
+                        </h1>
                     </div>
                 </div>
 
                 <div className="navbar-menu">
                     <div className="navbar-start">
-                        {/* <Dropdown label="Tab" items={[
-                            {
-                                label: "Add measure 4/4",
-                            },
-                            {
-                                label: "Add measure x/y",
-                            },
-                            "divider",
-                            {
-                                label: "Pick a drumset",
-                            },
-                            "divider",
-                            {label: "Export"},
-                            {label: "Import"},
-                        ]} /> */}
                         <Dropdown label="Docs" items={[
                             {
                                 label: "Overview",

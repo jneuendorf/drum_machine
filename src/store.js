@@ -6,7 +6,8 @@ import rootReducer from './reducers'
 
 
 export const store = createStore(rootReducer, applyMiddleware(
-    ThunkMiddleware, LoggerMiddleware
+    ThunkMiddleware,
+    // LoggerMiddleware,
 ))
-
+global.store = store
 export default store

@@ -12,8 +12,9 @@ export class MenuItem extends React.Component {
             children,
             className='',
             title,
+            isActive,
         } = this.props
-        const isActive = ui.activeItem === label
+        isActive = isActive || ui.activeItem === label
         if (isActive) {
             className += ' is-active'
         }

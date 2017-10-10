@@ -3,7 +3,7 @@ import {ListActions} from './reducers/ListReducer'
 
 
 export const ActionTypes = Enum([
-    'ADD_MEASURE',
+    'ADD_EMPTY_MEASURE',
     'ADD_CLONED_MEASURE',
     'TOGGLE_NOTE',
     'SET_VOLUME',
@@ -20,12 +20,13 @@ export const ActionTypes = Enum([
     'SELECT_MENU_ITEM',
 
     'SET_CURRENT_PLAY_POS',
+    'SET_PLAYING_STATE',
 ])
 
 
 
-export const addMeasure = (measure) => ({
-    type: ActionTypes.ADD_MEASURE,
+export const addEmptyMeasure = (measure) => ({
+    type: ActionTypes.ADD_EMPTY_MEASURE,
     measure,
     meta: ListActions.append(measure),
 })
@@ -116,4 +117,9 @@ export const selectMenuItem = label => ({
 export const setCurrentPlayPos = (measureIndex, noteIndex) => ({
     type: ActionTypes.SET_CURRENT_PLAY_POS,
     measureIndex, noteIndex,
+})
+
+export const setPlayingState = (playingState) => ({
+    type: ActionTypes.SET_PLAYING_STATE,
+    playingState,
 })

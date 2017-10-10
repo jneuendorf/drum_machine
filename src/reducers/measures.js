@@ -6,7 +6,8 @@ import {
     cloneDeep,
     last,
     filledArray,
-    arrayChangedSize
+    arrayChangedSize,
+    dict,
 } from '../utils'
 
 
@@ -33,8 +34,18 @@ const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, dru
 
 const measure = function(state, action, meta) {
     switch (action.type) {
-        case ActionTypes.ADD_MEASURE:
-            return action.measure
+        case ActionTypes.ADD_EMPTY_MEASURE: {
+            let lastMeasure = last(meta.list)
+            if (lastMeasure) {
+                return Object.assign(cloneDeep(lastMeasure), {
+                    notes: dict(Object.entries(lastMeasure.notes).map(
+                        ([instrument, notes]) =>
+                            [instrument, notes.map(note => 0)]
+                    ))
+                })
+            }
+            return createMeasure()
+        }
         case ActionTypes.ADD_CLONED_MEASURE: {
             // const {drumkit} = action
             // const lastMeasure = last(state)
@@ -103,7 +114,7 @@ const measure = function(state, action, meta) {
             return Object.assign({}, state, {notes})
         }
         default:
-            console.warn('should not happen');
+            console.warn('should not happen: measures reducer got action with type', action.type)
             return state
     }
 }

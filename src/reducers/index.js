@@ -3,12 +3,12 @@ import {reducer as ui} from 'redux-ui'
 
 import tab from './tab'
 import drumkits from './drumkits'
-import currentPlayPos from './currentPlayPos'
+import soundControls from './soundControls'
 
 
 export default combineReducers({
     tab,
     drumkits,
-    currentPlayPos,
+    soundControls,
     ui,
 })

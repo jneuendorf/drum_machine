@@ -91,6 +91,15 @@ export const unique = function(iterable) {
 }
 
 
+export const dict = function(tuples) {
+    const res = {}
+    for (const [key, value] of tuples) {
+        res[key] = value
+    }
+    return res
+}
+
+
 export const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue) {
     return numberOfBeats * (minNoteValue / noteValue)
 }

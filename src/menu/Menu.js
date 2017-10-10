@@ -4,7 +4,8 @@ import ui from 'redux-ui'
 import {defaultConnect} from '../utils'
 import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
-import MenuItemPlay from './MenuItemPlay'
+// import MenuItemPlay from './MenuItemPlay'
+import SoundControls from './SoundControls'
 import DrumkitManagementModal from './DrumkitManagementModal'
 
 
@@ -17,7 +18,7 @@ class Menu extends React.Component {
     render() {
         return (
             <aside className="menu">
-                <MenuSection label="Sound Controls">
+                {/* <MenuSection label="Sound Controls">
                     <MenuItemPlay />
                     <MenuItem label="Pause">
                         <span>Pause</span>
@@ -31,7 +32,8 @@ class Menu extends React.Component {
                             <i className="fa fa-stop-circle" />
                         </span>
                     </MenuItem>
-                </MenuSection>
+                </MenuSection> */}
+                <SoundControls />
                 <MenuSection label="Notes">
                     <MenuItem label="Add triplet" />
                 </MenuSection>

@@ -13,12 +13,9 @@ import {defaultConnect} from '../utils'
 class Measures extends React.Component {
     render() {
         const {
-            tab: {measures}, drumkits,
-            actions: {addClonedMeasure, addMeasure}
+            tab: {measures},
+            actions: {addClonedMeasure, addEmptyMeasure}
         } = this.props
-        const lastMeasure = measures[measures.length - 1]
-        const drumkitName = lastMeasure ? lastMeasure.drumkit : 'default'
-        const drumkit = drumkits[drumkitName]
         return (
             <div className="measures">
                 {measures.map((measure, index) =>
@@ -36,16 +33,16 @@ class Measures extends React.Component {
                     <span className="icon is-small">
                         <i className="fa fa-plus" />
                     </span>
-                    <span>Add measure</span>
+                    <span>Add previous measure</span>
                 </button>
                 <button
                     className="button is-small add-measure"
-                    onClick={() => addMeasure(drumkit)}
+                    onClick={() => addEmptyMeasure()}
                 >
                     <span className="icon is-small">
                         <i className="fa fa-plus" />
                     </span>
-                    <span>Add different measure</span>
+                    <span>Add empty measure</span>
                 </button>
             </div>
         )

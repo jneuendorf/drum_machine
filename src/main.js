@@ -4,6 +4,7 @@ import {Provider} from 'react-redux'
 
 import Root from "./Root"
 import store from "./store"
+import "./Player"
 
 
 console.log('initial state', store.getState())
