@@ -45,6 +45,12 @@ module.exports = {
                 })
             },
             {
+                test: /\.(png|jpe?g)$/,
+                use: {
+                    loader: 'url-loader'
+                }
+            },
+            {
                 test: [/\.jsx?$/, /\.es6$/],
                 exclude: /node_modules/,
                 use: {

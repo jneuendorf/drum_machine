@@ -11,7 +11,7 @@ export class Root extends React.Component {
             <div className="container">
                 <Navbar />
                 <div className="columns main">
-                    <div className="column is-one-quarter">
+                    <div className="column is-2">
                         <Menu />
                     </div>
                     <div className="column has-border-left measures-container">
