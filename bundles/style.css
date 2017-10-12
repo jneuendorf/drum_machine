@@ -9832,7 +9832,7 @@ label.panel-block:hover {
 }
 
 #root > .container {
-  min-height: 702px;
+  min-height: 560px;
   position: relative;
 }
 
