@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /*! bulma.io v0.5.3 | MIT License | github.com/jgthms/bulma */
 
 @keyframes spinAround {
@@ -9904,6 +9906,17 @@ label.panel-block:hover {
 .measures .measure .instrument .note {
   border: 1px solid gray;
   position: relative;
+}
+
+.measures .measure .instrument .note.highlighted::after {
+  content: '\2022';
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
 }
 
 .measures .measure .instrument .volume {

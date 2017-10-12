@@ -19,37 +19,56 @@ class Measure extends React.Component {
             drumkits,
             ui,
             updateUI,
-            actions: {toggleNote, setVolume}
+            actions: {toggleNote, setVolume, setVolumes}
         } = this.props
         const {drumkit: drumkitName, notes} = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
+        const notesPerWholeNote = measure.minNoteValue / measure.numberOfBeats
         return (
             <div className="measure has-border-bottom">
-                {instruments.map(instrument => (
-                    <div
-                        className="columns is-gapless instrument"
-                        key={instrument}
-                    >
-                        {notes[instrument].map((volume, index) => (
-                            <Note
-                                volume={volume}
-                                toggle={() =>
-                                    toggleNote(measure, instrument, index)
-                                }
-                                setVolume={(newVolume) =>
-                                    setVolume(measure, instrument, index, newVolume)
-                                }
-                                key={index}
-                            />
-                        ))}
-                        <div className="column is-narrow">
-                            <span className="tag is-primary is-rounded" title={instrument}>
-                                {instrument}
-                            </span>
+                {instruments.map(instrument => {
+                    const instrumentNotes = notes[instrument]
+                    const allNotesOn = instrumentNotes.every(volume => volume > 0)
+                    return (
+                        <div
+                            className="columns is-gapless instrument"
+                            key={instrument}
+                        >
+                            {instrumentNotes.map((volume, index) => (
+                                <Note
+                                    volume={volume}
+                                    toggle={() =>
+                                        toggleNote(measure, instrument, index)
+                                    }
+                                    setVolume={(newVolume) =>
+                                        setVolume(measure, instrument, index, newVolume)
+                                    }
+                                    key={index}
+                                    highlighted={index % notesPerWholeNote === 0}
+                                />
+                            ))}
+                            <div className="column is-narrow">
+                                <span
+                                    className="tag is-white is-rounded"
+                                    title={`Turn all notes ${allNotesOn ? 'off' : 'on'}`}
+                                    onClick={() =>
+                                        setVolumes(measure, instrument, allNotesOn ? 0 : 1)
+                                    }
+                                >
+                                    <span className="icon is-small">
+                                        <i className={`fa fa-toggle-${allNotesOn ? 'on' : 'off'}`} />
+                                    </span>
+                                </span>
+                            </div>
+                            <div className="column is-narrow">
+                                <span className="tag is-primary is-rounded" title={instrument}>
+                                    {instrument}
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
                 <a
                     className="button is-info"
                     style={{position: 'absolute', top: '17px', right: 0}}

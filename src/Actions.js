@@ -7,6 +7,7 @@ export const ActionTypes = Enum([
     'ADD_CLONED_MEASURE',
     'TOGGLE_NOTE',
     'SET_VOLUME',
+    'SET_VOLUMES',
     'SET_BPM',
     'SET_NUMBER_OF_BEATS',
     'SET_NOTE_VALUE',
@@ -45,6 +46,12 @@ export const toggleNote = (measure, instrument, noteIndex) => ({
 export const setVolume = (measure, instrument, noteIndex, volume) => ({
     type: ActionTypes.SET_VOLUME,
     instrument, noteIndex, volume,
+    meta: ListActions.update(measure),
+})
+
+export const setVolumes = (measure, instrument, volume) => ({
+    type: ActionTypes.SET_VOLUMES,
+    measure, instrument, volume,
     meta: ListActions.update(measure),
 })
 

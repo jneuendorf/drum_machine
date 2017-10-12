@@ -83,6 +83,16 @@ const measure = function(state, action, meta) {
                 }
             })
         }
+        case ActionTypes.SET_VOLUMES: {
+            const {instrument, volume: newVolume} = action
+            const {notes} = state
+            return Object.assign({}, state, {
+                notes: {
+                    ...notes,
+                    [instrument]: notes[instrument].map(volume => newVolume)
+                }
+            })
+        }
         case ActionTypes.SET_BPM: {
             const {bpm} = action
             return Object.assign({}, state, {bpm})

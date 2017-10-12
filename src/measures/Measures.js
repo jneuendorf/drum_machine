@@ -26,15 +26,21 @@ class Measures extends React.Component {
                         uiKey={`Measure${index}`}
                     />
                 )}
-                <button
-                    className="button is-primary is-small add-measure"
-                    onClick={() => addClonedMeasure()}
-                >
-                    <span className="icon is-small">
-                        <i className="fa fa-plus" />
-                    </span>
-                    <span>Add previous measure</span>
-                </button>
+                {
+                    measures.length === 0
+                    ? null
+                    : (
+                        <button
+                            className="button is-primary is-small add-measure"
+                            onClick={() => addClonedMeasure()}
+                        >
+                            <span className="icon is-small">
+                                <i className="fa fa-plus" />
+                            </span>
+                            <span>Add previous measure</span>
+                        </button>
+                    )
+                }
                 <button
                     className="button is-small add-measure"
                     onClick={() => addEmptyMeasure()}

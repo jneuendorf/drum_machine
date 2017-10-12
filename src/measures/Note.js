@@ -11,11 +11,11 @@ const style = {
 
 export class Note extends React.Component {
     render() {
-        const {volume, toggle, setVolume} = this.props
+        const {highlighted, volume, toggle, setVolume} = this.props
         return (
             <div className="column is-narrow">
                 <div
-                    className="note"
+                    className={`note ${highlighted ? 'highlighted' : ''}`}
                     style={style}
                     onClick={toggle}
                     onMouseMove={(event) => {

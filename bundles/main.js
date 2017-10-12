@@ -4323,7 +4323,7 @@ exports.default = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.setPlayingState = exports.setCurrentPlayPos = exports.selectMenuItem = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolume = exports.toggleNote = exports.addClonedMeasure = exports.addEmptyMeasure = exports.ActionTypes = undefined;
+exports.setPlayingState = exports.setCurrentPlayPos = exports.selectMenuItem = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addClonedMeasure = exports.addEmptyMeasure = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(375);
 
@@ -4333,7 +4333,7 @@ var _ListReducer = __webpack_require__(173);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SELECT_MENU_ITEM', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SELECT_MENU_ITEM', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE']);
 
 var addEmptyMeasure = exports.addEmptyMeasure = function addEmptyMeasure(measure) {
     return {
@@ -4362,6 +4362,14 @@ var setVolume = exports.setVolume = function setVolume(measure, instrument, note
     return {
         type: ActionTypes.SET_VOLUME,
         instrument: instrument, noteIndex: noteIndex, volume: volume,
+        meta: _ListReducer.ListActions.update(measure)
+    };
+};
+
+var setVolumes = exports.setVolumes = function setVolumes(measure, instrument, volume) {
+    return {
+        type: ActionTypes.SET_VOLUMES,
+        measure: measure, instrument: instrument, volume: volume,
         meta: _ListReducer.ListActions.update(measure)
     };
 };
@@ -40347,10 +40355,12 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
- * Copyright (c) 2014-present, Facebook, Inc.
+ *  Copyright (c) 2014-2015, Facebook, Inc.
+ *  All rights reserved.
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
 (function (global, factory) {
@@ -45908,7 +45918,7 @@ var Measures = function (_React$Component) {
                         uiKey: 'Measure' + index
                     });
                 }),
-                _react2.default.createElement(
+                measures.length === 0 ? null : _react2.default.createElement(
                     'button',
                     {
                         className: 'button is-primary is-small add-measure',
@@ -46036,24 +46046,30 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 updateUI = _props.updateUI,
                 _props$actions = _props.actions,
                 toggleNote = _props$actions.toggleNote,
-                _setVolume = _props$actions.setVolume;
+                _setVolume = _props$actions.setVolume,
+                setVolumes = _props$actions.setVolumes;
             var drumkitName = measure.drumkit,
                 notes = measure.notes;
 
             var drumkit = drumkits[drumkitName];
             var instruments = drumkit.instruments;
 
+            var notesPerWholeNote = measure.minNoteValue / measure.numberOfBeats;
             return _react2.default.createElement(
                 'div',
                 { className: 'measure has-border-bottom' },
                 instruments.map(function (instrument) {
+                    var instrumentNotes = notes[instrument];
+                    var allNotesOn = instrumentNotes.every(function (volume) {
+                        return volume > 0;
+                    });
                     return _react2.default.createElement(
                         'div',
                         {
                             className: 'columns is-gapless instrument',
                             key: instrument
                         },
-                        notes[instrument].map(function (volume, index) {
+                        instrumentNotes.map(function (volume, index) {
                             return _react2.default.createElement(_Note2.default, {
                                 volume: volume,
                                 toggle: function toggle() {
@@ -46062,9 +46078,29 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                 setVolume: function setVolume(newVolume) {
                                     return _setVolume(measure, instrument, index, newVolume);
                                 },
-                                key: index
+                                key: index,
+                                highlighted: index % notesPerWholeNote === 0
                             });
                         }),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'column is-narrow' },
+                            _react2.default.createElement(
+                                'span',
+                                {
+                                    className: 'tag is-white is-rounded',
+                                    title: 'Turn all notes ' + (allNotesOn ? 'off' : 'on'),
+                                    onClick: function onClick() {
+                                        return setVolumes(measure, instrument, allNotesOn ? 0 : 1);
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'icon is-small' },
+                                    _react2.default.createElement('i', { className: 'fa fa-toggle-' + (allNotesOn ? 'on' : 'off') })
+                                )
+                            )
+                        ),
                         _react2.default.createElement(
                             'div',
                             { className: 'column is-narrow' },
@@ -46169,6 +46205,7 @@ var Note = exports.Note = function (_React$Component) {
         key: 'render',
         value: function render() {
             var _props = this.props,
+                highlighted = _props.highlighted,
                 volume = _props.volume,
                 toggle = _props.toggle,
                 setVolume = _props.setVolume;
@@ -46179,7 +46216,7 @@ var Note = exports.Note = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     {
-                        className: 'note',
+                        className: 'note ' + (highlighted ? 'highlighted' : ''),
                         style: style,
                         onClick: toggle,
                         onMouseMove: function onMouseMove(event) {
@@ -56936,9 +56973,9 @@ var _defineProperty2 = __webpack_require__(188);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-var _extends4 = __webpack_require__(53);
+var _extends5 = __webpack_require__(53);
 
-var _extends5 = _interopRequireDefault(_extends4);
+var _extends6 = _interopRequireDefault(_extends5);
 
 var _slicedToArray2 = __webpack_require__(55);
 
@@ -57048,7 +57085,7 @@ var measure = function measure(state, action, meta) {
                 var notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends5.default)({}, notes, (0, _defineProperty3.default)({}, instrument, notes[instrument].map(function (volume, index) {
+                    notes: (0, _extends6.default)({}, notes, (0, _defineProperty3.default)({}, instrument, notes[instrument].map(function (volume, index) {
                         if (index !== noteIndex) {
                             return volume;
                         }
@@ -57065,11 +57102,23 @@ var measure = function measure(state, action, meta) {
                 var _notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends5.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, _notes[_instrument].map(function (volume, index) {
+                    notes: (0, _extends6.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, _notes[_instrument].map(function (volume, index) {
                         if (index !== _noteIndex) {
                             return volume;
                         }
                         return newVolume;
+                    })))
+                });
+            }
+        case _Actions.ActionTypes.SET_VOLUMES:
+            {
+                var _instrument2 = action.instrument,
+                    _newVolume = action.volume;
+                var _notes2 = state.notes;
+
+                return (0, _assign2.default)({}, state, {
+                    notes: (0, _extends6.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, _notes2[_instrument2].map(function (volume) {
+                        return _newVolume;
                     })))
                 });
             }
@@ -57099,7 +57148,7 @@ var measure = function measure(state, action, meta) {
                     oldNotes = state.notes;
 
                 var numberOfNotes = (0, _utils.getNumberOfNotes)(_numberOfBeats, _noteValue, minNoteValue);
-                var _notes2 = {};
+                var _notes3 = {};
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
@@ -57110,10 +57159,10 @@ var measure = function measure(state, action, meta) {
 
                         var _ref4 = (0, _slicedToArray3.default)(_ref3, 2);
 
-                        var _instrument2 = _ref4[0];
+                        var _instrument3 = _ref4[0];
                         var instrumentNotes = _ref4[1];
 
-                        _notes2[_instrument2] = (0, _utils.arrayChangedSize)(instrumentNotes, numberOfNotes, 0);
+                        _notes3[_instrument3] = (0, _utils.arrayChangedSize)(instrumentNotes, numberOfNotes, 0);
                     }
                 } catch (err) {
                     _didIteratorError2 = true;
@@ -57130,13 +57179,13 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)({}, state, { minNoteValue: minNoteValue, notes: _notes2 });
+                return (0, _assign2.default)({}, state, { minNoteValue: minNoteValue, notes: _notes3 });
             }
         case _Actions.ActionTypes.CLEAR_MEASURE:
             {
                 var _oldNotes = state.notes;
 
-                var _notes3 = {};
+                var _notes4 = {};
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
                 var _iteratorError3 = undefined;
@@ -57147,10 +57196,10 @@ var measure = function measure(state, action, meta) {
 
                         var _ref6 = (0, _slicedToArray3.default)(_ref5, 2);
 
-                        var _instrument3 = _ref6[0];
+                        var _instrument4 = _ref6[0];
                         var _instrumentNotes = _ref6[1];
 
-                        _notes3[_instrument3] = _instrumentNotes.map(function (item) {
+                        _notes4[_instrument4] = _instrumentNotes.map(function (item) {
                             return 0;
                         });
                     }
@@ -57169,7 +57218,7 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)({}, state, { notes: _notes3 });
+                return (0, _assign2.default)({}, state, { notes: _notes4 });
             }
         default:
             console.warn('should not happen: measures reducer got action with type', action.type);
