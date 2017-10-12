@@ -9908,7 +9908,7 @@ label.panel-block:hover {
   position: relative;
 }
 
-.measures .measure .instrument .note.highlighted::after {
+.measures .measure .instrument .note.isFirstOfWholeNote::after {
   content: '\2022';
   bottom: 0;
   left: 0;
@@ -9917,6 +9917,10 @@ label.panel-block:hover {
   right: 0;
   text-align: center;
   top: 0;
+}
+
+.measures .measure .instrument .note.isCurrentlyPlaying .volume {
+  background-color: #6bffe9;
 }
 
 .measures .measure .instrument .volume {

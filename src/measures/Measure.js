@@ -1,7 +1,7 @@
 import React from 'react'
 import ui from 'redux-ui'
 
-import {defaultConnect} from '../utils'
+import {defaultConnect, arraysEqual} from '../utils'
 import Note from './Note'
 import MeasureSettings from './MeasureSettings'
 
@@ -17,6 +17,8 @@ class Measure extends React.Component {
         const {
             measure,
             drumkits,
+            index: measureIndex,
+            soundControls: {currentPlayPos},
             ui,
             updateUI,
             actions: {toggleNote, setVolume, setVolumes}
@@ -45,7 +47,11 @@ class Measure extends React.Component {
                                         setVolume(measure, instrument, index, newVolume)
                                     }
                                     key={index}
-                                    highlighted={index % notesPerWholeNote === 0}
+                                    isFirstOfWholeNote={index % notesPerWholeNote === 0}
+                                    isCurrentlyPlaying={arraysEqual(
+                                        [measureIndex, index],
+                                        currentPlayPos
+                                    )}
                                 />
                             ))}
                             <div className="column is-narrow">

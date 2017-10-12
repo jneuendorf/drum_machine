@@ -1,7 +1,7 @@
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {Howl} from 'howler'
-import {fromJS, Set} from 'immutable'
+import {is, fromJS, Set} from 'immutable'
 
 import * as Actions from '../Actions'
 
@@ -34,6 +34,22 @@ export const cloneDeep = function(arg) {
     return mergeDeep(arg instanceof Array ? [] : {}, arg)
 }
 
+export const areEqual = function(...args) {
+    return is(...args.map(arg => fromJS(arg)))
+}
+
+
+export const arraysEqual = function(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false
+    }
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false
+        }
+    }
+    return true
+}
 
 export const filledArray = function(length, value) {
     return (new Array(length)).fill(value)

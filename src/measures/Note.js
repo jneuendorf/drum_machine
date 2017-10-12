@@ -11,11 +11,19 @@ const style = {
 
 export class Note extends React.Component {
     render() {
-        const {highlighted, volume, toggle, setVolume} = this.props
+        const {
+            isFirstOfWholeNote, isCurrentlyPlaying, volume,
+            toggle, setVolume
+        } = this.props
+        const className = (
+            `note `
+            + `${isFirstOfWholeNote ? 'isFirstOfWholeNote ' : ''}`
+            + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
+        )
         return (
             <div className="column is-narrow">
                 <div
-                    className={`note ${highlighted ? 'highlighted' : ''}`}
+                    className={className}
                     style={style}
                     onClick={toggle}
                     onMouseMove={(event) => {

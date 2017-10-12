@@ -2096,7 +2096,7 @@ module.exports = function (exec) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.defineDrumkit = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.dict = exports.unique = exports.arrayChangedSize = exports.isInt = exports.last = exports.chunkArray = exports.filledArray = exports.cloneDeep = exports.mergeDeep = exports.defaultConnect = undefined;
+exports.defineDrumkit = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.dict = exports.unique = exports.arrayChangedSize = exports.isInt = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.defaultConnect = undefined;
 
 var _extends2 = __webpack_require__(53);
 
@@ -2168,6 +2168,28 @@ var mergeDeep = exports.mergeDeep = function mergeDeep() {
 
 var cloneDeep = exports.cloneDeep = function cloneDeep(arg) {
     return mergeDeep(arg instanceof Array ? [] : {}, arg);
+};
+
+var areEqual = exports.areEqual = function areEqual() {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+    }
+
+    return _immutable.is.apply(undefined, (0, _toConsumableArray3.default)(args.map(function (arg) {
+        return (0, _immutable.fromJS)(arg);
+    })));
+};
+
+var arraysEqual = exports.arraysEqual = function arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+    for (var i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+    return true;
 };
 
 var filledArray = exports.filledArray = function filledArray(length, value) {
@@ -46042,6 +46064,8 @@ var Measure = (_dec = (0, _reduxUi2.default)({
             var _props = this.props,
                 measure = _props.measure,
                 drumkits = _props.drumkits,
+                measureIndex = _props.index,
+                currentPlayPos = _props.soundControls.currentPlayPos,
                 ui = _props.ui,
                 updateUI = _props.updateUI,
                 _props$actions = _props.actions,
@@ -46079,7 +46103,8 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                     return _setVolume(measure, instrument, index, newVolume);
                                 },
                                 key: index,
-                                highlighted: index % notesPerWholeNote === 0
+                                isFirstOfWholeNote: index % notesPerWholeNote === 0,
+                                isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, index], currentPlayPos)
                             });
                         }),
                         _react2.default.createElement(
@@ -46205,18 +46230,20 @@ var Note = exports.Note = function (_React$Component) {
         key: 'render',
         value: function render() {
             var _props = this.props,
-                highlighted = _props.highlighted,
+                isFirstOfWholeNote = _props.isFirstOfWholeNote,
+                isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
                 setVolume = _props.setVolume;
 
+            var className = 'note ' + ('' + (isFirstOfWholeNote ? 'isFirstOfWholeNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             return _react2.default.createElement(
                 'div',
                 { className: 'column is-narrow' },
                 _react2.default.createElement(
                     'div',
                     {
-                        className: 'note ' + (highlighted ? 'highlighted' : ''),
+                        className: className,
                         style: style,
                         onClick: toggle,
                         onMouseMove: function onMouseMove(event) {
