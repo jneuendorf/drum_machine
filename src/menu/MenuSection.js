@@ -7,6 +7,9 @@ import ui from 'redux-ui'
 export class MenuSection extends React.Component {
     render() {
         const {label, children} = this.props
+        if (!children) {
+            return null
+        }
         return (
             <span>
                 <p className="menu-label">

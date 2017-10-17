@@ -5,6 +5,7 @@ import {ListActions} from './reducers/ListReducer'
 export const ActionTypes = Enum([
     'ADD_EMPTY_MEASURE',
     'ADD_CLONED_MEASURE',
+    'ADD_MEASURE_FROM_TEMPLATE',
     'TOGGLE_NOTE',
     'SET_VOLUME',
     'SET_VOLUMES',
@@ -14,6 +15,7 @@ export const ActionTypes = Enum([
     'SET_MIN_NOTE_VALUE',
     'CLEAR_MEASURE',
     'REMOVE_MEASURE',
+    'CREATE_MEASURE_TEMPLATE',
 
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
@@ -35,6 +37,11 @@ export const addEmptyMeasure = (measure) => ({
 export const addClonedMeasure = () => ({
     type: ActionTypes.ADD_CLONED_MEASURE,
     meta: ListActions.append(),
+})
+
+export const addMeasureFromTemplate = ({measure}) => ({
+    type: ActionTypes.ADD_MEASURE_FROM_TEMPLATE,
+    meta: ListActions.append(measure),
 })
 
 export const toggleNote = (measure, instrument, noteIndex) => ({
@@ -87,6 +94,11 @@ export const clearMeasure = (measure) => ({
 export const removeMeasure = (measure) => ({
     type: ActionTypes.REMOVE_MEASURE,
     meta: ListActions.remove(measure),
+})
+
+export const createMeasureTemplate = (name, measure) => ({
+    type: ActionTypes.CREATE_MEASURE_TEMPLATE,
+    name, measure
 })
 
 

@@ -12,6 +12,7 @@ export class MenuItem extends React.Component {
             children,
             className='',
             title,
+            hasLabelAndChildren=false,
             isActive,
         } = this.props
         isActive = isActive || ui.activeItem === label
@@ -25,8 +26,9 @@ export class MenuItem extends React.Component {
                     title={title}
                     onClick={() => this.handleOnClick()}
                 >
-                    {children || label}
+                    {hasLabelAndChildren ? label : children || label}
                 </a>
+                {hasLabelAndChildren ? children : null}
             </li>
         )
     }

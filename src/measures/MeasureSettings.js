@@ -1,11 +1,19 @@
 import React from 'react'
 
+import {areEqual} from '../utils'
+
 
 class MeasureSettings extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {templateName: ''}
+    }
+
     render() {
         const {
             measure,
             measure: {numberOfBeats, noteValue, minNoteValue, drumkit, bpm},
+            menu: {measureTemplates},
             drumkits,
             actions: {
                 setBpm,
@@ -14,6 +22,7 @@ class MeasureSettings extends React.Component {
                 setMinNoteValue,
                 clearMeasure,
                 removeMeasure,
+                createMeasureTemplate,
             }
         } = this.props
         return (
@@ -106,6 +115,87 @@ class MeasureSettings extends React.Component {
                     </div>
 
                     <div className="field">
+                        <label className="label">Cleaning up</label>
+                        <div className="columns">
+                            <div className="column is-narrow">
+                                <label className="label is-small">Clear measure</label>
+                                <div className="control">
+                                    <button
+                                        className="button is-warning"
+                                        onClick={() => clearMeasure(measure)}
+                                        title="This will set all volumes to zero."
+                                    >
+                                        <span className="icon">
+                                            <i className="fa fa-eraser" />
+                                        </span>
+                                        <span>Clear</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="column is-narrow">
+                                <label className="label is-small">Delete measure</label>
+                                <div className="control">
+                                    <button
+                                        className="button is-danger"
+                                        onClick={() => removeMeasure(measure)}
+                                    >
+                                        <span className="icon">
+                                            <i className="fa fa-remove" />
+                                        </span>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="field">
+                        <label className="label">Measure as Template</label>
+                        <div className="columns">
+                            <div className="column">
+                                <label className="label is-small">Template name</label>
+                                <div className="control">
+                                    <input
+                                        className="input"
+                                        type="text"
+                                        value={this.state.templateName}
+                                        onChange={(event) => this.setState({templateName: event.target.value})}
+                                    />
+                                </div>
+                            </div>
+                            <div className="column is-narrow">
+                                <label className="label is-small">&nbsp;</label>
+                                <div className="control">
+                                    <button
+                                        className="button"
+                                        onClick={() => {
+                                            const {templateName} = this.state
+                                            if (templateName === '') {
+                                                return
+                                            }
+                                            // measureTemplates
+                                            const equalMeasureTemplateExists = measureTemplates.some(
+                                                template => areEqual(measure, template.measure)
+                                            )
+                                            if (equalMeasureTemplateExists) {
+                                                if (!window.confirm("An equal measure template exists. Continue anyway?")) {
+                                                    return
+                                                }
+                                            }
+                                            createMeasureTemplate(templateName, measure)
+                                        }}
+                                    >
+                                        <span className="icon">
+                                            <i className="fa fa-save" />
+                                        </span>
+                                        <span>Create template</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="field">
                         <label className="label">Drumkit</label>
                         <div className="control">
                             <div className="select">
@@ -115,44 +205,6 @@ class MeasureSettings extends React.Component {
                                     ))}
                                 </select>
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="field">
-                        <label className="label">Cleaning up</label>
-                        <label className="label is-small">Clear measure</label>
-                        <div className="columns">
-                            <div className="column is-narrow">
-                                <div className="control">
-                                    <button
-                                        className="button is-warning"
-                                        onClick={() => clearMeasure(measure)}
-                                    >
-                                        <span className="icon">
-                                            <i className="fa fa-eraser" />
-                                        </span>
-                                        <span>Clear</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="column">
-                                <span className="tag is-light">
-                                    This will set all volumes to zero.
-                                </span>
-                            </div>
-                        </div>
-
-                        <label className="label is-small">Delete measure</label>
-                        <div className="control">
-                            <button
-                                className="button is-danger"
-                                onClick={() => removeMeasure(measure)}
-                            >
-                                <span className="icon">
-                                    <i className="fa fa-remove" />
-                                </span>
-                                <span>Delete</span>
-                            </button>
                         </div>
                     </div>
                 </div>
