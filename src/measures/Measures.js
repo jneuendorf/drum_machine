@@ -1,5 +1,4 @@
 import React from 'react'
-// import ui from 'redux-ui'
 
 import Measure from './Measure'
 import {defaultConnect} from '../utils'

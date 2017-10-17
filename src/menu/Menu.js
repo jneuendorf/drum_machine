@@ -1,5 +1,4 @@
 import React from 'react'
-import ui from 'redux-ui'
 
 import {defaultConnect} from '../utils'
 import MenuSection from './MenuSection'
@@ -8,11 +7,6 @@ import SoundControls from './SoundControls'
 import MeasureTemplates from './MeasureTemplates'
 
 
-@ui({
-    state: {
-        activeItem: null,
-    },
-})
 class Menu extends React.Component {
     render() {
         const {menu: {measureTemplates}} = this.props

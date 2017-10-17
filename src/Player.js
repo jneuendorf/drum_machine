@@ -31,22 +31,35 @@ class Player {
     static onStateChange(state) {
         const {playingState} = state.soundControls
         const {playingState: prevPlayingState} = (this.prevState.soundControls || {})
-        // console.log('state changed...playingStates:', playingState, prevPlayingState, this.prevState)
+        // The prev state must be saved here because some actions
+        // are dispatched from the player's methods so this method can
+        // get called before the switch statement is done.
         this.prevState = state
-        // console.log('updated prevState', state);
+
         if (playingState !== prevPlayingState) {
-            // Don't pause or stop upon initialization.
-            if (this.clockIndex >= 0 || playingState === 'play') {
-                switch (playingState) {
-                    case 'play':
-                        this.play(state, prevPlayingState)
-                        break;
-                    case 'pause':
-                        this.pause()
-                        break;
-                    case 'stop':
-                        this.stop()
-                        break;
+            if (state.tab.measures.length === 0) {
+                setPlayingState('stop')
+                return
+            }
+            // Stop/pause only if the player was previously playing.
+            if (prevPlayingState === 'play') {
+                if (playingState === 'stop') {
+                    this.stop()
+                }
+                else if (playingState === 'pause') {
+                    this.pause()
+                }
+                else {
+                    setPlayingState('stop')
+                }
+            }
+            // Play only if the player was previously stopped/paused.
+            else {
+                if (playingState === 'play') {
+                    this.play(state, prevPlayingState)
+                }
+                else {
+                    setPlayingState('stop')
                 }
             }
         }
@@ -60,10 +73,6 @@ class Player {
 
         console.log('called play........');
 
-        if (measures.length === 0) {
-            return
-        }
-
         // resume
         if (prevPlayingState === 'pause') {
             console.log('resuming playback');
@@ -76,16 +85,12 @@ class Player {
             const interval = getMsBetweenNotes(measure)
             const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
             const {howl} = drumkits[drumkitName]
-            console.log('creating clock w/ interval', interval);
+            console.log('creating clock w/ interval', interval)
             this.clocks.push(new Tock({
                 interval,
                 callback: (clock, tick) => {
                     const elapsed = clock.lap()
-                    // const tick = Math.round(elapsed / interval)
-                    // const tick = Math.floor(elapsed / interval)
-                    // const tick = clock.tick
                     console.log('off by', elapsed - tick*interval)
-                    // console.log('clocks statuses:', clocks.map(c => c.go), clocks.map(c => c.interval));
                     console.log(`at tick #${tick}`, Date.now(), Date.now() - start)
                     if (tick < numberOfNotes) {
                         const instrumentsToPlayWithNotes = Object.entries(notes)
@@ -100,8 +105,7 @@ class Player {
                         setCurrentPlayPos(index, tick)
                     }
                     else {
-                        console.log('resetting...', Date.now())
-                        // clock.stop()
+                        // console.log('resetting...', Date.now())
                         clock.reset()
                         const clockIndex = this.startClock(index + 1)
                         console.log('clockIndex =', clockIndex, '(if == -1 -> reset playing state)');
@@ -113,14 +117,10 @@ class Player {
                             setCurrentPlayPos(-1, -1)
                             setPlayingState('stop')
                         }
-                        // console.log('old index', index, ', new index', clockIndex);
                     }
-                    // console.log(this.clocks.map(c => window._clocks.includes(c)))
                 },
             }))
         })
-        // window._clocks = (window._clocks || []).concat(this.clocks)
-        // console.log('starting with clocks', this.clocks);
         const start = Date.now()
         this.startClock(0)
         // setPlayingState('play')
@@ -130,7 +130,7 @@ class Player {
         if (index >= this.clocks.length) {
             return -1
         }
-        console.log(`starting clock #${index}`);
+        console.log(`starting clock #${index}`)
         this.clockIndex = index
         this.clocks[index].start()
         return index
@@ -145,7 +145,12 @@ class Player {
     }
 
     static stop() {
-        this.clocks[this.clockIndex].reset()
+        const clock = this.clocks[this.clockIndex]
+        // The clock might not exist.
+        // This happens if a measure is created
+        if (clock) {
+            clock.reset()
+        }
         setCurrentPlayPos(-1, -1)
         this.clocks = []
         this.clockIndex = -1

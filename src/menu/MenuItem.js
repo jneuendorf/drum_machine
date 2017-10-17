@@ -1,21 +1,17 @@
 import React from 'react'
-import ui from 'redux-ui'
 
 
-// inherits ui context from Menu because it's rendered by Menu.
-@ui()
 export class MenuItem extends React.Component {
     render() {
         let {
             label,
-            ui,
+            // ui,
             children,
             className='',
             title,
             hasLabelAndChildren=false,
             isActive,
         } = this.props
-        isActive = isActive || ui.activeItem === label
         if (isActive) {
             className += ' is-active'
         }
@@ -34,16 +30,9 @@ export class MenuItem extends React.Component {
     }
 
     handleOnClick() {
-        const {
-            label,
-            onClick,
-            updateUI,
-        } = this.props
-        if (typeof(onClick) === 'function') {
+        const {onClick} = this.props
+        if (onClick) {
             onClick()
-        }
-        else {
-            updateUI('activeItem', label)
         }
     }
 }
