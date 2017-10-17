@@ -5,11 +5,6 @@ import Measure from './Measure'
 import {defaultConnect} from '../utils'
 
 
-// @ui({
-//     state: {
-//
-//     },
-// })
 class Measures extends React.Component {
     render() {
         const {
@@ -18,14 +13,16 @@ class Measures extends React.Component {
         } = this.props
         return (
             <div className="measures">
-                {measures.map((measure, index) =>
-                    <Measure
-                        measure={measure}
-                        index={index}
-                        key={index}
-                        uiKey={`Measure${index}`}
-                    />
-                )}
+                {measures.map((measure, index) => {
+                    return (
+                        <Measure
+                            measure={measure}
+                            index={index}
+                            key={measure.id}
+                            uiKey={`Measure${measure.id}`}
+                        />
+                    )
+                })}
                 {
                     measures.length === 0
                     ? null
