@@ -4,13 +4,14 @@ import {Howl} from 'howler'
 import {is, fromJS, Set} from 'immutable'
 
 import * as Actions from '../Actions'
+import {dispatch as actionTrackingDispatch} from '../store'
 
 
 const mapStateToProps = function(state, ownProps) {
     return state
 }
 const mapDispatchToProps = function(dispatch, ownProps) {
-    return {actions: bindActionCreators(Actions, dispatch)}
+    return {actions: bindActionCreators(Actions, actionTrackingDispatch)}
 }
 export const defaultConnect = function(component, storeKey) {
     if (!storeKey) {

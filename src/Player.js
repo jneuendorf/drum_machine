@@ -1,8 +1,9 @@
 // import Tock from 'tocktimer'
 import Tock from '../lib/tock'
 
-import store from './store'
+import {subscribe, dispatch} from './store'
 import {
+    ActionTypes,
     setCurrentPlayPos as setCurrentPlayPosActionCreator,
     setPlayingState as setPlayingStateActionCreator,
 } from './Actions'
@@ -14,10 +15,10 @@ import {
 
 // Bind dispatch to action.
 const setCurrentPlayPos = function(measureIndex, noteIndex) {
-    store.dispatch(setCurrentPlayPosActionCreator(measureIndex, noteIndex))
+    dispatch(setCurrentPlayPosActionCreator(measureIndex, noteIndex))
 }
 const setPlayingState = function(playingState) {
-    store.dispatch(setPlayingStateActionCreator(playingState))
+    dispatch(setPlayingStateActionCreator(playingState))
 }
 
 
@@ -28,7 +29,12 @@ class Player {
     static clockIndex = -1
 
     // Decides what method should be called.
-    static onStateChange(state) {
+    static onStateChange(state, action) {
+        if (action.type === ActionTypes.SET_STORE_STATE) {
+            setPlayingState('stop')
+            this.stop()
+        }
+
         const {playingState} = state.soundControls
         const {playingState: prevPlayingState} = (this.prevState.soundControls || {})
         // The prev state must be saved here because some actions
@@ -158,9 +164,18 @@ class Player {
 }
 
 
-store.subscribe(function() {
-    Player.onStateChange(store.getState())
+// store.subscribe(function(state, action) {
+subscribe(function(state, action) {
+    console.log('subscribe', state, action)
+    Player.onStateChange(state, action)
+    // Player.onStateChange(store.getState())
 })
+
+// store.onSetState(function(store) {
+//     store.subscribe(function() {
+//         Player.onStateChange(store.getState())
+//     })
+// })
 
 export {Player}
 export default Player
