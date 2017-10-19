@@ -3,6 +3,8 @@ import {ListActions} from './reducers/ListReducer'
 
 
 export const ActionTypes = Enum([
+    'SET_STORE_STATE',
+
     'ADD_EMPTY_MEASURE',
     'ADD_CLONED_MEASURE',
     'ADD_MEASURE_FROM_TEMPLATE',
@@ -26,6 +28,11 @@ export const ActionTypes = Enum([
     'SET_PLAYING_STATE',
 ])
 
+
+export const setStoreState = (state) => ({
+    type: ActionTypes.SET_STORE_STATE,
+    state,
+})
 
 
 export const addEmptyMeasure = (measure) => ({
