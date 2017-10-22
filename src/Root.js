@@ -1,8 +1,8 @@
-import React from "react"
+import React from 'react'
 
-import Navbar from "./nav/Navbar"
-import Menu from "./menu/Menu"
-import Measures from "./measures/Measures"
+import Navbar from './nav/Navbar'
+import Menu from './menu/Menu'
+import Measures from './measures/Measures'
 
 
 export class Root extends React.Component {

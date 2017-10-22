@@ -30,7 +30,7 @@ class Player {
 
     // Decides what method should be called.
     static onStateChange(state, action) {
-        if (action.type === ActionTypes.SET_STORE_STATE) {
+        if (action && action.type === ActionTypes.SET_STORE_STATE) {
             setPlayingState('stop')
             this.stop()
         }
