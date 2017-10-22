@@ -12,7 +12,7 @@ const extractSass = new ExtractTextPlugin({
 module.exports = {
     entry: {
         "main.js": "./src/main.js",
-        "tock_test.js": "./tock_test.js",
+        // "tock_test.js": "./tock_test.js",
         "style.css": "./style/main.sass"
     },
     output: {
