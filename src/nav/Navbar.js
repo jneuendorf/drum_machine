@@ -1,14 +1,26 @@
 import React from 'react'
+import ui from 'redux-ui'
 
 import Dropdown from './Dropdown'
-// import * as store from '../store'
+import StoreStateDisplayer from '../StoreStateDisplayer'
 import store from '../store'
-import {defaultConnect, createMeasure} from "../utils"
+import {defaultConnect, serializeState} from "../utils"
 
 
+@ui({
+    state: {
+        displayStoreState: false,
+        serializedState: '',
+    }
+})
 class Navbar extends React.Component {
+
     render() {
-        const {actions: {setStoreState}} = this.props
+        const {
+            ui: {displayStoreState, serializedState},
+            updateUI,
+            actions: {setStoreState}
+        } = this.props
         return (
             <nav className="navbar is-transparent has-border-bottom">
                 <div className="navbar-brand">
@@ -73,7 +85,15 @@ class Navbar extends React.Component {
                                     </a>
                                 </p>
                                 <p className="control">
-                                    <a className="button is-primary" href="#">
+                                    <a
+                                        className="button is-primary"
+                                        onClick={() => {
+                                            updateUI({
+                                                displayStoreState: true,
+                                                serializedState: serializeState(store.getState())
+                                            })
+                                        }}
+                                    >
                                         <span className="icon">
                                             <i className="fa fa-cloud-upload" />
                                         </span>
@@ -92,6 +112,21 @@ class Navbar extends React.Component {
                         </div>
                     </div>
                 </div>
+                {
+                    displayStoreState
+                    ? (
+                        <StoreStateDisplayer
+                            state={serializedState}
+                            close={
+                                () => updateUI({
+                                    displayStoreState: false,
+                                    serializedState: '',
+                                })
+                            }
+                        />
+                    )
+                    : null
+                }
             </nav>
         )
     }

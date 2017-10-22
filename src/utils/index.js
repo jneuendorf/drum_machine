@@ -1,6 +1,5 @@
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {Howl} from 'howler'
 import {is, fromJS, Set} from 'immutable'
 
 import * as Actions from '../Actions'
@@ -123,33 +122,24 @@ export const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue)
 
 export const getMsBetweenNotes = function(measure) {
     const {noteValue, minNoteValue, bpm} = measure
-    // return ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    // here we return the mathematically simplified version of
+    // ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
     return (noteValue * 60000) / bpm / minNoteValue
 }
 
 
-export const defineDrumkit = function(name, sourceFiles, sprite, options={}) {
-    const instruments = Object.keys(sprite)
-    // In this case we skip the is 'isLoading' state because drumkits should
-    // load before the user can hit 'play' or 'manage drumkits'
-    const loadingState = options.preload === true ? 'loaded' : 'unloaded'
-    return {
-        howl: new Howl({
-            preload: false,
-            ...options,
-            src: sourceFiles,
-            sprite: sprite,
-        }),
-        name,
-        instruments,
-        // same as howl.state() but this prop is changed by actions
-        loadingState,
-        formattedInstruments: formatInstruments(instruments),
-    }
+export const serializeState = function(storeState) {
+    /* eslint-disable-next-line no-unused-vars */
+    const {drumkits, ...state} = storeState
+    return JSON.stringify(
+        Object.assign({}, state, {
+            ui: state.ui.toJS()
+        })
+    )
 }
 
-const formatInstruments = function(instruments) {
-    return instruments.map(name => {
-        return `${name.charAt(0).toUpperCase()}${name.slice(1)}`.replace(/(\d+)$/g, ' $1')
-    })
+export const deserializeState = function(serializedState) {
+    const state = JSON.parse(serializedState)
+    state.ui = fromJS(state.ui)
+    return state
 }

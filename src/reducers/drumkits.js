@@ -1,5 +1,32 @@
 import {ActionTypes} from '../Actions'
-import {defineDrumkit} from '../utils'
+import {Howl} from 'howler'
+
+
+const defineDrumkit = function(name, sourceFiles, sprite, options={}) {
+    const instruments = Object.keys(sprite)
+    // In this case we skip the is 'isLoading' state because drumkits should
+    // load before the user can hit 'play' or 'manage drumkits'
+    const loadingState = options.preload === true ? 'loaded' : 'unloaded'
+    return {
+        howl: new Howl({
+            preload: false,
+            ...options,
+            src: sourceFiles,
+            sprite: sprite,
+        }),
+        name,
+        instruments,
+        // same as howl.state() but this prop is changed by actions
+        loadingState,
+        formattedInstruments: formatInstruments(instruments),
+    }
+}
+
+const formatInstruments = function(instruments) {
+    return instruments.map(name => {
+        return `${name.charAt(0).toUpperCase()}${name.slice(1)}`.replace(/(\d+)$/g, ' $1')
+    })
+}
 
 
 export const initialDrumkits = {

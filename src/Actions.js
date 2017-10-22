@@ -4,6 +4,7 @@ import {ListActions} from './reducers/ListReducer'
 
 export const ActionTypes = Enum([
     'SET_STORE_STATE',
+    'DISPLAY_STORE_STATE',
 
     'ADD_EMPTY_MEASURE',
     'ADD_CLONED_MEASURE',
@@ -31,6 +32,11 @@ export const ActionTypes = Enum([
 
 export const setStoreState = (state) => ({
     type: ActionTypes.SET_STORE_STATE,
+    state,
+})
+
+export const displayStoreState = (state) => ({
+    type: ActionTypes.DISPLAY_STORE_STATE,
     state,
 })
 
