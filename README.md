@@ -9,7 +9,7 @@ See demo [here](http://jneuendorf.github.io/drum_machine/).
 
 - [ ] Export
     - [x] as text
-    - [ ] as text file
+    - [x] as text file
     - [ ] as music file
 - [ ] Import
     - [x] from text

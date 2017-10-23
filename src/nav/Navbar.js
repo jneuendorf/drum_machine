@@ -1,5 +1,6 @@
 import React from 'react'
 import ui from 'redux-ui'
+import download from 'downloadjs'
 
 import Dropdown from './Dropdown'
 import StoreStateManager from '../StoreStateManager'
@@ -37,7 +38,7 @@ class Navbar extends React.Component {
                     <div className="navbar-start">
                         <Dropdown label="Export" items={[
                             {
-                                label: "As text",
+                                label: 'As text',
                                 onClick: () => {
                                     updateUI({
                                         displayStoreState: true,
@@ -46,12 +47,27 @@ class Navbar extends React.Component {
                                 }
                             },
                             {
-                                label: "As file",
-                            }
+                                label: 'As text file',
+                                onClick: () => {
+                                    const defaultFilename = 'drum_machine'
+                                    const filename = (
+                                        prompt('Enter filename (without extension)', defaultFilename)
+                                        || defaultFilename
+                                    )
+                                    download(
+                                        serializeState(store.getState()),
+                                        `${filename}.txt`,
+                                        'text/plain'
+                                    )
+                                }
+                            },
+                            {
+                                label: 'As music file'
+                            },
                         ]} />
                         <Dropdown label="Import" items={[
                             {
-                                label: "From text",
+                                label: 'From text',
                                 onClick: () => {
                                     updateUI({
                                         importStoreState: true,
@@ -59,85 +75,21 @@ class Navbar extends React.Component {
                                 }
                             },
                             {
-                                label: "From file",
-                            }
+                                label: 'From text file',
+                            },
                         ]} />
                     </div>
                     <div className="navbar-end">
                         <Dropdown label="Docs" items={[
                             {
-                                label: "Overview",
-                                href: "docs.html",
+                                label: 'Overview',
+                                href: 'docs.html',
                             },
                             {
-                                label: "API",
-                                href: "docs.html#api",
-                            }
+                                label: 'API',
+                                href: 'docs.html#api',
+                            },
                         ]} />
-                        {/* <div className="navbar-item">
-                            <div className="field is-grouped">
-                                <p className="control">
-                                    <a
-                                        className="button"
-                                        onClick={() =>
-                                            // store.setState({
-                                            setStoreState({
-                                                tab: {measures: [
-                                                    {
-                                                        id:0,
-                                                        numberOfBeats:4,
-                                                        noteValue:4,
-                                                        minNoteValue:8,
-                                                        drumkit:"default",
-                                                        notes:{
-                                                            snare:[1,0,1,0,0,0,0,0],
-                                                            "hi-hat":[0,0,0,0,0,0,0,0],
-                                                            kick:[0,0,0,0,0,0,0,0],
-                                                            crash1:[0,0,0,0,0,0,0,0],
-                                                            crash2:[0,0,0,0,0,0,0,0],
-                                                            ride:[0,0,0,0,0,0,0,0],
-                                                            tom1:[0,0,0,0,0,0,0,0],
-                                                            tom2:[0,0,0,0,0,0,0,0],
-                                                            tom3:[0,0,0,0,0,0,0,0]
-                                                        },
-                                                        bpm:100
-                                                    }
-                                                ]}
-                                            })
-                                        }
-                                    >
-                                        <span className="icon">
-                                            <i className="fa fa-cloud-download" />
-                                        </span>
-                                        <span>Import</span>
-                                    </a>
-                                </p>
-                                <p className="control">
-                                    <a
-                                        className="button is-primary"
-                                        onClick={() => {
-                                            updateUI({
-                                                displayStoreState: true,
-                                                serializedState: serializeState(store.getState())
-                                            })
-                                        }}
-                                    >
-                                        <span className="icon">
-                                            <i className="fa fa-cloud-upload" />
-                                        </span>
-                                        <span>Export</span>
-                                    </a>
-                                </p>
-                                <p className="control">
-                                    <a className="button is-primary" href="#">
-                                        <span className="icon">
-                                            <i className="fa fa-file-audio-o" />
-                                        </span>
-                                        <span>Export as file</span>
-                                    </a>
-                                </p>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
                 {
