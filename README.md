@@ -1,16 +1,20 @@
-Drum Machine
-============
+# drum_machine
 
-## See `refurbishment` branch for latest changes.
-
-
-A simple drum machine for the web.
-
-See demo at http://jneuendorf.github.io/drum_machine/
+A drum machine for the web.
 
 
-Uses
-- jQuery (http://jquery.com/),
-- jQuery UI (http://jqueryui.com/),
-- Sound Manager (http://www.schillmania.com/projects/soundmanager2/) and
-- CoffeeScript (http://coffeescript.org/)
+## Features
+
+- [] Export
+    - [x] as text
+    - [] as text file
+    - [] as music file
+- [] Import
+    - [x] from text
+    - from text file
+- [x] Measure templates (for fast)
+- [x] Customizable measure signatures and speeds
+- [x] Different kinds of notes
+    - [] Triplets
+- [x] Note volumes
+- [x] Multiple drumkits
