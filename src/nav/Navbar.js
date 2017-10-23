@@ -2,7 +2,7 @@ import React from 'react'
 import ui from 'redux-ui'
 
 import Dropdown from './Dropdown'
-import StoreStateDisplayer from '../StoreStateDisplayer'
+import StoreStateManager from '../StoreStateManager'
 import store from '../store'
 import {defaultConnect, serializeState} from "../utils"
 
@@ -11,13 +11,14 @@ import {defaultConnect, serializeState} from "../utils"
     state: {
         displayStoreState: false,
         serializedState: '',
+        importStoreState: false,
     }
 })
 class Navbar extends React.Component {
 
     render() {
         const {
-            ui: {displayStoreState, serializedState},
+            ui: {displayStoreState, serializedState, importStoreState},
             updateUI,
             actions: {setStoreState}
         } = this.props
@@ -34,6 +35,35 @@ class Navbar extends React.Component {
 
                 <div className="navbar-menu">
                     <div className="navbar-start">
+                        <Dropdown label="Export" items={[
+                            {
+                                label: "As text",
+                                onClick: () => {
+                                    updateUI({
+                                        displayStoreState: true,
+                                        serializedState: serializeState(store.getState()),
+                                    })
+                                }
+                            },
+                            {
+                                label: "As file",
+                            }
+                        ]} />
+                        <Dropdown label="Import" items={[
+                            {
+                                label: "From text",
+                                onClick: () => {
+                                    updateUI({
+                                        importStoreState: true,
+                                    })
+                                }
+                            },
+                            {
+                                label: "From file",
+                            }
+                        ]} />
+                    </div>
+                    <div className="navbar-end">
                         <Dropdown label="Docs" items={[
                             {
                                 label: "Overview",
@@ -44,9 +74,7 @@ class Navbar extends React.Component {
                                 href: "docs.html#api",
                             }
                         ]} />
-                    </div>
-                    <div className="navbar-end">
-                        <div className="navbar-item">
+                        {/* <div className="navbar-item">
                             <div className="field is-grouped">
                                 <p className="control">
                                     <a
@@ -109,17 +137,34 @@ class Navbar extends React.Component {
                                     </a>
                                 </p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {
                     displayStoreState
                     ? (
-                        <StoreStateDisplayer
+                        <StoreStateManager
+                            managementKind="export"
                             state={serializedState}
                             close={
                                 () => updateUI({
                                     displayStoreState: false,
+                                    serializedState: '',
+                                })
+                            }
+                        />
+                    )
+                    : null
+                }
+                {
+                    importStoreState
+                    ? (
+                        <StoreStateManager
+                            managementKind="import"
+                            setStoreState={setStoreState}
+                            close={
+                                () => updateUI({
+                                    importStoreState: false,
                                     serializedState: '',
                                 })
                             }
