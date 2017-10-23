@@ -129,7 +129,7 @@ export const getMsBetweenNotes = function(measure) {
 
 
 export const serializeState = function(storeState) {
-    /* eslint-disable-next-line no-unused-vars */
+    // eslint-disable-next-line
     const {drumkits, ...state} = storeState
     return JSON.stringify(
         Object.assign({}, state, {
