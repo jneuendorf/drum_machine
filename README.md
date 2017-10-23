@@ -2,6 +2,8 @@
 
 A drum machine for the web.
 
+See demo [here](http://jneuendorf.github.io/drum_machine/).
+
 
 ## Features
 
@@ -11,7 +13,7 @@ A drum machine for the web.
     - [ ] as music file
 - [ ] Import
     - [x] from text
-    - from text file
+    - [ ] from text file
 - [x] Measure templates (for fast)
 - [x] Customizable measure signatures and speeds
 - [x] Different kinds of notes
