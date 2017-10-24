@@ -3,16 +3,27 @@ import React from 'react'
 
 import StoreStateExporter from "./StoreStateExporter"
 import StoreStateImporter from "./StoreStateImporter"
+import StoreStateFileImporter from "./StoreStateFileImporter"
 
 
 class StoreStateManager extends React.Component {
     render() {
-        const {close, managementKind, ...props} = this.props
-        const component = (
-            managementKind === 'export'
-            ? <StoreStateExporter {...props} />
-            : <StoreStateImporter {...props} />
-        )
+        const {close, managerKind, ...props} = this.props
+
+        let component
+        switch (managerKind) {
+            case 'textExporter':
+                component = <StoreStateExporter {...props} />
+                break
+            case 'textImporter':
+                component = <StoreStateImporter {...props} />
+                break
+            case 'fileImporter':
+                component = <StoreStateFileImporter {...props} />
+                break
+            default:
+                throw new Error('Invalid managerKind given')
+        }
         return (
             <div className="store-state-manager">
                 <a className="button close" onClick={close}>

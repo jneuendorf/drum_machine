@@ -3,26 +3,42 @@ import ui from 'redux-ui'
 import download from 'downloadjs'
 
 import Dropdown from './Dropdown'
-import StoreStateManager from '../StoreStateManager'
+import StoreStateManager from './StoreStateManager'
 import store from '../store'
 import {defaultConnect, serializeState} from "../utils"
 
 
 @ui({
     state: {
-        displayStoreState: false,
+        managerToShow: null,
         serializedState: '',
-        importStoreState: false,
     }
 })
 class Navbar extends React.Component {
 
     render() {
         const {
-            ui: {displayStoreState, serializedState, importStoreState},
+            ui: {
+                managerToShow,
+                serializedState,
+            },
             updateUI,
             actions: {setStoreState}
         } = this.props
+        const manager = managerToShow ? (
+            <StoreStateManager
+                managerKind={managerToShow}
+                state={serializedState}
+                setStoreState={setStoreState}
+                close={
+                    () => updateUI({
+                        managerToShow: null,
+                        serializedState: '',
+                    })
+                }
+            />
+        ) : null
+
         return (
             <nav className="navbar is-transparent has-border-bottom">
                 <div className="navbar-brand">
@@ -41,7 +57,8 @@ class Navbar extends React.Component {
                                 label: 'As text',
                                 onClick: () => {
                                     updateUI({
-                                        displayStoreState: true,
+                                        managerToShow: 'textExporter',
+                                        // showStoreStateExporter: true,
                                         serializedState: serializeState(store.getState()),
                                     })
                                 }
@@ -49,16 +66,17 @@ class Navbar extends React.Component {
                             {
                                 label: 'As text file',
                                 onClick: () => {
-                                    const defaultFilename = 'drum_machine'
-                                    const filename = (
-                                        prompt('Enter filename (without extension)', defaultFilename)
-                                        || defaultFilename
+                                    const filename = prompt(
+                                        'Enter filename (without extension)',
+                                        'drum_machine'
                                     )
-                                    download(
-                                        serializeState(store.getState()),
-                                        `${filename}.txt`,
-                                        'text/plain'
-                                    )
+                                    if (filename) {
+                                        download(
+                                            serializeState(store.getState()),
+                                            `${filename}.txt`,
+                                            'text/plain'
+                                        )
+                                    }
                                 }
                             },
                             {
@@ -68,14 +86,11 @@ class Navbar extends React.Component {
                         <Dropdown label="Import" items={[
                             {
                                 label: 'From text',
-                                onClick: () => {
-                                    updateUI({
-                                        importStoreState: true,
-                                    })
-                                }
+                                onClick: () => updateUI({managerToShow: 'textImporter'})
                             },
                             {
                                 label: 'From text file',
+                                onClick: () => updateUI({managerToShow: 'fileImporter'})
                             },
                         ]} />
                     </div>
@@ -92,38 +107,7 @@ class Navbar extends React.Component {
                         ]} />
                     </div>
                 </div>
-                {
-                    displayStoreState
-                    ? (
-                        <StoreStateManager
-                            managementKind="export"
-                            state={serializedState}
-                            close={
-                                () => updateUI({
-                                    displayStoreState: false,
-                                    serializedState: '',
-                                })
-                            }
-                        />
-                    )
-                    : null
-                }
-                {
-                    importStoreState
-                    ? (
-                        <StoreStateManager
-                            managementKind="import"
-                            setStoreState={setStoreState}
-                            close={
-                                () => updateUI({
-                                    importStoreState: false,
-                                    serializedState: '',
-                                })
-                            }
-                        />
-                    )
-                    : null
-                }
+                {manager}
             </nav>
         )
     }

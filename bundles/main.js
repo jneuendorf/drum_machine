@@ -33712,7 +33712,7 @@ var _Dropdown = __webpack_require__(237);
 
 var _Dropdown2 = _interopRequireDefault(_Dropdown);
 
-var _StoreStateManager = __webpack_require__(243);
+var _StoreStateManager = __webpack_require__(293);
 
 var _StoreStateManager2 = _interopRequireDefault(_StoreStateManager);
 
@@ -33726,9 +33726,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Navbar = (_dec = (0, _reduxUi2.default)({
     state: {
-        displayStoreState: false,
-        serializedState: '',
-        importStoreState: false
+        managerToShow: null,
+        serializedState: ''
     }
 }), _dec(_class = function (_React$Component) {
     (0, _inherits3.default)(Navbar, _React$Component);
@@ -33743,11 +33742,22 @@ var Navbar = (_dec = (0, _reduxUi2.default)({
         value: function render() {
             var _props = this.props,
                 _props$ui = _props.ui,
-                displayStoreState = _props$ui.displayStoreState,
+                managerToShow = _props$ui.managerToShow,
                 serializedState = _props$ui.serializedState,
-                importStoreState = _props$ui.importStoreState,
                 updateUI = _props.updateUI,
                 setStoreState = _props.actions.setStoreState;
+
+            var manager = managerToShow ? _react2.default.createElement(_StoreStateManager2.default, {
+                managerKind: managerToShow,
+                state: serializedState,
+                setStoreState: setStoreState,
+                close: function close() {
+                    return updateUI({
+                        managerToShow: null,
+                        serializedState: ''
+                    });
+                }
+            }) : null;
 
             return _react2.default.createElement(
                 'nav',
@@ -33776,16 +33786,18 @@ var Navbar = (_dec = (0, _reduxUi2.default)({
                                 label: 'As text',
                                 onClick: function onClick() {
                                     updateUI({
-                                        displayStoreState: true,
+                                        managerToShow: 'textExporter',
+                                        // showStoreStateExporter: true,
                                         serializedState: (0, _utils.serializeState)(_store2.default.getState())
                                     });
                                 }
                             }, {
                                 label: 'As text file',
                                 onClick: function onClick() {
-                                    var defaultFilename = 'drum_machine';
-                                    var filename = prompt('Enter filename (without extension)', defaultFilename) || defaultFilename;
-                                    (0, _downloadjs2.default)((0, _utils.serializeState)(_store2.default.getState()), filename + '.txt', 'text/plain');
+                                    var filename = prompt('Enter filename (without extension)', 'drum_machine');
+                                    if (filename) {
+                                        (0, _downloadjs2.default)((0, _utils.serializeState)(_store2.default.getState()), filename + '.txt', 'text/plain');
+                                    }
                                 }
                             }, {
                                 label: 'As music file'
@@ -33793,12 +33805,13 @@ var Navbar = (_dec = (0, _reduxUi2.default)({
                         _react2.default.createElement(_Dropdown2.default, { label: 'Import', items: [{
                                 label: 'From text',
                                 onClick: function onClick() {
-                                    updateUI({
-                                        importStoreState: true
-                                    });
+                                    return updateUI({ managerToShow: 'textImporter' });
                                 }
                             }, {
-                                label: 'From text file'
+                                label: 'From text file',
+                                onClick: function onClick() {
+                                    return updateUI({ managerToShow: 'fileImporter' });
+                                }
                             }] })
                     ),
                     _react2.default.createElement(
@@ -33813,26 +33826,7 @@ var Navbar = (_dec = (0, _reduxUi2.default)({
                             }] })
                     )
                 ),
-                displayStoreState ? _react2.default.createElement(_StoreStateManager2.default, {
-                    managementKind: 'export',
-                    state: serializedState,
-                    close: function close() {
-                        return updateUI({
-                            displayStoreState: false,
-                            serializedState: ''
-                        });
-                    }
-                }) : null,
-                importStoreState ? _react2.default.createElement(_StoreStateManager2.default, {
-                    managementKind: 'import',
-                    setStoreState: setStoreState,
-                    close: function close() {
-                        return updateUI({
-                            importStoreState: false,
-                            serializedState: ''
-                        });
-                    }
-                }) : null
+                manager
             );
         }
     }]);
@@ -41670,273 +41664,9 @@ var NavbarItemDivider = exports.NavbarItemDivider = function NavbarItemDivider(p
 exports.default = NavbarItemDivider;
 
 /***/ }),
-/* 243 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.StoreStateManager = undefined;
-
-var _objectWithoutProperties2 = __webpack_require__(33);
-
-var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-var _getPrototypeOf = __webpack_require__(5);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(3);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(4);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(6);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(7);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _react = __webpack_require__(1);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _StoreStateExporter = __webpack_require__(244);
-
-var _StoreStateExporter2 = _interopRequireDefault(_StoreStateExporter);
-
-var _StoreStateImporter = __webpack_require__(245);
-
-var _StoreStateImporter2 = _interopRequireDefault(_StoreStateImporter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import ui from 'redux-ui'
-
-var StoreStateManager = function (_React$Component) {
-    (0, _inherits3.default)(StoreStateManager, _React$Component);
-
-    function StoreStateManager() {
-        (0, _classCallCheck3.default)(this, StoreStateManager);
-        return (0, _possibleConstructorReturn3.default)(this, (StoreStateManager.__proto__ || (0, _getPrototypeOf2.default)(StoreStateManager)).apply(this, arguments));
-    }
-
-    (0, _createClass3.default)(StoreStateManager, [{
-        key: "render",
-        value: function render() {
-            var _props = this.props,
-                close = _props.close,
-                managementKind = _props.managementKind,
-                props = (0, _objectWithoutProperties3.default)(_props, ["close", "managementKind"]);
-
-            var component = managementKind === 'export' ? _react2.default.createElement(_StoreStateExporter2.default, props) : _react2.default.createElement(_StoreStateImporter2.default, props);
-            return _react2.default.createElement(
-                "div",
-                { className: "store-state-manager" },
-                _react2.default.createElement(
-                    "a",
-                    { className: "button close", onClick: close },
-                    _react2.default.createElement(
-                        "span",
-                        { className: "icon" },
-                        _react2.default.createElement("i", { className: "fa fa-close" })
-                    )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "component-container" },
-                    component
-                )
-            );
-        }
-    }]);
-    return StoreStateManager;
-}(_react2.default.Component);
-
-exports.StoreStateManager = StoreStateManager;
-exports.default = StoreStateManager;
-
-/***/ }),
-/* 244 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.StoreStateExporter = undefined;
-
-var _getPrototypeOf = __webpack_require__(5);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(3);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(4);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(6);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(7);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _react = __webpack_require__(1);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var StoreStateExporter = function (_React$Component) {
-    (0, _inherits3.default)(StoreStateExporter, _React$Component);
-
-    function StoreStateExporter() {
-        (0, _classCallCheck3.default)(this, StoreStateExporter);
-        return (0, _possibleConstructorReturn3.default)(this, (StoreStateExporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateExporter)).apply(this, arguments));
-    }
-
-    (0, _createClass3.default)(StoreStateExporter, [{
-        key: "componentDidMount",
-
-        // Selects the text representing the state.
-        value: function componentDidMount() {
-            var selection = getSelection();
-            selection.removeAllRanges();
-            var range = document.createRange();
-            range.selectNode(this.stateText);
-            selection.addRange(range);
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            var state = this.props.state;
-
-            return _react2.default.createElement(
-                "div",
-                { className: "state", ref: function ref(element) {
-                        return _this2.stateText = element;
-                    } },
-                state
-            );
-        }
-    }]);
-    return StoreStateExporter;
-}(_react2.default.Component);
-
-exports.StoreStateExporter = StoreStateExporter;
-exports.default = StoreStateExporter;
-
-/***/ }),
-/* 245 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.StoreStateImporter = undefined;
-
-var _getPrototypeOf = __webpack_require__(5);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(3);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(4);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(6);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(7);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _react = __webpack_require__(1);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var StoreStateImporter = function (_React$Component) {
-    (0, _inherits3.default)(StoreStateImporter, _React$Component);
-
-    function StoreStateImporter(props) {
-        (0, _classCallCheck3.default)(this, StoreStateImporter);
-
-        var _this = (0, _possibleConstructorReturn3.default)(this, (StoreStateImporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateImporter)).call(this, props));
-
-        _this.state = { stateToImport: '' };
-        return _this;
-    }
-
-    (0, _createClass3.default)(StoreStateImporter, [{
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
-
-            var setStoreState = this.props.setStoreState;
-
-            return [_react2.default.createElement('textarea', {
-                key: 'stateImporterTextArea',
-                className: 'textarea',
-                placeholder: 'Insert the copied state here.',
-                value: this.state.stateToImport,
-                onChange: function onChange(event) {
-                    return _this2.setState({ stateToImport: event.target.value });
-                }
-            }), _react2.default.createElement(
-                'a',
-                {
-                    key: 'stateImporterButton',
-                    className: 'button is-primary',
-                    onClick: function onClick() {
-                        return setStoreState(_this2.state.stateToImport);
-                    }
-                },
-                _react2.default.createElement(
-                    'span',
-                    { className: 'icon' },
-                    _react2.default.createElement('i', { className: 'fa fa-cloud-download' })
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    'Import'
-                )
-            )];
-        }
-    }]);
-    return StoreStateImporter;
-}(_react2.default.Component);
-
-exports.StoreStateImporter = StoreStateImporter;
-exports.default = StoreStateImporter;
-
-/***/ }),
+/* 243 */,
+/* 244 */,
+/* 245 */,
 /* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -57623,6 +57353,377 @@ var Tock = (_temp = _class = function () {
 }(), _class.instances = 0, _temp);
 exports.Tock = Tock;
 exports.default = Tock;
+
+/***/ }),
+/* 292 */,
+/* 293 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.StoreStateManager = undefined;
+
+var _objectWithoutProperties2 = __webpack_require__(33);
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _getPrototypeOf = __webpack_require__(5);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(3);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(4);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(6);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(7);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _StoreStateExporter = __webpack_require__(294);
+
+var _StoreStateExporter2 = _interopRequireDefault(_StoreStateExporter);
+
+var _StoreStateImporter = __webpack_require__(295);
+
+var _StoreStateImporter2 = _interopRequireDefault(_StoreStateImporter);
+
+var _StoreStateFileImporter = __webpack_require__(296);
+
+var _StoreStateFileImporter2 = _interopRequireDefault(_StoreStateFileImporter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StoreStateManager = function (_React$Component) {
+    (0, _inherits3.default)(StoreStateManager, _React$Component);
+
+    function StoreStateManager() {
+        (0, _classCallCheck3.default)(this, StoreStateManager);
+        return (0, _possibleConstructorReturn3.default)(this, (StoreStateManager.__proto__ || (0, _getPrototypeOf2.default)(StoreStateManager)).apply(this, arguments));
+    }
+
+    (0, _createClass3.default)(StoreStateManager, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                close = _props.close,
+                managerKind = _props.managerKind,
+                props = (0, _objectWithoutProperties3.default)(_props, ["close", "managerKind"]);
+
+
+            var component = void 0;
+            switch (managerKind) {
+                case 'textExporter':
+                    component = _react2.default.createElement(_StoreStateExporter2.default, props);
+                    break;
+                case 'textImporter':
+                    component = _react2.default.createElement(_StoreStateImporter2.default, props);
+                    break;
+                case 'fileImporter':
+                    component = _react2.default.createElement(_StoreStateFileImporter2.default, props);
+                    break;
+                default:
+                    throw new Error('Invalid managerKind given');
+            }
+            return _react2.default.createElement(
+                "div",
+                { className: "store-state-manager" },
+                _react2.default.createElement(
+                    "a",
+                    { className: "button close", onClick: close },
+                    _react2.default.createElement(
+                        "span",
+                        { className: "icon" },
+                        _react2.default.createElement("i", { className: "fa fa-close" })
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "component-container" },
+                    component
+                )
+            );
+        }
+    }]);
+    return StoreStateManager;
+}(_react2.default.Component);
+// import ui from 'redux-ui'
+
+exports.StoreStateManager = StoreStateManager;
+exports.default = StoreStateManager;
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.StoreStateExporter = undefined;
+
+var _getPrototypeOf = __webpack_require__(5);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(3);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(4);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(6);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(7);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StoreStateExporter = function (_React$Component) {
+    (0, _inherits3.default)(StoreStateExporter, _React$Component);
+
+    function StoreStateExporter() {
+        (0, _classCallCheck3.default)(this, StoreStateExporter);
+        return (0, _possibleConstructorReturn3.default)(this, (StoreStateExporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateExporter)).apply(this, arguments));
+    }
+
+    (0, _createClass3.default)(StoreStateExporter, [{
+        key: "componentDidMount",
+
+        // Selects the text representing the state.
+        value: function componentDidMount() {
+            var selection = getSelection();
+            selection.removeAllRanges();
+            var range = document.createRange();
+            range.selectNode(this.stateText);
+            selection.addRange(range);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            var state = this.props.state;
+
+            return _react2.default.createElement(
+                "div",
+                { className: "state", ref: function ref(element) {
+                        return _this2.stateText = element;
+                    } },
+                state
+            );
+        }
+    }]);
+    return StoreStateExporter;
+}(_react2.default.Component);
+
+exports.StoreStateExporter = StoreStateExporter;
+exports.default = StoreStateExporter;
+
+/***/ }),
+/* 295 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.StoreStateImporter = undefined;
+
+var _getPrototypeOf = __webpack_require__(5);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(3);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(4);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(6);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(7);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StoreStateImporter = function (_React$Component) {
+    (0, _inherits3.default)(StoreStateImporter, _React$Component);
+
+    function StoreStateImporter(props) {
+        (0, _classCallCheck3.default)(this, StoreStateImporter);
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (StoreStateImporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateImporter)).call(this, props));
+
+        _this.state = { stateToImport: '' };
+        return _this;
+    }
+
+    (0, _createClass3.default)(StoreStateImporter, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var setStoreState = this.props.setStoreState;
+
+            return [_react2.default.createElement('textarea', {
+                key: 'stateImporterTextArea',
+                className: 'textarea',
+                placeholder: 'Insert the copied state here.',
+                value: this.state.stateToImport,
+                onChange: function onChange(event) {
+                    return _this2.setState({ stateToImport: event.target.value });
+                }
+            }), _react2.default.createElement(
+                'a',
+                {
+                    key: 'stateImporterButton',
+                    className: 'button is-primary',
+                    onClick: function onClick() {
+                        return setStoreState(_this2.state.stateToImport);
+                    }
+                },
+                _react2.default.createElement(
+                    'span',
+                    { className: 'icon' },
+                    _react2.default.createElement('i', { className: 'fa fa-cloud-download' })
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    'Import'
+                )
+            )];
+        }
+    }]);
+    return StoreStateImporter;
+}(_react2.default.Component);
+
+exports.StoreStateImporter = StoreStateImporter;
+exports.default = StoreStateImporter;
+
+/***/ }),
+/* 296 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.StoreStateFileImporter = undefined;
+
+var _getPrototypeOf = __webpack_require__(5);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(3);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(4);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(6);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(7);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StoreStateFileImporter = function (_React$Component) {
+    (0, _inherits3.default)(StoreStateFileImporter, _React$Component);
+
+    function StoreStateFileImporter() {
+        (0, _classCallCheck3.default)(this, StoreStateFileImporter);
+        return (0, _possibleConstructorReturn3.default)(this, (StoreStateFileImporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateFileImporter)).apply(this, arguments));
+    }
+
+    (0, _createClass3.default)(StoreStateFileImporter, [{
+        key: "render",
+
+        // constructor(props) {
+        //     super(props)
+        //     this.state = {stateToImport: ''}
+        // }
+
+        value: function render() {
+            // const {setStoreState} = this.props
+            return [_react2.default.createElement(
+                "h3",
+                null,
+                "Dropzone here..."
+            ), _react2.default.createElement(
+                "a",
+                {
+                    key: "stateImporterButton",
+                    className: "button is-primary"
+                    // onClick={() => setStoreState(this.state.stateToImport)}
+                },
+                _react2.default.createElement(
+                    "span",
+                    { className: "icon" },
+                    _react2.default.createElement("i", { className: "fa fa-cloud-download" })
+                ),
+                _react2.default.createElement(
+                    "span",
+                    null,
+                    "Import"
+                )
+            )];
+        }
+    }]);
+    return StoreStateFileImporter;
+}(_react2.default.Component);
+
+exports.StoreStateFileImporter = StoreStateFileImporter;
+exports.default = StoreStateFileImporter;
 
 /***/ })
 /******/ ]);
