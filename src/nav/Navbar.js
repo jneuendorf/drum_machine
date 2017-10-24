@@ -15,7 +15,6 @@ import {defaultConnect, serializeState} from "../utils"
     }
 })
 class Navbar extends React.Component {
-
     render() {
         const {
             ui: {

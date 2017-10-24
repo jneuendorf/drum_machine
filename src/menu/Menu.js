@@ -9,7 +9,13 @@ import MeasureTemplates from './MeasureTemplates'
 
 class Menu extends React.Component {
     render() {
-        const {menu: {measureTemplates}} = this.props
+        const {
+            menu: {measureTemplates},
+            tab: {
+                notes: {inTripletMode},
+            },
+            actions: {setTripletMode}
+        } = this.props
         return (
             <aside className="menu">
                 <SoundControls />
@@ -17,7 +23,23 @@ class Menu extends React.Component {
                     {measureTemplates.length === 0 ? null : <MeasureTemplates />}
                 </MenuSection>
                 <MenuSection label="Notes">
-                    <MenuItem label="Add triplet" />
+                    <MenuItem
+                        label="Add triplet"
+                        isActive={inTripletMode}
+                        onClick={() => setTripletMode(!inTripletMode)}
+                    >
+                        {
+                            inTripletMode
+                            ? [
+                                <span key="0">Cancel</span>,
+                                <span key="1" className="icon">
+                                    <i className="fa fa-close" />
+                                </span>
+                            ]
+                            : null
+                        }
+
+                    </MenuItem>
                 </MenuSection>
             </aside>
         )

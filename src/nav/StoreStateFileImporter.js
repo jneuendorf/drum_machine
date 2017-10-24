@@ -10,7 +10,7 @@ class StoreStateFileImporter extends React.Component {
     render() {
         // const {setStoreState} = this.props
         return [
-            <h3>Dropzone here...</h3>,
+            <h3 key="stateFileImporterDropzone">Dropzone here...</h3>,
             <a
                 key="stateImporterButton"
                 className="button is-primary"

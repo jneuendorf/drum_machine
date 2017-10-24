@@ -23,7 +23,7 @@ export const ActionTypes = Enum([
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
 
-    'SELECT_MENU_ITEM',
+    'SET_TRIPLET_MODE',
 
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
@@ -140,9 +140,9 @@ export const finishLoadingDrumkit = name => ({
 })
 
 
-export const selectMenuItem = label => ({
-    type: ActionTypes.SELECT_MENU_ITEM,
-    label,
+export const setTripletMode = (inTripletMode) => ({
+    type: ActionTypes.SET_TRIPLET_MODE,
+    inTripletMode,
 })
 
 

@@ -909,7 +909,7 @@ module.exports = { "default": __webpack_require__(238), __esModule: true };
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.setPlayingState = exports.setCurrentPlayPos = exports.selectMenuItem = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
+exports.setPlayingState = exports.setCurrentPlayPos = exports.setTripletMode = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(249);
 
@@ -919,7 +919,7 @@ var _ListReducer = __webpack_require__(119);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SELECT_MENU_ITEM', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_TRIPLET_MODE', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE']);
 
 var setStoreState = exports.setStoreState = function setStoreState(state) {
     return {
@@ -1063,10 +1063,10 @@ var finishLoadingDrumkit = exports.finishLoadingDrumkit = function finishLoading
     };
 };
 
-var selectMenuItem = exports.selectMenuItem = function selectMenuItem(label) {
+var setTripletMode = exports.setTripletMode = function setTripletMode(inTripletMode) {
     return {
-        type: ActionTypes.SELECT_MENU_ITEM,
-        label: label
+        type: ActionTypes.SET_TRIPLET_MODE,
+        inTripletMode: inTripletMode
     };
 };
 
@@ -41895,10 +41895,15 @@ var _measures = __webpack_require__(256);
 
 var _measures2 = _interopRequireDefault(_measures);
 
+var _notes = __webpack_require__(297);
+
+var _notes2 = _interopRequireDefault(_notes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tab = exports.tab = (0, _redux.combineReducers)({
-    measures: _measures2.default
+    measures: _measures2.default,
+    notes: _notes2.default
 });
 exports.default = tab;
 
@@ -45481,7 +45486,10 @@ var Menu = function (_React$Component) {
     (0, _createClass3.default)(Menu, [{
         key: 'render',
         value: function render() {
-            var measureTemplates = this.props.menu.measureTemplates;
+            var _props = this.props,
+                measureTemplates = _props.menu.measureTemplates,
+                inTripletMode = _props.tab.notes.inTripletMode,
+                setTripletMode = _props.actions.setTripletMode;
 
             return _react2.default.createElement(
                 'aside',
@@ -45495,7 +45503,25 @@ var Menu = function (_React$Component) {
                 _react2.default.createElement(
                     _MenuSection2.default,
                     { label: 'Notes' },
-                    _react2.default.createElement(_MenuItem2.default, { label: 'Add triplet' })
+                    _react2.default.createElement(
+                        _MenuItem2.default,
+                        {
+                            label: 'Add triplet',
+                            isActive: inTripletMode,
+                            onClick: function onClick() {
+                                return setTripletMode(!inTripletMode);
+                            }
+                        },
+                        inTripletMode ? [_react2.default.createElement(
+                            'span',
+                            { key: '0' },
+                            'Cancel'
+                        ), _react2.default.createElement(
+                            'span',
+                            { key: '1', className: 'icon' },
+                            _react2.default.createElement('i', { className: 'fa fa-close' })
+                        )] : null
+                    )
                 )
             );
         }
@@ -57697,7 +57723,7 @@ var StoreStateFileImporter = function (_React$Component) {
             // const {setStoreState} = this.props
             return [_react2.default.createElement(
                 "h3",
-                null,
+                { key: "stateFileImporterDropzone" },
                 "Dropzone here..."
             ), _react2.default.createElement(
                 "a",
@@ -57724,6 +57750,48 @@ var StoreStateFileImporter = function (_React$Component) {
 
 exports.StoreStateFileImporter = StoreStateFileImporter;
 exports.default = StoreStateFileImporter;
+
+/***/ }),
+/* 297 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.notes = undefined;
+
+var _assign = __webpack_require__(19);
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _Actions = __webpack_require__(20);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var initialNotes = {
+    inTripletMode: false
+};
+
+var notes = exports.notes = function notes() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialNotes;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _Actions.ActionTypes.SET_TRIPLET_MODE:
+            {
+                var inTripletMode = action.inTripletMode;
+
+                return (0, _assign2.default)({}, state, { inTripletMode: inTripletMode });
+            }
+        default:
+            return state;
+    }
+};
+
+exports.default = notes;
 
 /***/ })
 /******/ ]);
