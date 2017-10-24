@@ -57,7 +57,6 @@ class Navbar extends React.Component {
                                 onClick: () => {
                                     updateUI({
                                         managerToShow: 'textExporter',
-                                        // showStoreStateExporter: true,
                                         serializedState: serializeState(store.getState()),
                                     })
                                 }

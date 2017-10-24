@@ -143,3 +143,22 @@ export const deserializeState = function(serializedState) {
     state.ui = fromJS(state.ui)
     return state
 }
+
+
+export const readTextFromFile = function(file, onSuccess) {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        const reader = new FileReader()
+        if (file) {
+            reader.onload = function(event) {
+                onSuccess(event.target.result, file.name)
+            }
+            reader.readAsText(file)
+        }
+    }
+    else {
+        alert(
+            'The File APIs are not fully supported by your browser. '
+            + 'Thus the file cannot be imported.'
+        )
+    }
+}

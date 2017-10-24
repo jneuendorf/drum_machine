@@ -486,7 +486,7 @@ module.exports = $export;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.deserializeState = exports.serializeState = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.dict = exports.unique = exports.arrayChangedSize = exports.isInt = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.defaultConnect = undefined;
+exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.dict = exports.unique = exports.arrayChangedSize = exports.isInt = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.defaultConnect = undefined;
 
 var _assign = __webpack_require__(19);
 
@@ -712,6 +712,20 @@ var deserializeState = exports.deserializeState = function deserializeState(seri
     var state = JSON.parse(serializedState);
     state.ui = (0, _immutable.fromJS)(state.ui);
     return state;
+};
+
+var readTextFromFile = exports.readTextFromFile = function readTextFromFile(file, onSuccess) {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        var reader = new FileReader();
+        if (file) {
+            reader.onload = function (event) {
+                onSuccess(event.target.result, file.name);
+            };
+            reader.readAsText(file);
+        }
+    } else {
+        alert('The File APIs are not fully supported by your browser. ' + 'Thus the file cannot be imported.');
+    }
 };
 
 /***/ }),
@@ -33787,7 +33801,6 @@ var Navbar = (_dec = (0, _reduxUi2.default)({
                                 onClick: function onClick() {
                                     updateUI({
                                         managerToShow: 'textExporter',
-                                        // showStoreStateExporter: true,
                                         serializedState: (0, _utils.serializeState)(_store2.default.getState())
                                     });
                                 }
@@ -57701,46 +57714,86 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _utils = __webpack_require__(10);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var StoreStateFileImporter = function (_React$Component) {
     (0, _inherits3.default)(StoreStateFileImporter, _React$Component);
 
-    function StoreStateFileImporter() {
+    function StoreStateFileImporter(props) {
         (0, _classCallCheck3.default)(this, StoreStateFileImporter);
-        return (0, _possibleConstructorReturn3.default)(this, (StoreStateFileImporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateFileImporter)).apply(this, arguments));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (StoreStateFileImporter.__proto__ || (0, _getPrototypeOf2.default)(StoreStateFileImporter)).call(this, props));
+
+        _this.state = {
+            fileContent: ""
+        };
+        return _this;
     }
 
     (0, _createClass3.default)(StoreStateFileImporter, [{
-        key: "render",
-
-        // constructor(props) {
-        //     super(props)
-        //     this.state = {stateToImport: ''}
-        // }
-
+        key: 'render',
         value: function render() {
-            // const {setStoreState} = this.props
+            var _this2 = this;
+
+            var setStoreState = this.props.setStoreState;
+
             return [_react2.default.createElement(
-                "h3",
-                { key: "stateFileImporterDropzone" },
-                "Dropzone here..."
+                'div',
+                { key: 'stateFileImporterInput', className: 'file' },
+                _react2.default.createElement(
+                    'label',
+                    { className: 'file-label' },
+                    _react2.default.createElement('input', {
+                        className: 'file-input',
+                        type: 'file',
+                        onChange: function onChange(event) {
+                            return (0, _utils.readTextFromFile)(event.target.files[0], function (text, filename) {
+                                return _this2.setState({
+                                    fileContent: text,
+                                    filename: filename
+                                });
+                            });
+                        }
+                    }),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'file-cta' },
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'file-icon' },
+                            _react2.default.createElement('i', { className: 'fa fa-upload' })
+                        ),
+                        this.state.filename ? _react2.default.createElement(
+                            'span',
+                            { className: 'file-label' },
+                            this.state.filename
+                        ) : _react2.default.createElement(
+                            'span',
+                            { className: 'file-label' },
+                            'Choose a file\u2026'
+                        )
+                    )
+                )
             ), _react2.default.createElement(
-                "a",
+                'a',
                 {
-                    key: "stateImporterButton",
-                    className: "button is-primary"
-                    // onClick={() => setStoreState(this.state.stateToImport)}
+                    key: 'stateImporterButton',
+                    className: 'button is-primary',
+                    onClick: function onClick() {
+                        return setStoreState(_this2.state.fileContent);
+                    }
                 },
                 _react2.default.createElement(
-                    "span",
-                    { className: "icon" },
-                    _react2.default.createElement("i", { className: "fa fa-cloud-download" })
+                    'span',
+                    { className: 'icon' },
+                    _react2.default.createElement('i', { className: 'fa fa-cloud-download' })
                 ),
                 _react2.default.createElement(
-                    "span",
+                    'span',
                     null,
-                    "Import"
+                    'Import'
                 )
             )];
         }
