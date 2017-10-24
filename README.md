@@ -11,9 +11,9 @@ See demo [here](http://jneuendorf.github.io/drum_machine/).
     - [x] as text
     - [x] as text file
     - [ ] as music file
-- [ ] Import
+- [x] Import
     - [x] from text
-    - [ ] from text file
+    - [x] from text file
 - [x] Measure templates (for fast)
 - [x] Customizable measure signatures and speeds
 - [x] Different kinds of notes
