@@ -45527,8 +45527,12 @@ var Menu = function (_React$Component) {
                         },
                         inTripletMode ? [_react2.default.createElement(
                             'span',
-                            { key: '0' },
+                            { key: 'cancelLabel1' },
                             'Cancel'
+                        ), _react2.default.createElement(
+                            'small',
+                            { key: 'cancelLabel2' },
+                            ' (Add triplet)'
                         ), _react2.default.createElement(
                             'span',
                             { key: '1', className: 'icon' },
@@ -45974,10 +45978,11 @@ var Measure = (_dec = (0, _reduxUi2.default)({
         key: 'render',
         value: function render() {
             var _props = this.props,
-                measure = _props.measure,
                 drumkits = _props.drumkits,
-                measureIndex = _props.index,
                 currentPlayPos = _props.soundControls.currentPlayPos,
+                inTripletMode = _props.tab.notes.inTripletMode,
+                measure = _props.measure,
+                measureIndex = _props.index,
                 ui = _props.ui,
                 updateUI = _props.updateUI,
                 _props$actions = _props.actions,
@@ -46016,7 +46021,8 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                 },
                                 key: index,
                                 isFirstOfWholeNote: index % notesPerWholeNote === 0,
-                                isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, index], currentPlayPos)
+                                isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, index], currentPlayPos),
+                                inTripletMode: inTripletMode
                             });
                         }),
                         _react2.default.createElement(
@@ -46094,6 +46100,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Note = undefined;
 
+var _assign = __webpack_require__(19);
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _getPrototypeOf = __webpack_require__(5);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -46125,7 +46135,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var size = 30;
-var style = {
+var sizeStyle = {
     width: size,
     height: size
 };
@@ -46133,22 +46143,32 @@ var style = {
 var Note = exports.Note = function (_React$Component) {
     (0, _inherits3.default)(Note, _React$Component);
 
-    function Note() {
+    function Note(props) {
         (0, _classCallCheck3.default)(this, Note);
-        return (0, _possibleConstructorReturn3.default)(this, (Note.__proto__ || (0, _getPrototypeOf2.default)(Note)).apply(this, arguments));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (Note.__proto__ || (0, _getPrototypeOf2.default)(Note)).call(this, props));
+
+        _this.state = {
+            isHoveredInTripletMode: false
+        };
+        return _this;
     }
 
     (0, _createClass3.default)(Note, [{
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             var _props = this.props,
                 isFirstOfWholeNote = _props.isFirstOfWholeNote,
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
-                setVolume = _props.setVolume;
+                setVolume = _props.setVolume,
+                inTripletMode = _props.inTripletMode;
 
             var className = 'note ' + ('' + (isFirstOfWholeNote ? 'isFirstOfWholeNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var style = this.state.isHoveredInTripletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
             return _react2.default.createElement(
                 'div',
                 { className: 'column is-narrow' },
@@ -46166,6 +46186,14 @@ var Note = exports.Note = function (_React$Component) {
                                 var _volume = deltaY < 0 ? 1 : deltaY > size ? 0 : 1 - deltaY / size;
                                 setVolume(_volume);
                             }
+                        },
+                        onMouseEnter: function onMouseEnter() {
+                            if (inTripletMode) {
+                                _this2.setState({ isHoveredInTripletMode: true });
+                            }
+                        },
+                        onMouseLeave: function onMouseLeave() {
+                            _this2.setState({ isHoveredInTripletMode: false });
                         }
                     },
                     _react2.default.createElement('div', { className: 'volume', style: { top: Math.abs(1 - volume) * 100 + '%' } })

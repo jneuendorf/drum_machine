@@ -15,10 +15,11 @@ import MeasureSettings from './MeasureSettings'
 class Measure extends React.Component {
     render() {
         const {
-            measure,
             drumkits,
-            index: measureIndex,
             soundControls: {currentPlayPos},
+            tab: {notes: {inTripletMode}},
+            measure,
+            index: measureIndex,
             ui,
             updateUI,
             actions: {toggleNote, setVolume, setVolumes}
@@ -52,6 +53,7 @@ class Measure extends React.Component {
                                         [measureIndex, index],
                                         currentPlayPos
                                     )}
+                                    inTripletMode={inTripletMode}
                                 />
                             ))}
                             <div className="column is-narrow">

@@ -31,7 +31,8 @@ class Menu extends React.Component {
                         {
                             inTripletMode
                             ? [
-                                <span key="0">Cancel</span>,
+                                <span key="cancelLabel1">Cancel</span>,
+                                <small key="cancelLabel2"> (Add triplet)</small>,
                                 <span key="1" className="icon">
                                     <i className="fa fa-close" />
                                 </span>

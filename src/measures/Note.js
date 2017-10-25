@@ -3,22 +3,35 @@ import $ from 'jquery'
 
 
 const size = 30
-const style = {
+const sizeStyle = {
     width: size,
     height: size,
 }
 
 
 export class Note extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isHoveredInTripletMode: false,
+        }
+    }
+
     render() {
         const {
             isFirstOfWholeNote, isCurrentlyPlaying, volume,
-            toggle, setVolume
+            toggle, setVolume,
+            inTripletMode,
         } = this.props
         const className = (
             `note `
             + `${isFirstOfWholeNote ? 'isFirstOfWholeNote ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
+        )
+        const style = (
+            this.state.isHoveredInTripletMode
+            ? Object.assign({backgroundColor: '#3273dd'}, sizeStyle)
+            : sizeStyle
         )
         return (
             <div className="column is-narrow">
@@ -38,6 +51,14 @@ export class Note extends React.Component {
                             )
                             setVolume(volume)
                         }
+                    }}
+                    onMouseEnter={() => {
+                        if (inTripletMode) {
+                            this.setState({isHoveredInTripletMode: true})
+                        }
+                    }}
+                    onMouseLeave={() => {
+                        this.setState({isHoveredInTripletMode: false})
                     }}
                 >
                     <div className="volume" style={{top: `${Math.abs(1 - volume)*100}%`}} />
