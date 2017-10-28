@@ -11,6 +11,7 @@ export const ActionTypes = Enum([
     'ADD_MEASURE_FROM_TEMPLATE',
     'TOGGLE_NOTE',
     'SET_VOLUME',
+    'ADD_TUPLET',
     'SET_VOLUMES',
     'SET_BPM',
     'SET_NUMBER_OF_BEATS',
@@ -23,7 +24,7 @@ export const ActionTypes = Enum([
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
 
-    'SET_TRIPLET_MODE',
+    'SET_TUPLET_MODE',
 
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
@@ -63,15 +64,33 @@ export const toggleNote = (measure, instrument, noteIndex) => ({
     meta: ListActions.update(measure),
 })
 
-export const setVolume = (measure, instrument, noteIndex, volume) => ({
-    type: ActionTypes.SET_VOLUME,
-    instrument, noteIndex, volume,
-    meta: ListActions.update(measure),
-})
+export const setVolume = (...args) => {
+    let measure, instrument, noteIndex, tupletNoteIndex=-1, volume
+    if (args.length === 4) {
+        [measure, instrument, noteIndex, volume] = args
+    }
+    else if (args.length === 5) {
+        [measure, instrument, noteIndex, tupletNoteIndex, volume] = args
+    }
+    else {
+        throw new Error('Invalid arguments.')
+    }
+    return {
+        type: ActionTypes.SET_VOLUME,
+        instrument, noteIndex, tupletNoteIndex, volume,
+        meta: ListActions.update(measure),
+    }
+}
 
 export const setVolumes = (measure, instrument, volume) => ({
     type: ActionTypes.SET_VOLUMES,
     measure, instrument, volume,
+    meta: ListActions.update(measure),
+})
+
+export const addTuplet = (measure, instrument, noteIndex, notesToReplace, notesInTuplet) => ({
+    type: ActionTypes.ADD_TUPLET,
+    measure, instrument, noteIndex, notesToReplace, notesInTuplet,
     meta: ListActions.update(measure),
 })
 
@@ -140,15 +159,15 @@ export const finishLoadingDrumkit = name => ({
 })
 
 
-export const setTripletMode = (inTripletMode) => ({
-    type: ActionTypes.SET_TRIPLET_MODE,
-    inTripletMode,
+export const setTupletMode = (inTupletMode) => ({
+    type: ActionTypes.SET_TUPLET_MODE,
+    inTupletMode,
 })
 
 
-export const setCurrentPlayPos = (measureIndex, noteIndex) => ({
+export const setCurrentPlayPos = (measureIndex, noteIndex, tupletNoteIndex) => ({
     type: ActionTypes.SET_CURRENT_PLAY_POS,
-    measureIndex, noteIndex,
+    measureIndex, noteIndex, tupletNoteIndex,
 })
 
 export const setPlayingState = (playingState) => ({

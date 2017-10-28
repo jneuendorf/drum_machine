@@ -13,15 +13,15 @@ export class Note extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isHoveredInTripletMode: false,
+            isHoveredInTupletMode: false,
         }
     }
 
     render() {
         const {
             isFirstOfWholeNote, isCurrentlyPlaying, volume,
-            toggle, setVolume,
-            inTripletMode,
+            toggle, setVolume, addTuplet,
+            inTupletMode,
         } = this.props
         const className = (
             `note `
@@ -29,7 +29,7 @@ export class Note extends React.Component {
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
         const style = (
-            this.state.isHoveredInTripletMode
+            this.state.isHoveredInTupletMode
             ? Object.assign({backgroundColor: '#3273dd'}, sizeStyle)
             : sizeStyle
         )
@@ -38,9 +38,36 @@ export class Note extends React.Component {
                 <div
                     className={className}
                     style={style}
-                    onClick={toggle}
+                    onClick={() => {
+                        if (!inTupletMode) {
+                            toggle()
+                        }
+                        else {
+                            const notesInTuplet = parseInt(prompt(
+                                (
+                                    'Enter the number of notes in the tuplet '
+                                    + '(e.g. 3 for a triplet)'
+                                ),
+                                '3'
+                            ), 10)
+                            if (isNaN(notesInTuplet) || notesInTuplet <= 1) {
+                                return
+                            }
+                            const notesToReplace = parseInt(prompt(
+                                'Enter the number of notes to replace',
+                                '1'
+                            ), 10)
+                            if (isNaN(notesToReplace) || notesToReplace <= 0) {
+                                return
+                            }
+                            if (notesInTuplet === notesToReplace) {
+                                return
+                            }
+                            addTuplet(notesToReplace, notesInTuplet)
+                        }
+                    }}
                     onMouseMove={(event) => {
-                        if (event.shiftKey) {
+                        if (event.shiftKey && !inTupletMode) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             const deltaY = event.pageY - $(event.currentTarget).offset().top
                             // deltaY < 0 <=> mouse is above note element
@@ -53,12 +80,14 @@ export class Note extends React.Component {
                         }
                     }}
                     onMouseEnter={() => {
-                        if (inTripletMode) {
-                            this.setState({isHoveredInTripletMode: true})
+                        if (inTupletMode) {
+                            this.setState({isHoveredInTupletMode: true})
                         }
                     }}
                     onMouseLeave={() => {
-                        this.setState({isHoveredInTripletMode: false})
+                        if (inTupletMode) {
+                            this.setState({isHoveredInTupletMode: false})
+                        }
                     }}
                 >
                     <div className="volume" style={{top: `${Math.abs(1 - volume)*100}%`}} />

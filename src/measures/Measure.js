@@ -3,6 +3,7 @@ import ui from 'redux-ui'
 
 import {defaultConnect, arraysEqual} from '../utils'
 import Note from './Note'
+import Tuplet from './Tuplet'
 import MeasureSettings from './MeasureSettings'
 
 
@@ -17,12 +18,12 @@ class Measure extends React.Component {
         const {
             drumkits,
             soundControls: {currentPlayPos},
-            tab: {notes: {inTripletMode}},
+            tab: {notes: {inTupletMode}},
             measure,
             index: measureIndex,
             ui,
             updateUI,
-            actions: {toggleNote, setVolume, setVolumes}
+            actions: {toggleNote, setVolume, setVolumes, addTuplet, setTupletMode}
         } = this.props
         const {drumkit: drumkitName, notes} = measure
         const drumkit = drumkits[drumkitName]
@@ -38,24 +39,61 @@ class Measure extends React.Component {
                             className="columns is-gapless instrument"
                             key={instrument}
                         >
-                            {instrumentNotes.map((volume, index) => (
-                                <Note
-                                    volume={volume}
-                                    toggle={() =>
-                                        toggleNote(measure, instrument, index)
-                                    }
-                                    setVolume={(newVolume) =>
-                                        setVolume(measure, instrument, index, newVolume)
-                                    }
-                                    key={index}
-                                    isFirstOfWholeNote={index % notesPerWholeNote === 0}
-                                    isCurrentlyPlaying={arraysEqual(
-                                        [measureIndex, index],
-                                        currentPlayPos
-                                    )}
-                                    inTripletMode={inTripletMode}
-                                />
-                            ))}
+                            {instrumentNotes.map((note, index) => {
+                                if (!Array.isArray(note)) {
+                                    const volume = note
+                                    return (
+                                        <Note
+                                            volume={volume}
+                                            toggle={() =>
+                                                toggleNote(measure, instrument, index)
+                                            }
+                                            setVolume={(newVolume) =>
+                                                setVolume(measure, instrument, index, newVolume)
+                                            }
+                                            addTuplet={(notesToReplace, notesInTuplet) => {
+                                                let tupletWasAdded
+                                                try {
+                                                    addTuplet(measure, instrument, index, notesToReplace, notesInTuplet)
+                                                    tupletWasAdded = true
+                                                }
+                                                catch (e) {
+                                                    console.error(e)
+                                                    tupletWasAdded = false
+                                                }
+                                                if (tupletWasAdded) {
+                                                    setTupletMode(false)
+                                                }
+                                            }}
+                                            key={index}
+                                            isFirstOfWholeNote={index % notesPerWholeNote === 0}
+                                            isCurrentlyPlaying={arraysEqual(
+                                                [measureIndex, index, -1],
+                                                currentPlayPos
+                                            )}
+                                            inTupletMode={inTupletMode}
+                                        />
+                                    )
+                                }
+                                else {
+                                    const [replacedNotes, ...volumes] = note
+                                    return (
+                                        <Tuplet
+                                            toggle={(tupletNoteIndex) =>
+                                                toggleNote(measure, instrument, index, tupletNoteIndex)
+                                            }
+                                            setVolume={(tupletNoteIndex, newVolume) =>
+                                                setVolume(measure, instrument, index, tupletNoteIndex, newVolume)
+                                            }
+                                            key={index}
+                                            measureIndex={measureIndex}
+                                            noteIndex={index}
+                                            replacedNotes={replacedNotes}
+                                            volumes={volumes}
+                                        />
+                                    )
+                                }
+                            })}
                             <div className="column is-narrow">
                                 <span
                                     className="tag is-white is-rounded"

@@ -111,6 +111,23 @@ const measure = function(state, action, meta) {
                 }
             }))
         }
+        case ActionTypes.ADD_TUPLET: {
+            const {instrument, noteIndex, notesToReplace, notesInTuplet} = action
+            const {notes} = state
+            const instrumentNotes = notes[instrument]
+            debugger
+            return setNextId(Object.assign({}, state, {
+                notes: {
+                    ...notes,
+                    [instrument]: [
+                        notesToReplace,
+                        ...instrumentNotes.slice(0, noteIndex > 0 ? noteIndex - 1 : 0),
+                        filledArray(notesInTuplet, 1),
+                        ...instrumentNotes.slice(noteIndex + notesToReplace)
+                    ]
+                }
+            }))
+        }
         case ActionTypes.SET_BPM: {
             const {bpm} = action
             return setNextId(Object.assign({}, state, {bpm}))

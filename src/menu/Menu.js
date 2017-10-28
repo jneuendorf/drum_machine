@@ -12,9 +12,9 @@ class Menu extends React.Component {
         const {
             menu: {measureTemplates},
             tab: {
-                notes: {inTripletMode},
+                notes: {inTupletMode},
             },
-            actions: {setTripletMode}
+            actions: {setTupletMode}
         } = this.props
         return (
             <aside className="menu">
@@ -24,15 +24,15 @@ class Menu extends React.Component {
                 </MenuSection>
                 <MenuSection label="Notes">
                     <MenuItem
-                        label="Add triplet"
-                        isActive={inTripletMode}
-                        onClick={() => setTripletMode(!inTripletMode)}
+                        label="Add Tuplet"
+                        isActive={inTupletMode}
+                        onClick={() => setTupletMode(!inTupletMode)}
                     >
                         {
-                            inTripletMode
+                            inTupletMode
                             ? [
                                 <span key="cancelLabel1">Cancel</span>,
-                                <small key="cancelLabel2"> (Add triplet)</small>,
+                                <small key="cancelLabel2"> (Add Tuplet)</small>,
                                 <span key="1" className="icon">
                                     <i className="fa fa-close" />
                                 </span>
