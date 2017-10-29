@@ -71,32 +71,55 @@ const measure = function(state, action, meta) {
         case ActionTypes.ADD_MEASURE_FROM_TEMPLATE:
             return cloneMeasure(state)
         case ActionTypes.TOGGLE_NOTE: {
-            const {instrument, noteIndex} = action
+            const {instrument, noteIndex, tupletNoteIndex} = action
             const {notes} = state
             return setNextId(Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: notes[instrument].map((volume, index) => {
+                    [instrument]: notes[instrument].map((note, index) => {
                         if (index !== noteIndex) {
-                            return volume
+                            return note
                         }
-                        // toggle between 0 and 1
-                        return volume^1
+                        if (!Array.isArray(note)) {
+                            // toggle between 0 and 1
+                            return note^1
+                        }
+                        return [
+                            note[0],
+                            ...note.slice(1).map((tupletNote, index) => {
+                                if (index !== tupletNoteIndex) {
+                                    return tupletNote
+                                }
+                                return tupletNote^1
+                            })
+                        ]
                     })
                 }
             }))
         }
         case ActionTypes.SET_VOLUME: {
-            const {instrument, noteIndex, volume: newVolume} = action
+            const {instrument, noteIndex, tupletNoteIndex, volume: newVolume} = action
             const {notes} = state
             return setNextId(Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: notes[instrument].map((volume, index) => {
+                    [instrument]: notes[instrument].map((note, index) => {
                         if (index !== noteIndex) {
-                            return volume
+                            return note
                         }
-                        return newVolume
+
+                        if (!Array.isArray(note)) {
+                            return newVolume
+                        }
+                        return [
+                            note[0],
+                            ...note.slice(1).map((tupletNote, index) => {
+                                if (index !== tupletNoteIndex) {
+                                    return tupletNote
+                                }
+                                return newVolume
+                            })
+                        ]
                     })
                 }
             }))

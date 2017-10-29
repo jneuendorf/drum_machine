@@ -33,24 +33,23 @@ class Tuplet extends React.Component {
                             {volumes.length}
                         </div>
                     </div>
-                    {/* <div className="columns"> */}
-                        {volumes.map((volume, tupletNoteIndex) => (
-                            <TupletNote
-                                volume={volume}
-                                toggle={() =>
-                                    toggle(tupletNoteIndex)
-                                }
-                                setVolume={(newVolume) =>
-                                    setVolume(tupletNoteIndex, newVolume)
-                                }
-                                key={tupletNoteIndex}
-                                isCurrentlyPlaying={arraysEqual(
-                                    [measureIndex, noteIndex, tupletNoteIndex],
-                                    currentPlayPos
-                                )}
-                            />
-                        ))}
-                    {/* </div> */}
+                    {volumes.map((volume, tupletNoteIndex) => (
+                        <TupletNote
+                            volume={volume}
+                            toggle={() =>
+                                toggle(tupletNoteIndex)
+                            }
+                            setVolume={(newVolume) =>
+                                setVolume(tupletNoteIndex, newVolume)
+                            }
+                            key={tupletNoteIndex}
+                            isCurrentlyPlaying={arraysEqual(
+                                [measureIndex, noteIndex, tupletNoteIndex],
+                                currentPlayPos
+                            )}
+                            inTupletMode={inTupletMode}
+                        />
+                    ))}
                 </div>
             </div>
         )

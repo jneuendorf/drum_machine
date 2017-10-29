@@ -18,7 +18,7 @@ export class TupletNote extends React.Component {
         const {
             isFirstOfWholeNote, isCurrentlyPlaying, volume,
             toggle, setVolume,
-            // inTupletMode,
+            inTupletMode,
         } = this.props
         const className = (
             `tuplet-note`
@@ -34,7 +34,7 @@ export class TupletNote extends React.Component {
                 }}
                 onClick={toggle}
                 onMouseMove={(event) => {
-                    if (event.shiftKey) {
+                    if (event.shiftKey && !inTupletMode) {
                         // using jquery to also work if parents are positioned absolutely/relatively
                         const deltaY = event.pageY - $(event.currentTarget).offset().top
                         // deltaY < 0 <=> mouse is above note element

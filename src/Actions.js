@@ -58,14 +58,14 @@ export const addMeasureFromTemplate = ({measure}) => ({
     meta: ListActions.append(measure),
 })
 
-export const toggleNote = (measure, instrument, noteIndex) => ({
+export const toggleNote = (measure, instrument, noteIndex, tupletNoteIndex) => ({
     type: ActionTypes.TOGGLE_NOTE,
-    instrument, noteIndex,
+    instrument, noteIndex, tupletNoteIndex,
     meta: ListActions.update(measure),
 })
 
 export const setVolume = (...args) => {
-    let measure, instrument, noteIndex, tupletNoteIndex=-1, volume
+    let measure, instrument, noteIndex, tupletNoteIndex, volume
     if (args.length === 4) {
         [measure, instrument, noteIndex, volume] = args
     }

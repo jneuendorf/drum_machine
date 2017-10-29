@@ -972,10 +972,10 @@ var addMeasureFromTemplate = exports.addMeasureFromTemplate = function addMeasur
     };
 };
 
-var toggleNote = exports.toggleNote = function toggleNote(measure, instrument, noteIndex) {
+var toggleNote = exports.toggleNote = function toggleNote(measure, instrument, noteIndex, tupletNoteIndex) {
     return {
         type: ActionTypes.TOGGLE_NOTE,
-        instrument: instrument, noteIndex: noteIndex,
+        instrument: instrument, noteIndex: noteIndex, tupletNoteIndex: tupletNoteIndex,
         meta: _ListReducer.ListActions.update(measure)
     };
 };
@@ -988,7 +988,7 @@ var setVolume = exports.setVolume = function setVolume() {
     var measure = void 0,
         instrument = void 0,
         noteIndex = void 0,
-        tupletNoteIndex = -1,
+        tupletNoteIndex = void 0,
         volume = void 0;
     if (args.length === 4) {
         measure = args[0];
@@ -41962,13 +41962,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _toConsumableArray2 = __webpack_require__(272);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 var _defineProperty2 = __webpack_require__(120);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _toConsumableArray2 = __webpack_require__(272);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _extends6 = __webpack_require__(38);
 
@@ -42095,16 +42095,25 @@ var measure = function measure(state, action, meta) {
         case _Actions.ActionTypes.TOGGLE_NOTE:
             {
                 var instrument = action.instrument,
-                    noteIndex = action.noteIndex;
+                    noteIndex = action.noteIndex,
+                    tupletNoteIndex = action.tupletNoteIndex;
                 var notes = state.notes;
 
                 return setNextId((0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, notes, (0, _defineProperty3.default)({}, instrument, notes[instrument].map(function (volume, index) {
+                    notes: (0, _extends7.default)({}, notes, (0, _defineProperty3.default)({}, instrument, notes[instrument].map(function (note, index) {
                         if (index !== noteIndex) {
-                            return volume;
+                            return note;
                         }
-                        // toggle between 0 and 1
-                        return volume ^ 1;
+                        if (!Array.isArray(note)) {
+                            // toggle between 0 and 1
+                            return note ^ 1;
+                        }
+                        return [note[0]].concat((0, _toConsumableArray3.default)(note.slice(1).map(function (tupletNote, index) {
+                            if (index !== tupletNoteIndex) {
+                                return tupletNote;
+                            }
+                            return tupletNote ^ 1;
+                        })));
                     })))
                 }));
             }
@@ -42112,15 +42121,25 @@ var measure = function measure(state, action, meta) {
             {
                 var _instrument = action.instrument,
                     _noteIndex = action.noteIndex,
+                    _tupletNoteIndex = action.tupletNoteIndex,
                     newVolume = action.volume;
                 var _notes = state.notes;
 
                 return setNextId((0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, _notes[_instrument].map(function (volume, index) {
+                    notes: (0, _extends7.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, _notes[_instrument].map(function (note, index) {
                         if (index !== _noteIndex) {
-                            return volume;
+                            return note;
                         }
-                        return newVolume;
+
+                        if (!Array.isArray(note)) {
+                            return newVolume;
+                        }
+                        return [note[0]].concat((0, _toConsumableArray3.default)(note.slice(1).map(function (tupletNote, index) {
+                            if (index !== _tupletNoteIndex) {
+                                return tupletNote;
+                            }
+                            return newVolume;
+                        })));
                     })))
                 }));
             }
@@ -58109,7 +58128,8 @@ var Tuplet = function (_React$Component) {
                                 return _setVolume(tupletNoteIndex, newVolume);
                             },
                             key: tupletNoteIndex,
-                            isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, noteIndex, tupletNoteIndex], currentPlayPos)
+                            isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, noteIndex, tupletNoteIndex], currentPlayPos),
+                            inTupletMode: inTupletMode
                         });
                     })
                 )
@@ -58190,7 +58210,8 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
-                setVolume = _props.setVolume;
+                setVolume = _props.setVolume,
+                inTupletMode = _props.inTupletMode;
 
             var className = 'tuplet-note' + ('' + (isFirstOfWholeNote ? 'isFirstOfWholeNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             return _react2.default.createElement(
@@ -58203,7 +58224,7 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
                     },
                     onClick: toggle,
                     onMouseMove: function onMouseMove(event) {
-                        if (event.shiftKey) {
+                        if (event.shiftKey && !inTupletMode) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             var deltaY = event.pageY - (0, _jquery2.default)(event.currentTarget).offset().top;
                             // deltaY < 0 <=> mouse is above note element
