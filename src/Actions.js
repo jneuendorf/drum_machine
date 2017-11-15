@@ -20,6 +20,7 @@ export const ActionTypes = Enum([
     'CLEAR_MEASURE',
     'REMOVE_MEASURE',
     'CREATE_MEASURE_TEMPLATE',
+    'SET_SOUNDS',
 
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
@@ -133,12 +134,18 @@ export const createMeasureTemplate = (name, measure) => ({
     name, measure
 })
 
+export const setSounds = (measure, sounds) => ({
+    type: ActionTypes.SET_SOUNDS,
+    measure, sounds,
+    meta: ListActions.update(measure),
+})
+
 
 export const loadDrumkit = function(drumkitName, howl) {
     return (dispatch, getState) => {
         dispatch(startLoadingDrumkit(drumkitName))
         howl.once('loaderror', function() {
-            console.log('error');
+            console.log('error')
         }).once('load', function() {
             dispatch(finishLoadingDrumkit(drumkitName))
             // TODO: remove
@@ -165,9 +172,9 @@ export const setTupletMode = (inTupletMode) => ({
 })
 
 
-export const setCurrentPlayPos = (measureIndex, noteIndex, tupletNoteIndex) => ({
+export const setCurrentPlayPos = (measureIndex, time) => ({
     type: ActionTypes.SET_CURRENT_PLAY_POS,
-    measureIndex, noteIndex, tupletNoteIndex,
+    measureIndex, time,
 })
 
 export const setPlayingState = (playingState) => ({

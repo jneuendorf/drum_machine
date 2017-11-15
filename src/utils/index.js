@@ -25,6 +25,12 @@ export const defaultConnect = function(component, storeKey) {
 }
 
 
+export const isInt = function(n) {
+    const x = parseFloat(n)
+    return !isNaN(n) && (x | 0) === x
+}
+
+
 export const mergeDeep = function(...args) {
     const [first, ...rest] = args
     return fromJS(first).mergeDeep(...rest).toJS()
@@ -69,9 +75,21 @@ export const last = function(array) {
     return array[array.length - 1]
 }
 
-export const isInt = function(n) {
-    const x = parseFloat(n)
-    return !isNaN(n) && (x | 0) === x
+// Splits the array into 2 classes:
+// One containing elements fulfilling the condition,
+// the other with the remaining elements.
+export const partition = function(array, condition) {
+    const trueish = []
+    const falsy = []
+    for (const element of array) {
+        if (condition(element)) {
+            trueish.push(element)
+        }
+        else {
+            falsy.push(element)
+        }
+    }
+    return {trueish, falsy}
 }
 
 // ...while keeping old values when extending.

@@ -1,0 +1,121 @@
+import {dict} from '.'
+
+
+export const getGroupedSounds = function(measure) {
+    const {notes} = measure
+    const addSoundToGroup = function(group=[], instrument, volume) {
+        if (volume > 0) {
+            return group.concat({instrument, volume})
+        }
+        return group
+    }
+    const numberOfNotes = getNumberOfNotes(measure)
+
+    /*
+    A:  1,  0,  1, 0
+    B: [1,1,1], 0, 0
+
+    time     A,B
+    ------------
+    0%    -> 1,1
+    16.6% -> 0,1
+    25%   -> 0,0
+    33.3% -> 0,1
+    50%   -> 1,0
+    75%   -> 0,0
+    */
+    const groups = {}
+    const notesByInstrument = notes
+    for (const [instrument, notes] of Object.entries(notesByInstrument)) {
+        // In contrary to the index (which belongs to the note array)
+        // the position determines where the note is in the measure.
+        // For example, take a measure consisting of a tuplet spanning 2 notes
+        // and 2 regular notes. The tuplet is an array - thus the index of the
+        // note following the tuplet is 1, but its position is 2 (since the
+        // tuplet is taking 2 slots).
+
+        // let notePosition = 0
+        const notePositions = getNotePositions(notes)
+        for (const noteIndex of notes.keys()) {
+            const note = notes[noteIndex]
+            const notePosition = notePositions[noteIndex]
+            const tickPercent = notePosition / numberOfNotes
+            if (Array.isArray(note)) {
+                const [replacedNotes, ...volumes] = note
+                const volumePercent = (replacedNotes / numberOfNotes) / volumes.length
+                for (const volumeIndex of volumes.keys()) {
+                    const volume = volumes[volumeIndex]
+                    const percent = tickPercent + volumeIndex * volumePercent
+                    groups[percent] = addSoundToGroup(groups[percent], instrument, volume)
+                }
+                // notePosition += replacedNotes
+            }
+            else {
+                const volume = note
+                const percent = tickPercent
+                groups[percent] = addSoundToGroup(groups[percent], instrument, volume)
+                // notePosition++
+            }
+        }
+    }
+    const duration = numberOfNotes * getMsBetweenNotes(measure)
+    return dict(
+        Object.entries(groups)
+        .filter(([percent, group]) => group.length > 0)
+        .map(([percent, group]) => [parseFloat(percent) * duration, group])
+    )
+}
+
+export const getNumberOfNotes = function(measure) {
+    const {numberOfBeats, noteValue, minNoteValue} = measure
+    return numberOfBeats * (minNoteValue / noteValue)
+}
+
+export const getMsBetweenNotes = function(measure) {
+    const {noteValue, minNoteValue, bpm} = measure
+    // here we return the mathematically simplified version of
+    // ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    return (noteValue * 60000) / bpm / minNoteValue
+}
+
+export const getDuration = function(measure) {
+    return getNumberOfNotes(measure) * getMsBetweenNotes(measure)
+}
+
+export const getNotePositions = function(notes) {
+    let notePosition = 0
+    const notePositions = []
+    for (const noteIndex of notes.keys()) {
+        const note = notes[noteIndex]
+        notePositions.push(notePosition)
+        if (Array.isArray(note)) {
+            notePosition += note[0]
+        }
+        else {
+            notePosition += 1
+        }
+    }
+    return notePositions
+}
+
+// @param modifier [Function] This callback is applied to all atomic notes (-> not tuplets).
+// @return [Array] The result of the modifier for each note.
+export const modifyNotes = function(notes, modifier, tupletModifier=null) {
+    if (!tupletModifier) {
+        tupletModifier = modifier
+    }
+    return notes.map((note, noteIndex) => {
+        if (Array.isArray(note)) {
+            return [
+                // 'replacedNotes' stays the same.
+                note[0],
+                ...note.slice(1).map((tupletNote, tupletNoteIndex) =>
+                    tupletModifier(tupletNote, tupletNoteIndex, noteIndex)
+                )
+            ]
+        }
+        else {
+            return modifier(note, noteIndex)
+        }
+    })
+}
