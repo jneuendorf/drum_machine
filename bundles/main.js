@@ -57106,9 +57106,8 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                             setTupletMode(false);
                                         }
                                     },
-                                    key: index
-                                    // TODO: index is wrong: tuplets' replacedNotes must be 'consumed'.
-                                    , isFirstOfWholeNote: index % notesPerWholeNote === 0,
+                                    key: index,
+                                    isFirstOfWholeNote: notePositions[index] % notesPerWholeNote === 0,
                                     isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
                                     inTupletMode: inTupletMode
                                 });

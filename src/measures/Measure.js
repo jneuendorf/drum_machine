@@ -80,8 +80,7 @@ class Measure extends React.Component {
                                                 }
                                             }}
                                             key={index}
-                                            // TODO: index is wrong: tuplets' replacedNotes must be 'consumed'.
-                                            isFirstOfWholeNote={index % notesPerWholeNote === 0}
+                                            isFirstOfWholeNote={notePositions[index] % notesPerWholeNote === 0}
                                             isCurrentlyPlaying={arraysEqual(
                                                 [measureIndex, time],
                                                 currentPlayPos
