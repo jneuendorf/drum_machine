@@ -13,14 +13,15 @@ globals:
     React: true
 plugins: [react]
 rules:
-    new-cap: 0
-    strict: 0
-    no-undef: 2
-    no-underscore-dangle: 0
-    no-use-before-define: 0
-    no-unused-vars: [error, {vars: all, args: none}]
     eol-last: 0
     jsx-quotes: 1
+    new-cap: 0
+    no-undef: 2
+    no-underscore-dangle: 0
+    no-unused-vars: [error, {vars: all, args: none}]
+    no-use-before-define: 0
+    semi: [error, never]
+    strict: 0
     react/jsx-boolean-value: 0
     react/jsx-no-undef: 1
     react/jsx-uses-react: 1
