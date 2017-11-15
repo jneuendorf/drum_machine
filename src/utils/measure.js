@@ -1,6 +1,9 @@
 import {dict} from '.'
 
 
+// Creates a group of sounds for each tick.
+// Here, a sound means {instrument, volume}.
+// Each group knows how much time to wait until the next group has to be played.
 export const getGroupedSounds = function(measure) {
     const {notes} = measure
     const addSoundToGroup = function(group=[], instrument, volume) {
@@ -48,13 +51,11 @@ export const getGroupedSounds = function(measure) {
                     const percent = tickPercent + volumeIndex * volumePercent
                     groups[percent] = addSoundToGroup(groups[percent], instrument, volume)
                 }
-                // notePosition += replacedNotes
             }
             else {
                 const volume = note
                 const percent = tickPercent
                 groups[percent] = addSoundToGroup(groups[percent], instrument, volume)
-                // notePosition++
             }
         }
     }
@@ -73,8 +74,8 @@ export const getNumberOfNotes = function(measure) {
 
 export const getMsBetweenNotes = function(measure) {
     const {noteValue, minNoteValue, bpm} = measure
-    // here we return the mathematically simplified version of
-    // ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    // Here we return the mathematically simplified version of:
+    // ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(measure)
     return (noteValue * 60000) / bpm / minNoteValue
 }
 

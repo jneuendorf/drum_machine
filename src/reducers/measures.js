@@ -2,7 +2,6 @@ import {initialDrumkits} from './drumkits'
 import {ActionTypes} from '../Actions'
 import {listReducer} from './ListReducer'
 import {
-    getNumberOfNotes,
     cloneDeep,
     last,
     filledArray,
@@ -10,7 +9,8 @@ import {
     dict,
 } from '../utils'
 import {
-    modifyNotes
+    getNumberOfNotes,
+    modifyNotes,
 } from '../utils/measure'
 
 
@@ -30,7 +30,7 @@ const setNextId = function(measure) {
 const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, drumkit='default', bpm=120) {
     const notesByInstrument = {}
     const {instruments} = initialDrumkits[drumkit]
-    const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    const numberOfNotes = getNumberOfNotes({numberOfBeats, noteValue, minNoteValue})
     for (const instrument of instruments) {
         notesByInstrument[instrument] = filledArray(
             // 4/4 => 8, 6/8 => 12, 3/4 => 6
@@ -145,8 +145,8 @@ const measure = function(state, action, meta) {
         }
         case ActionTypes.SET_MIN_NOTE_VALUE: {
             const {minNoteValue} = action
-            const {numberOfBeats, noteValue, notes: oldNotes} = state
-            const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+            const {notes: oldNotes} = state
+            const numberOfNotes = getNumberOfNotes(state)
             const notes = {}
             for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
                 notes[instrument] = arrayChangedSize(instrumentNotes, numberOfNotes, 0)

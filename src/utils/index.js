@@ -134,18 +134,6 @@ export const dict = function(tuples) {
 }
 
 
-export const getNumberOfNotes = function(numberOfBeats, noteValue, minNoteValue) {
-    return numberOfBeats * (minNoteValue / noteValue)
-}
-
-export const getMsBetweenNotes = function(measure) {
-    const {noteValue, minNoteValue, bpm} = measure
-    // here we return the mathematically simplified version of
-    // ((numberOfBeats * 60000) / bpm) / getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
-    return (noteValue * 60000) / bpm / minNoteValue
-}
-
-
 export const serializeState = function(storeState) {
     // eslint-disable-next-line
     const {drumkits, ...state} = storeState
