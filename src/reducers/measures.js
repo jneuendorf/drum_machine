@@ -46,7 +46,6 @@ const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, dru
         minNoteValue,
         drumkit,
         notes: notesByInstrument,
-        sounds: {},
     }
 }
 
@@ -137,23 +136,36 @@ const measure = function(state, action, meta) {
         }
         case ActionTypes.SET_NUMBER_OF_BEATS: {
             const {numberOfBeats} = action
-            return Object.assign({}, state, {numberOfBeats})
+            const {notes: oldNotes} = state
+            const newState = Object.assign({}, state, {numberOfBeats})
+            const numberOfNotes = getNumberOfNotes(newState)
+            const notes = {}
+            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+                notes[instrument] = filledArray(numberOfNotes, 0)
+            }
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.SET_NOTE_VALUE: {
             const {noteValue} = action
-            return Object.assign({}, state, {noteValue})
+            const {notes: oldNotes} = state
+            const newState = Object.assign({}, state, {noteValue})
+            const numberOfNotes = getNumberOfNotes(newState)
+            const notes = {}
+            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+                notes[instrument] = filledArray(numberOfNotes, 0)
+            }
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.SET_MIN_NOTE_VALUE: {
             const {minNoteValue} = action
             const {notes: oldNotes} = state
-            const numberOfNotes = getNumberOfNotes(
-                Object.assign(state, {minNoteValue})
-            )
+            const newState = Object.assign({}, state, {minNoteValue})
+            const numberOfNotes = getNumberOfNotes(newState)
             const notes = {}
             for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
                 notes[instrument] = arrayChangedSize(instrumentNotes, numberOfNotes, 0)
             }
-            return Object.assign({}, state, {minNoteValue, notes})
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.CLEAR_MEASURE: {
             const {notes: oldNotes} = state
@@ -164,10 +176,6 @@ const measure = function(state, action, meta) {
             )
             return Object.assign({}, state, {notes})
         }
-        // case ActionTypes.SET_SOUNDS: {
-        //     const {sounds} = action
-        //     return Object.assign({}, state, {sounds})
-        // }
         default:
             return state
     }

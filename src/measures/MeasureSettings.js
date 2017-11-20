@@ -83,7 +83,13 @@ class MeasureSettings extends React.Component {
                     </div>
 
                     <div className="field">
-                        <label className="label">Signature</label>
+                        <label className="label">
+                            Signature
+                            &nbsp;
+                            <span className="tag is-warning">
+                                Chaning the signature will reset all notes.
+                            </span>
+                        </label>
                         <div className="columns">
                             <div className="column">
                                 <label className="label is-small">Number of beats</label>

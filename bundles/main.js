@@ -53285,8 +53285,7 @@ var createMeasure = function createMeasure() {
         noteValue: noteValue,
         minNoteValue: minNoteValue,
         drumkit: drumkit,
-        notes: notesByInstrument,
-        sounds: {}
+        notes: notesByInstrument
     };
 };
 
@@ -53387,21 +53386,10 @@ var measure = function measure(state, action, meta) {
         case _Actions.ActionTypes.SET_NUMBER_OF_BEATS:
             {
                 var numberOfBeats = action.numberOfBeats;
-
-                return (0, _assign2.default)({}, state, { numberOfBeats: numberOfBeats });
-            }
-        case _Actions.ActionTypes.SET_NOTE_VALUE:
-            {
-                var noteValue = action.noteValue;
-
-                return (0, _assign2.default)({}, state, { noteValue: noteValue });
-            }
-        case _Actions.ActionTypes.SET_MIN_NOTE_VALUE:
-            {
-                var minNoteValue = action.minNoteValue;
                 var oldNotes = state.notes;
 
-                var numberOfNotes = (0, _measure.getNumberOfNotes)((0, _assign2.default)(state, { minNoteValue: minNoteValue }));
+                var newState = (0, _assign2.default)({}, state, { numberOfBeats: numberOfBeats });
+                var numberOfNotes = (0, _measure.getNumberOfNotes)(newState);
                 var _notes4 = {};
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
@@ -53416,7 +53404,7 @@ var measure = function measure(state, action, meta) {
                         var _instrument4 = _ref4[0];
                         var _instrumentNotes = _ref4[1];
 
-                        _notes4[_instrument4] = (0, _utils.arrayChangedSize)(_instrumentNotes, numberOfNotes, 0);
+                        _notes4[_instrument4] = (0, _utils.filledArray)(numberOfNotes, 0);
                     }
                 } catch (err) {
                     _didIteratorError2 = true;
@@ -53433,27 +53421,103 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)({}, state, { minNoteValue: minNoteValue, notes: _notes4 });
+                return (0, _assign2.default)(newState, { notes: _notes4 });
+            }
+        case _Actions.ActionTypes.SET_NOTE_VALUE:
+            {
+                var noteValue = action.noteValue;
+                var _oldNotes = state.notes;
+
+                var _newState = (0, _assign2.default)({}, state, { noteValue: noteValue });
+                var _numberOfNotes = (0, _measure.getNumberOfNotes)(_newState);
+                var _notes5 = {};
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = (0, _getIterator3.default)((0, _entries2.default)(_oldNotes)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var _ref5 = _step3.value;
+
+                        var _ref6 = (0, _slicedToArray3.default)(_ref5, 2);
+
+                        var _instrument5 = _ref6[0];
+                        var _instrumentNotes2 = _ref6[1];
+
+                        _notes5[_instrument5] = (0, _utils.filledArray)(_numberOfNotes, 0);
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
+                        }
+                    }
+                }
+
+                return (0, _assign2.default)(_newState, { notes: _notes5 });
+            }
+        case _Actions.ActionTypes.SET_MIN_NOTE_VALUE:
+            {
+                var minNoteValue = action.minNoteValue;
+                var _oldNotes2 = state.notes;
+
+                var _newState2 = (0, _assign2.default)({}, state, { minNoteValue: minNoteValue });
+                var _numberOfNotes2 = (0, _measure.getNumberOfNotes)(_newState2);
+                var _notes6 = {};
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
+
+                try {
+                    for (var _iterator4 = (0, _getIterator3.default)((0, _entries2.default)(_oldNotes2)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var _ref7 = _step4.value;
+
+                        var _ref8 = (0, _slicedToArray3.default)(_ref7, 2);
+
+                        var _instrument6 = _ref8[0];
+                        var _instrumentNotes3 = _ref8[1];
+
+                        _notes6[_instrument6] = (0, _utils.arrayChangedSize)(_instrumentNotes3, _numberOfNotes2, 0);
+                    }
+                } catch (err) {
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+                    } finally {
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
+                        }
+                    }
+                }
+
+                return (0, _assign2.default)(_newState2, { notes: _notes6 });
             }
         case _Actions.ActionTypes.CLEAR_MEASURE:
             {
-                var _oldNotes = state.notes;
+                var _oldNotes3 = state.notes;
 
-                var _notes5 = (0, _utils.dict)((0, _entries2.default)(_oldNotes).map(function (_ref5) {
-                    var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
-                        instrument = _ref6[0],
-                        instrumentNotes = _ref6[1];
+                var _notes7 = (0, _utils.dict)((0, _entries2.default)(_oldNotes3).map(function (_ref9) {
+                    var _ref10 = (0, _slicedToArray3.default)(_ref9, 2),
+                        instrument = _ref10[0],
+                        instrumentNotes = _ref10[1];
 
                     return [instrument, (0, _measure.modifyNotes)(instrumentNotes, function (note) {
                         return 0;
                     })];
                 }));
-                return (0, _assign2.default)({}, state, { notes: _notes5 });
+                return (0, _assign2.default)({}, state, { notes: _notes7 });
             }
-        // case ActionTypes.SET_SOUNDS: {
-        //     const {sounds} = action
-        //     return Object.assign({}, state, {sounds})
-        // }
         default:
             return state;
     }
@@ -57741,7 +57805,12 @@ var MeasureSettings = function (_React$Component) {
                         _react2.default.createElement(
                             'label',
                             { className: 'label' },
-                            'Signature'
+                            'Signature \xA0',
+                            _react2.default.createElement(
+                                'span',
+                                { className: 'tag is-warning' },
+                                'Chaning the signature will reset all notes.'
+                            )
                         ),
                         _react2.default.createElement(
                             'div',
