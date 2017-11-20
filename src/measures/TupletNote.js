@@ -21,17 +21,13 @@ export class TupletNote extends React.Component {
             inTupletMode,
         } = this.props
         const className = (
-            `tuplet-note`
+            `tuplet-note `
             + `${isFirstOfWholeNote ? 'isFirstOfWholeNote ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
         return (
             <div
                 className={className}
-                style={{
-                    flex: 1,
-                    height: '100%',
-                }}
                 onClick={toggle}
                 onMouseMove={(event) => {
                     if (event.shiftKey && !inTupletMode) {

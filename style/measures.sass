@@ -52,9 +52,13 @@ $row-margin: 7px
                         top: -1rem
             .tuplet-note
                 border-right: 1px solid gray
+                flex: 1 1 0%
+                height: 100%
                 position: relative
                 &:last-child
                     border-right: none
+                &.isCurrentlyPlaying .volume
+                    background-color: lighten(#00d1b2, 30%)
             .note
                 &.isFirstOfWholeNote::after
                     content: '•'

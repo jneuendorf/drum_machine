@@ -146,7 +146,9 @@ const measure = function(state, action, meta) {
         case ActionTypes.SET_MIN_NOTE_VALUE: {
             const {minNoteValue} = action
             const {notes: oldNotes} = state
-            const numberOfNotes = getNumberOfNotes(state)
+            const numberOfNotes = getNumberOfNotes(
+                Object.assign(state, {minNoteValue})
+            )
             const notes = {}
             for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
                 notes[instrument] = arrayChangedSize(instrumentNotes, numberOfNotes, 0)

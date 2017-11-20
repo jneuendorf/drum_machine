@@ -20,7 +20,6 @@ export const ActionTypes = Enum([
     'CLEAR_MEASURE',
     'REMOVE_MEASURE',
     'CREATE_MEASURE_TEMPLATE',
-    'SET_SOUNDS',
 
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
@@ -132,12 +131,6 @@ export const removeMeasure = (measure) => ({
 export const createMeasureTemplate = (name, measure) => ({
     type: ActionTypes.CREATE_MEASURE_TEMPLATE,
     name, measure
-})
-
-export const setSounds = (measure, sounds) => ({
-    type: ActionTypes.SET_SOUNDS,
-    measure, sounds,
-    meta: ListActions.update(measure),
 })
 
 

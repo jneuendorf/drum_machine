@@ -45,17 +45,16 @@ class Measure extends React.Component {
                     )
                     const notePositions = getNotePositions(instrumentNotes)
                     const numberOfNotes = getNumberOfNotes(measure)
-                    const duration = getDuration(measure)
+                    const measureDuration = getDuration(measure)
                     return (
                         <div
                             className="columns is-gapless instrument"
                             key={instrument}
                         >
-                            {instrumentNotes
-                            .map((note, index) => {
+                            {instrumentNotes.map((note, index) => {
+                                const time = notePositions[index] / numberOfNotes * measureDuration
                                 if (!Array.isArray(note)) {
                                     const volume = note
-                                    const time = notePositions[index] / numberOfNotes * duration
                                     return (
                                         <Note
                                             volume={volume}
@@ -104,6 +103,8 @@ class Measure extends React.Component {
                                             noteIndex={index}
                                             replacedNotes={replacedNotes}
                                             volumes={volumes}
+                                            startTime={time}
+                                            duration={measureDuration / numberOfNotes * replacedNotes}
                                         />
                                     )
                                 }

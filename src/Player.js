@@ -1,4 +1,3 @@
-// import Tock from '../lib/tock'
 import TickTock from '../lib/TickTock'
 
 import {subscribe, dispatch} from './store'
@@ -6,11 +5,11 @@ import {
     ActionTypes,
     setCurrentPlayPos as setCurrentPlayPosActionCreator,
     setPlayingState as setPlayingStateActionCreator,
-    setSounds as setSoundsActionCreator,
 } from './Actions'
 import {
     getGroupedSounds,
     getDuration,
+    roundedTime,
 } from './utils/measure'
 
 
@@ -20,9 +19,6 @@ const setCurrentPlayPos = function(measureIndex, time) {
 }
 const setPlayingState = function(playingState) {
     dispatch(setPlayingStateActionCreator(playingState))
-}
-const setSounds = function(measure, sounds) {
-    dispatch(setSoundsActionCreator(measure, sounds))
 }
 
 
@@ -88,23 +84,11 @@ class Player {
             return
         }
 
-        const allSoundGroups = measures.map(measure => getGroupedSounds(measure))
-        // Update playback data to store.
-        allSoundGroups.forEach((soundGroup, index) =>
-            setSounds(measures[index], soundGroup)
-        )
-
         this.clocks = measures.map((measure, index) => {
             const {drumkit: drumkitName} = measure
             const duration = getDuration(measure)
-
-            const soundGroups = allSoundGroups[index]
-            console.log(soundGroups)
-            const times = (
-                Object.keys(soundGroups)
-                .map(time => parseFloat(time))
-                .sort((a, b) => a - b)
-            )
+            const soundGroups = getGroupedSounds(measure)
+            const times = soundGroups.keySeq().toJS()
             const nextMeasureDelay = duration - times[times.length - 1]
             console.log(times)
 
@@ -121,14 +105,16 @@ class Player {
             return new TickTock({
                 interval: intervals,
                 callback: (clock, time, tick) => {
-                    if (!soundGroups[time]) {
-                        debugger
-                    }
-                    // console.log('playing sounds at time', time)
-                    for (const {instrument, volume} of soundGroups[time]) {
-                        // console.log('playing', instrument, 'at', volume)
-                        const soundId = howl.play(instrument)
-                        howl.volume(volume, soundId)
+                    time = roundedTime(time)
+                    // if (!soundGroups.get(time)) {
+                    //     debugger
+                    // }
+                    const sounds = soundGroups.get(time)
+                    if (sounds) {
+                        for (const {instrument, volume} of soundGroups.get(time)) {
+                            const soundId = howl.play(instrument)
+                            howl.volume(volume, soundId)
+                        }
                     }
                     setCurrentPlayPos(index, time)
                 },

@@ -1,4 +1,4 @@
-import {dict} from '.'
+import {SortedMap} from 'immutable-sorted'
 
 
 // Creates a group of sounds for each tick.
@@ -36,8 +36,6 @@ export const getGroupedSounds = function(measure) {
         // and 2 regular notes. The tuplet is an array - thus the index of the
         // note following the tuplet is 1, but its position is 2 (since the
         // tuplet is taking 2 slots).
-
-        // let notePosition = 0
         const notePositions = getNotePositions(notes)
         for (const noteIndex of notes.keys()) {
             const note = notes[noteIndex]
@@ -60,11 +58,27 @@ export const getGroupedSounds = function(measure) {
         }
     }
     const duration = numberOfNotes * getMsBetweenNotes(measure)
-    return dict(
+    return SortedMap(
         Object.entries(groups)
-        .filter(([percent, group]) => group.length > 0)
-        .map(([percent, group]) => [parseFloat(percent) * duration, group])
+        .map(([percent, group]) => [roundedTime(Number(percent) * duration), group]),
+        (a, b) => {
+            if (a < b) {
+                return -1
+            }
+            if (a > b) {
+                return a
+            }
+            return 0
+        }
     )
+}
+
+// When we're talking about the time of a note we mean the rounded time.
+// Since humans can only hear above around 20Hz (-> 50ms distance) we don't
+// need exact times. Thus 'getGroupedSounds' and the 'currentPlayPos' use
+// the rounded time.
+export const roundedTime = function(time) {
+    return Math.round(time)
 }
 
 export const getNumberOfNotes = function(measure) {

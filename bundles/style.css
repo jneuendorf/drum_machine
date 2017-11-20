@@ -9941,11 +9941,17 @@ label.panel-block:hover {
 
 .measures .measure .instrument .tuplet-note {
   border-right: 1px solid gray;
+  flex: 1 1 0%;
+  height: 100%;
   position: relative;
 }
 
 .measures .measure .instrument .tuplet-note:last-child {
   border-right: none;
+}
+
+.measures .measure .instrument .tuplet-note.isCurrentlyPlaying .volume {
+  background-color: #6bffe9;
 }
 
 .measures .measure .instrument .note.isFirstOfWholeNote::after {

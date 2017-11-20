@@ -199,7 +199,11 @@ class MeasureSettings extends React.Component {
                         <label className="label">Drumkit</label>
                         <div className="control">
                             <div className="select">
-                                <select value={drumkit}>
+                                <select
+                                    value={drumkit}
+                                    // TODO: create change-drumkit action.
+                                    onChange={() => {}}
+                                >
                                     {Object.entries(drumkits).map(([name, kit]) => (
                                         <option key={name} value={name}>{name}</option>
                                     ))}

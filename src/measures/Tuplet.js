@@ -1,27 +1,24 @@
 import React from 'react'
-// import $ from 'jquery'
 
 import TupletNote from './TupletNote'
 import {defaultConnect, arraysEqual} from '../utils'
+import {roundedTime} from '../utils/measure'
 
 
 
 class Tuplet extends React.Component {
     render() {
         const {
-            measureIndex, noteIndex,
-            isFirstOfWholeNote, isCurrentlyPlaying, volume,
-            toggle, setVolume, addTuplet,
+            measureIndex,
+            toggle, setVolume,
             inTupletMode,
-
             replacedNotes,
             volumes,
+            startTime,
+            duration,
             soundControls: {currentPlayPos},
         } = this.props
-        const className = (
-            `note `
-            + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
-        )
+        const tupletNoteDuration = duration / volumes.length
         const style = {
             width: replacedNotes * 30,
         }
@@ -33,23 +30,26 @@ class Tuplet extends React.Component {
                             {volumes.length}
                         </div>
                     </div>
-                    {volumes.map((volume, tupletNoteIndex) => (
-                        <TupletNote
-                            volume={volume}
-                            toggle={() =>
-                                toggle(tupletNoteIndex)
-                            }
-                            setVolume={(newVolume) =>
-                                setVolume(tupletNoteIndex, newVolume)
-                            }
-                            key={tupletNoteIndex}
-                            isCurrentlyPlaying={arraysEqual(
-                                [measureIndex, noteIndex, tupletNoteIndex],
-                                currentPlayPos
-                            )}
-                            inTupletMode={inTupletMode}
-                        />
-                    ))}
+                    {volumes.map((volume, tupletNoteIndex) => {
+                        const time = roundedTime(startTime + tupletNoteIndex * tupletNoteDuration)
+                        return (
+                            <TupletNote
+                                volume={volume}
+                                toggle={() =>
+                                    toggle(tupletNoteIndex)
+                                }
+                                setVolume={(newVolume) =>
+                                    setVolume(tupletNoteIndex, newVolume)
+                                }
+                                key={tupletNoteIndex}
+                                isCurrentlyPlaying={arraysEqual(
+                                    [measureIndex, time],
+                                    currentPlayPos
+                                )}
+                                inTupletMode={inTupletMode}
+                            />
+                        )
+                    })}
                 </div>
             </div>
         )
