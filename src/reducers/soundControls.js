@@ -9,9 +9,9 @@ const initialState = {
 export const soundControls = function(state=initialState, action) {
     switch (action.type) {
         case ActionTypes.SET_CURRENT_PLAY_POS: {
-            const {measureIndex, noteIndex} = action
+            const {measureIndex, time} = action
             return Object.assign({}, state, {
-                currentPlayPos: [measureIndex, noteIndex]
+                currentPlayPos: [measureIndex, time]
             })
         }
         case ActionTypes.SET_PLAYING_STATE: {

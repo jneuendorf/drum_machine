@@ -17,7 +17,7 @@ const store = createStore(rootReducer, storeEnhancer)
 let lastDispatchedAction = null
 export const dispatch = function(action) {
     lastDispatchedAction = action
-    console.log("my logger!!!", action);
+    // console.log("my logger!!!", action);
     return store.dispatch(action)
 }
 

@@ -21,12 +21,46 @@ $row-margin: 7px
             margin-bottom: $row-margin
 
         .instrument
-            .note, .volume
+            .tuplet, .note, .volume
                 border-radius: 4px
-            .note
+            .tuplet, .note
                 border: 1px solid gray
                 position: relative
-                &.isFirstOfWholeNote::after
+            .tuplet
+                display: flex
+                height: 25px
+                margin-top: 5px
+                position: relative
+                .bracket
+                    border:
+                        left: 1px solid black
+                        top: 1px solid black
+                        right: 1px solid black
+                    height: 5px
+                    left: 1px
+                    position: absolute
+                    top: -8px
+                    .enclosed-notes
+                        background-color: white
+                        display: inline-block
+                        font-size: 0.55rem
+                        font-weight: bold
+                        left: calc(50% - 6px)
+                        line-height: 0.8
+                        padding: 0rem 0.2rem
+                        position: relative
+                        top: -1rem
+            .tuplet-note
+                border-right: 1px solid gray
+                flex: 1 1 0%
+                height: 100%
+                position: relative
+                &:last-child
+                    border-right: none
+                &.isCurrentlyPlaying .volume
+                    background-color: lighten(#00d1b2, 30%)
+            .note
+                &.isFirstOfQuarterNote::after
                     content: '•'
                     bottom: 0
                     left: 0
@@ -43,6 +77,8 @@ $row-margin: 7px
                 left: 0
                 position: absolute
                 right: 0
+            .tuplet-note .volume
+                border-radius: 0
 
             .tag
                 margin-left: 5px

@@ -2,13 +2,16 @@ import {initialDrumkits} from './drumkits'
 import {ActionTypes} from '../Actions'
 import {listReducer} from './ListReducer'
 import {
-    getNumberOfNotes,
     cloneDeep,
     last,
     filledArray,
     arrayChangedSize,
     dict,
 } from '../utils'
+import {
+    getNumberOfNotes,
+    modifyNotes,
+} from '../utils/measure'
 
 
 
@@ -27,7 +30,7 @@ const setNextId = function(measure) {
 const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, drumkit='default', bpm=120) {
     const notesByInstrument = {}
     const {instruments} = initialDrumkits[drumkit]
-    const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+    const numberOfNotes = getNumberOfNotes({numberOfBeats, noteValue, minNoteValue})
     for (const instrument of instruments) {
         notesByInstrument[instrument] = filledArray(
             // 4/4 => 8, 6/8 => 12, 3/4 => 6
@@ -37,12 +40,12 @@ const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, dru
     }
     return {
         id: getNextId(),
+        bpm,
         numberOfBeats,
         noteValue,
         minNoteValue,
         drumkit,
         notes: notesByInstrument,
-        bpm,
     }
 }
 
@@ -55,6 +58,7 @@ const measure = function(state, action, meta) {
         case ActionTypes.ADD_EMPTY_MEASURE: {
             let lastMeasure = last(meta.list)
             if (lastMeasure) {
+                // Use last measure's drumkit, BPM etc.
                 return Object.assign(cloneMeasure(lastMeasure), {
                     notes: dict(Object.entries(lastMeasure.notes).map(
                         ([instrument, notes]) =>
@@ -71,35 +75,32 @@ const measure = function(state, action, meta) {
         case ActionTypes.ADD_MEASURE_FROM_TEMPLATE:
             return cloneMeasure(state)
         case ActionTypes.TOGGLE_NOTE: {
-            const {instrument, noteIndex} = action
+            const {instrument, noteIndex, tupletNoteIndex} = action
             const {notes} = state
-            return setNextId(Object.assign({}, state, {
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: notes[instrument].map((volume, index) => {
-                        if (index !== noteIndex) {
-                            return volume
-                        }
-                        // toggle between 0 and 1
-                        return volume^1
-                    })
+                    [instrument]: modifyNotes(
+                        notes[instrument],
+                        (note, index) => index === noteIndex ? note^1 : note,
+                        (note, index) => index === tupletNoteIndex ? note^1 : note,
+                    ),
                 }
-            }))
+            })
         }
         case ActionTypes.SET_VOLUME: {
-            const {instrument, noteIndex, volume: newVolume} = action
+            const {instrument, noteIndex, tupletNoteIndex, volume: newVolume} = action
             const {notes} = state
-            return setNextId(Object.assign({}, state, {
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: notes[instrument].map((volume, index) => {
-                        if (index !== noteIndex) {
-                            return volume
-                        }
-                        return newVolume
-                    })
+                    [instrument]: modifyNotes(
+                        notes[instrument],
+                        (note, index) => index === noteIndex ? newVolume : note,
+                        (note, index) => index === tupletNoteIndex ? newVolume : note,
+                    ),
                 }
-            }))
+            })
         }
         case ActionTypes.SET_VOLUMES: {
             const {instrument, volume: newVolume} = action
@@ -107,39 +108,73 @@ const measure = function(state, action, meta) {
             return setNextId(Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: notes[instrument].map(volume => newVolume)
+                    [instrument]: modifyNotes(
+                        notes[instrument],
+                        note => newVolume,
+                    ),
+                }
+            }))
+        }
+        case ActionTypes.ADD_TUPLET: {
+            const {instrument, noteIndex, notesToReplace, notesInTuplet} = action
+            const {notes} = state
+            const instrumentNotes = notes[instrument]
+            return setNextId(Object.assign({}, state, {
+                notes: {
+                    ...notes,
+                    [instrument]: [
+                        ...instrumentNotes.slice(0, noteIndex >= 0 ? noteIndex : 0),
+                        [notesToReplace, ...filledArray(notesInTuplet, 1)],
+                        ...instrumentNotes.slice(noteIndex + notesToReplace)
+                    ]
                 }
             }))
         }
         case ActionTypes.SET_BPM: {
             const {bpm} = action
-            return setNextId(Object.assign({}, state, {bpm}))
+            return Object.assign({}, state, {bpm})
         }
         case ActionTypes.SET_NUMBER_OF_BEATS: {
             const {numberOfBeats} = action
-            return setNextId(Object.assign({}, state, {numberOfBeats}))
+            const {notes: oldNotes} = state
+            const newState = Object.assign({}, state, {numberOfBeats})
+            const numberOfNotes = getNumberOfNotes(newState)
+            const notes = {}
+            for (const instrument of Object.keys(oldNotes)) {
+                notes[instrument] = filledArray(numberOfNotes, 0)
+            }
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.SET_NOTE_VALUE: {
             const {noteValue} = action
-            return setNextId(Object.assign({}, state, {noteValue}))
+            const {notes: oldNotes} = state
+            const newState = Object.assign({}, state, {noteValue})
+            const numberOfNotes = getNumberOfNotes(newState)
+            const notes = {}
+            for (const instrument of Object.keys(oldNotes)) {
+                notes[instrument] = filledArray(numberOfNotes, 0)
+            }
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.SET_MIN_NOTE_VALUE: {
             const {minNoteValue} = action
-            const {numberOfBeats, noteValue, notes: oldNotes} = state
-            const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
+            const {notes: oldNotes} = state
+            const newState = Object.assign({}, state, {minNoteValue})
+            const numberOfNotes = getNumberOfNotes(newState)
             const notes = {}
             for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
                 notes[instrument] = arrayChangedSize(instrumentNotes, numberOfNotes, 0)
             }
-            return setNextId(Object.assign({}, state, {minNoteValue, notes}))
+            return Object.assign(newState, {notes})
         }
         case ActionTypes.CLEAR_MEASURE: {
             const {notes: oldNotes} = state
-            const notes = {}
-            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
-                notes[instrument] = instrumentNotes.map(item => 0)
-            }
-            return setNextId(Object.assign({}, state, {notes}))
+            const notes = dict(
+                Object.entries(oldNotes).map(([instrument, instrumentNotes]) =>
+                    [instrument, modifyNotes(instrumentNotes, note => 0)]
+                )
+            )
+            return Object.assign({}, state, {notes})
         }
         default:
             return state

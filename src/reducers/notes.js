@@ -2,15 +2,15 @@ import {ActionTypes} from '../Actions'
 
 
 const initialNotes = {
-    inTripletMode: false,
+    inTupletMode: false,
 }
 
 
 export const notes = function(state=initialNotes, action) {
     switch (action.type) {
-        case ActionTypes.SET_TRIPLET_MODE: {
-            const {inTripletMode} = action
-            return Object.assign({}, state, {inTripletMode})
+        case ActionTypes.SET_TUPLET_MODE: {
+            const {inTupletMode} = action
+            return Object.assign({}, state, {inTupletMode})
         }
         default:
             return state

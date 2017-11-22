@@ -1,5 +1,4 @@
-// import Tock from 'tocktimer'
-import Tock from '../lib/tock'
+import TickTock from '../lib/TickTock'
 
 import {subscribe, dispatch} from './store'
 import {
@@ -8,14 +7,15 @@ import {
     setPlayingState as setPlayingStateActionCreator,
 } from './Actions'
 import {
-    getMsBetweenNotes,
-    getNumberOfNotes,
-} from './utils'
+    getGroupedSounds,
+    getDuration,
+    roundedTime,
+} from './utils/measure'
 
 
 // Bind dispatch to action.
-const setCurrentPlayPos = function(measureIndex, noteIndex) {
-    dispatch(setCurrentPlayPosActionCreator(measureIndex, noteIndex))
+const setCurrentPlayPos = function(measureIndex, time) {
+    dispatch(setCurrentPlayPosActionCreator(measureIndex, time))
 }
 const setPlayingState = function(playingState) {
     dispatch(setPlayingStateActionCreator(playingState))
@@ -77,59 +77,64 @@ class Player {
             drumkits,
         } = state
 
-        console.log('called play........');
-
         // resume
         if (prevPlayingState === 'pause') {
-            console.log('resuming playback');
+            console.log('resuming playback')
             this.resume()
             return
         }
 
-        measures.forEach((measure, index) => {
-            const {numberOfBeats, noteValue, minNoteValue, drumkit: drumkitName, notes} = measure
-            const interval = getMsBetweenNotes(measure)
-            const numberOfNotes = getNumberOfNotes(numberOfBeats, noteValue, minNoteValue)
-            const {howl} = drumkits[drumkitName]
-            console.log('creating clock w/ interval', interval)
-            this.clocks.push(new Tock({
-                interval,
-                callback: (clock, tick) => {
-                    const elapsed = clock.lap()
-                    console.log('off by', elapsed - tick*interval)
-                    console.log(`at tick #${tick}`, Date.now(), Date.now() - start)
-                    if (tick < numberOfNotes) {
-                        const instrumentsToPlayWithNotes = Object.entries(notes)
-                            .filter(([instrument, notes]) => notes[tick] > 0)
+        this.clocks = measures.map((measure, index) => {
+            const {drumkit: drumkitName} = measure
+            const duration = getDuration(measure)
+            const soundGroups = getGroupedSounds(measure)
+            const times = soundGroups.keySeq().toJS()
+            const nextMeasureDelay = duration - times[times.length - 1]
+            console.log(times)
 
-                        for (const [instrumentToPlay, notes] of instrumentsToPlayWithNotes) {
-                            const id = howl.play(instrumentToPlay)
-                            const volume = notes[tick]
-                            console.log(`playing ${instrumentToPlay} at tick ${tick} with volume ${volume}`)
-                            howl.volume(volume, id)
+            // create time diffs
+            const intervals = [
+                ...times.slice(1)
+                .map((time, i) =>
+                    time - times[i]
+                )
+            ]
+            console.log(intervals)
+
+            const {howl} = drumkits[drumkitName]
+            return new TickTock({
+                interval: intervals,
+                callback: (clock, time, tick) => {
+                    time = roundedTime(time)
+                    // if (!soundGroups.get(time)) {
+                    //     debugger
+                    // }
+                    const sounds = soundGroups.get(time)
+                    if (sounds) {
+                        for (const {instrument, volume} of soundGroups.get(time)) {
+                            const soundId = howl.play(instrument)
+                            howl.volume(volume, soundId)
                         }
-                        setCurrentPlayPos(index, tick)
                     }
-                    else {
-                        // console.log('resetting...', Date.now())
-                        clock.reset()
+                    setCurrentPlayPos(index, time)
+                },
+                complete: (time, tick, stopTime) => {
+                    setTimeout(() => {
                         const clockIndex = this.startClock(index + 1)
-                        console.log('clockIndex =', clockIndex, '(if == -1 -> reset playing state)');
                         if (clockIndex >= 0) {
                             setCurrentPlayPos(clockIndex, 0)
                         }
-                        // Current clock from last measure.
                         else {
                             setCurrentPlayPos(-1, -1)
                             setPlayingState('stop')
                         }
-                    }
-                },
-            }))
+                    }, nextMeasureDelay)
+                }
+            })
         })
-        const start = Date.now()
+        console.log(this.clocks)
         this.startClock(0)
-        // setPlayingState('play')
+        setPlayingState('play')
     }
 
     static startClock(index) {
@@ -147,7 +152,7 @@ class Player {
     }
 
     static resume() {
-        this.clocks[this.clockIndex].pause()
+        this.clocks[this.clockIndex].resume()
     }
 
     static stop() {
@@ -155,7 +160,16 @@ class Player {
         // The clock might not exist.
         // This happens if a measure is created
         if (clock) {
-            clock.reset()
+            try {
+                // Clock is already stopped after last measure was played.
+                // That's ok because the clock was already stopped because
+                // setPlayingState(stop) is called from the complete callback.
+                clock.stop()
+            }
+            catch (error) {}
+            finally {
+                clock.reset()
+            }
         }
         setCurrentPlayPos(-1, -1)
         this.clocks = []

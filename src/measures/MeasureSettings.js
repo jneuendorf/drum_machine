@@ -83,7 +83,13 @@ class MeasureSettings extends React.Component {
                     </div>
 
                     <div className="field">
-                        <label className="label">Signature</label>
+                        <label className="label">
+                            Signature
+                            &nbsp;
+                            <span className="tag is-warning">
+                                Chaning the signature will reset all notes.
+                            </span>
+                        </label>
                         <div className="columns">
                             <div className="column">
                                 <label className="label is-small">Number of beats</label>
@@ -199,7 +205,11 @@ class MeasureSettings extends React.Component {
                         <label className="label">Drumkit</label>
                         <div className="control">
                             <div className="select">
-                                <select value={drumkit}>
+                                <select
+                                    value={drumkit}
+                                    // TODO: create change-drumkit action.
+                                    onChange={() => {}}
+                                >
                                     {Object.entries(drumkits).map(([name, kit]) => (
                                         <option key={name} value={name}>{name}</option>
                                     ))}

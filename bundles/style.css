@@ -9898,17 +9898,63 @@ label.panel-block:hover {
   margin-bottom: 7px;
 }
 
+.measures .measure .instrument .tuplet,
 .measures .measure .instrument .note,
 .measures .measure .instrument .volume {
   border-radius: 4px;
 }
 
+.measures .measure .instrument .tuplet,
 .measures .measure .instrument .note {
   border: 1px solid gray;
   position: relative;
 }
 
-.measures .measure .instrument .note.isFirstOfWholeNote::after {
+.measures .measure .instrument .tuplet {
+  display: flex;
+  height: 25px;
+  margin-top: 5px;
+  position: relative;
+}
+
+.measures .measure .instrument .tuplet .bracket {
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  height: 5px;
+  left: 1px;
+  position: absolute;
+  top: -8px;
+}
+
+.measures .measure .instrument .tuplet .bracket .enclosed-notes {
+  background-color: white;
+  display: inline-block;
+  font-size: 0.55rem;
+  font-weight: bold;
+  left: calc(50% - 6px);
+  line-height: 0.8;
+  padding: 0rem 0.2rem;
+  position: relative;
+  top: -1rem;
+}
+
+.measures .measure .instrument .tuplet-note {
+  border-right: 1px solid gray;
+  flex: 1 1 0%;
+  height: 100%;
+  position: relative;
+}
+
+.measures .measure .instrument .tuplet-note:last-child {
+  border-right: none;
+}
+
+.measures .measure .instrument .tuplet-note.isCurrentlyPlaying .volume {
+  background-color: #6bffe9;
+}
+
+.measures .measure .instrument .note.isFirstOfQuarterNote::after {
   content: '\2022';
   bottom: 0;
   left: 0;
@@ -9929,6 +9975,10 @@ label.panel-block:hover {
   left: 0;
   position: absolute;
   right: 0;
+}
+
+.measures .measure .instrument .tuplet-note .volume {
+  border-radius: 0;
 }
 
 .measures .measure .instrument .tag {
