@@ -16,13 +16,13 @@ export class TupletNote extends React.Component {
 
     render() {
         const {
-            isFirstOfWholeNote, isCurrentlyPlaying, volume,
+            isFirstOfQuarterNote, isCurrentlyPlaying, volume,
             toggle, setVolume,
             inTupletMode,
         } = this.props
         const className = (
             `tuplet-note `
-            + `${isFirstOfWholeNote ? 'isFirstOfWholeNote ' : ''}`
+            + `${isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
         return (

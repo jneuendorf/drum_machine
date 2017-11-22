@@ -140,7 +140,7 @@ const measure = function(state, action, meta) {
             const newState = Object.assign({}, state, {numberOfBeats})
             const numberOfNotes = getNumberOfNotes(newState)
             const notes = {}
-            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+            for (const instrument of Object.keys(oldNotes)) {
                 notes[instrument] = filledArray(numberOfNotes, 0)
             }
             return Object.assign(newState, {notes})
@@ -151,7 +151,7 @@ const measure = function(state, action, meta) {
             const newState = Object.assign({}, state, {noteValue})
             const numberOfNotes = getNumberOfNotes(newState)
             const notes = {}
-            for (const [instrument, instrumentNotes] of Object.entries(oldNotes)) {
+            for (const instrument of Object.keys(oldNotes)) {
                 notes[instrument] = filledArray(numberOfNotes, 0)
             }
             return Object.assign(newState, {notes})

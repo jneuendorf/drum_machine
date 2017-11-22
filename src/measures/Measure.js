@@ -79,7 +79,7 @@ class Measure extends React.Component {
                                                 }
                                             }}
                                             key={index}
-                                            isFirstOfWholeNote={notePositions[index] % notesPerWholeNote === 0}
+                                            isFirstOfQuarterNote={notePositions[index] % notesPerWholeNote === 0}
                                             isCurrentlyPlaying={arraysEqual(
                                                 [measureIndex, time],
                                                 currentPlayPos

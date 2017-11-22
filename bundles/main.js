@@ -53188,6 +53188,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _keys = __webpack_require__(125);
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _toConsumableArray2 = __webpack_require__(40);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
@@ -53396,13 +53400,8 @@ var measure = function measure(state, action, meta) {
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = (0, _getIterator3.default)((0, _entries2.default)(oldNotes)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var _ref3 = _step2.value;
-
-                        var _ref4 = (0, _slicedToArray3.default)(_ref3, 2);
-
-                        var _instrument4 = _ref4[0];
-                        var _instrumentNotes = _ref4[1];
+                    for (var _iterator2 = (0, _getIterator3.default)((0, _keys2.default)(oldNotes)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var _instrument4 = _step2.value;
 
                         _notes4[_instrument4] = (0, _utils.filledArray)(numberOfNotes, 0);
                     }
@@ -53436,13 +53435,8 @@ var measure = function measure(state, action, meta) {
                 var _iteratorError3 = undefined;
 
                 try {
-                    for (var _iterator3 = (0, _getIterator3.default)((0, _entries2.default)(_oldNotes)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var _ref5 = _step3.value;
-
-                        var _ref6 = (0, _slicedToArray3.default)(_ref5, 2);
-
-                        var _instrument5 = _ref6[0];
-                        var _instrumentNotes2 = _ref6[1];
+                    for (var _iterator3 = (0, _getIterator3.default)((0, _keys2.default)(_oldNotes)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var _instrument5 = _step3.value;
 
                         _notes5[_instrument5] = (0, _utils.filledArray)(_numberOfNotes, 0);
                     }
@@ -53477,14 +53471,14 @@ var measure = function measure(state, action, meta) {
 
                 try {
                     for (var _iterator4 = (0, _getIterator3.default)((0, _entries2.default)(_oldNotes2)), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                        var _ref7 = _step4.value;
+                        var _ref3 = _step4.value;
 
-                        var _ref8 = (0, _slicedToArray3.default)(_ref7, 2);
+                        var _ref4 = (0, _slicedToArray3.default)(_ref3, 2);
 
-                        var _instrument6 = _ref8[0];
-                        var _instrumentNotes3 = _ref8[1];
+                        var _instrument6 = _ref4[0];
+                        var _instrumentNotes = _ref4[1];
 
-                        _notes6[_instrument6] = (0, _utils.arrayChangedSize)(_instrumentNotes3, _numberOfNotes2, 0);
+                        _notes6[_instrument6] = (0, _utils.arrayChangedSize)(_instrumentNotes, _numberOfNotes2, 0);
                     }
                 } catch (err) {
                     _didIteratorError4 = true;
@@ -53507,10 +53501,10 @@ var measure = function measure(state, action, meta) {
             {
                 var _oldNotes3 = state.notes;
 
-                var _notes7 = (0, _utils.dict)((0, _entries2.default)(_oldNotes3).map(function (_ref9) {
-                    var _ref10 = (0, _slicedToArray3.default)(_ref9, 2),
-                        instrument = _ref10[0],
-                        instrumentNotes = _ref10[1];
+                var _notes7 = (0, _utils.dict)((0, _entries2.default)(_oldNotes3).map(function (_ref5) {
+                    var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+                        instrument = _ref6[0],
+                        instrumentNotes = _ref6[1];
 
                     return [instrument, (0, _measure.modifyNotes)(instrumentNotes, function (note) {
                         return 0;
@@ -57171,7 +57165,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                         }
                                     },
                                     key: index,
-                                    isFirstOfWholeNote: notePositions[index] % notesPerWholeNote === 0,
+                                    isFirstOfQuarterNote: notePositions[index] % notesPerWholeNote === 0,
                                     isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
                                     inTupletMode: inTupletMode
                                 });
@@ -57332,7 +57326,7 @@ var Note = exports.Note = function (_React$Component) {
             var _this2 = this;
 
             var _props = this.props,
-                isFirstOfWholeNote = _props.isFirstOfWholeNote,
+                isFirstOfQuarterNote = _props.isFirstOfQuarterNote,
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
@@ -57340,7 +57334,7 @@ var Note = exports.Note = function (_React$Component) {
                 addTuplet = _props.addTuplet,
                 inTupletMode = _props.inTupletMode;
 
-            var className = 'note ' + ('' + (isFirstOfWholeNote ? 'isFirstOfWholeNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var className = 'note ' + ('' + (isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             var style = this.state.isHoveredInTupletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
             return _react2.default.createElement(
                 'div',
@@ -57574,14 +57568,14 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
         key: 'render',
         value: function render() {
             var _props = this.props,
-                isFirstOfWholeNote = _props.isFirstOfWholeNote,
+                isFirstOfQuarterNote = _props.isFirstOfQuarterNote,
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
                 setVolume = _props.setVolume,
                 inTupletMode = _props.inTupletMode;
 
-            var className = 'tuplet-note ' + ('' + (isFirstOfWholeNote ? 'isFirstOfWholeNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var className = 'tuplet-note ' + ('' + (isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             return _react2.default.createElement(
                 'div',
                 {

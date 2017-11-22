@@ -9954,7 +9954,7 @@ label.panel-block:hover {
   background-color: #6bffe9;
 }
 
-.measures .measure .instrument .note.isFirstOfWholeNote::after {
+.measures .measure .instrument .note.isFirstOfQuarterNote::after {
   content: '\2022';
   bottom: 0;
   left: 0;
