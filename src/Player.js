@@ -90,7 +90,7 @@ class Player {
             const soundGroups = getGroupedSounds(measure)
             const times = soundGroups.keySeq().toJS()
             const nextMeasureDelay = duration - times[times.length - 1]
-            console.log(times)
+            console.log('times', times, 'nextMeasureDelay', nextMeasureDelay)
 
             // create time diffs
             const intervals = [
@@ -132,7 +132,6 @@ class Player {
                 }
             })
         })
-        console.log(this.clocks)
         this.startClock(0)
         setPlayingState('play')
     }

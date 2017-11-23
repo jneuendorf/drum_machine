@@ -5,7 +5,6 @@ export class MenuItem extends React.Component {
     render() {
         let {
             label,
-            // ui,
             children,
             className='',
             title,
