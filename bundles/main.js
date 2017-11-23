@@ -57119,7 +57119,9 @@ var Measure = (_dec = (0, _reduxUi2.default)({
             var drumkit = drumkits[drumkitName];
             var instruments = drumkit.instruments;
 
-            var notesPerWholeNote = measure.minNoteValue / measure.numberOfBeats;
+            var notesPerNoteValue = measure.minNoteValue / measure.noteValue;
+            var numberOfNotes = (0, _measure.getNumberOfNotes)(measure);
+            var measureDuration = (0, _measure.getDuration)(measure);
             return _react2.default.createElement(
                 'div',
                 { className: 'measure has-border-bottom' },
@@ -57131,8 +57133,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                         });
                     });
                     var notePositions = (0, _measure.getNotePositions)(instrumentNotes);
-                    var numberOfNotes = (0, _measure.getNumberOfNotes)(measure);
-                    var measureDuration = (0, _measure.getDuration)(measure);
+                    console.log(notePositions);
                     return _react2.default.createElement(
                         'div',
                         {
@@ -57165,7 +57166,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                         }
                                     },
                                     key: index,
-                                    isFirstOfQuarterNote: notePositions[index] % notesPerWholeNote === 0,
+                                    isFirstOfNoteValue: notePositions[index] % notesPerNoteValue === 0,
                                     isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
                                     inTupletMode: inTupletMode
                                 });
@@ -57326,7 +57327,7 @@ var Note = exports.Note = function (_React$Component) {
             var _this2 = this;
 
             var _props = this.props,
-                isFirstOfQuarterNote = _props.isFirstOfQuarterNote,
+                isFirstOfNoteValue = _props.isFirstOfNoteValue,
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
@@ -57334,7 +57335,7 @@ var Note = exports.Note = function (_React$Component) {
                 addTuplet = _props.addTuplet,
                 inTupletMode = _props.inTupletMode;
 
-            var className = 'note ' + ('' + (isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var className = 'note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             var style = this.state.isHoveredInTupletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
             return _react2.default.createElement(
                 'div',
@@ -57568,14 +57569,14 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
         key: 'render',
         value: function render() {
             var _props = this.props,
-                isFirstOfQuarterNote = _props.isFirstOfQuarterNote,
+                isFirstOfNoteValue = _props.isFirstOfNoteValue,
                 isCurrentlyPlaying = _props.isCurrentlyPlaying,
                 volume = _props.volume,
                 toggle = _props.toggle,
                 setVolume = _props.setVolume,
                 inTupletMode = _props.inTupletMode;
 
-            var className = 'tuplet-note ' + ('' + (isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var className = 'tuplet-note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             return _react2.default.createElement(
                 'div',
                 {

@@ -19,13 +19,13 @@ export class Note extends React.Component {
 
     render() {
         const {
-            isFirstOfQuarterNote, isCurrentlyPlaying, volume,
+            isFirstOfNoteValue, isCurrentlyPlaying, volume,
             toggle, setVolume, addTuplet,
             inTupletMode,
         } = this.props
         const className = (
             `note `
-            + `${isFirstOfQuarterNote ? 'isFirstOfQuarterNote ' : ''}`
+            + `${isFirstOfNoteValue ? 'isFirstOfNoteValue ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
         const style = (

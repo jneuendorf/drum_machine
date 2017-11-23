@@ -30,10 +30,12 @@ class Measure extends React.Component {
             updateUI,
             actions: {toggleNote, setVolume, setVolumes, addTuplet, setTupletMode}
         } = this.props
-        const {drumkit: drumkitName, notes/*, sounds: playbackData*/} = measure
+        const {drumkit: drumkitName, notes} = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
-        const notesPerWholeNote = measure.minNoteValue / measure.numberOfBeats
+        const notesPerNoteValue = measure.minNoteValue / measure.noteValue
+        const numberOfNotes = getNumberOfNotes(measure)
+        const measureDuration = getDuration(measure)
         return (
             <div className="measure has-border-bottom">
                 {instruments.map(instrument => {
@@ -44,8 +46,7 @@ class Measure extends React.Component {
                         : note.slice(1).every(tupletNote => tupletNote > 0)
                     )
                     const notePositions = getNotePositions(instrumentNotes)
-                    const numberOfNotes = getNumberOfNotes(measure)
-                    const measureDuration = getDuration(measure)
+                    console.log(notePositions)
                     return (
                         <div
                             className="columns is-gapless instrument"
@@ -79,7 +80,7 @@ class Measure extends React.Component {
                                                 }
                                             }}
                                             key={index}
-                                            isFirstOfQuarterNote={notePositions[index] % notesPerWholeNote === 0}
+                                            isFirstOfNoteValue={notePositions[index] % notesPerNoteValue === 0}
                                             isCurrentlyPlaying={arraysEqual(
                                                 [measureIndex, time],
                                                 currentPlayPos
