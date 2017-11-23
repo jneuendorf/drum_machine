@@ -46,7 +46,6 @@ class Measure extends React.Component {
                         : note.slice(1).every(tupletNote => tupletNote > 0)
                     )
                     const notePositions = getNotePositions(instrumentNotes)
-                    console.log(notePositions)
                     return (
                         <div
                             className="columns is-gapless instrument"

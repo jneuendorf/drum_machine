@@ -57133,7 +57133,6 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                         });
                     });
                     var notePositions = (0, _measure.getNotePositions)(instrumentNotes);
-                    console.log(notePositions);
                     return _react2.default.createElement(
                         'div',
                         {
