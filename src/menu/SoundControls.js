@@ -1,4 +1,5 @@
 import React from 'react'
+import Toggle from 'react-toggle'
 
 import {
     defaultConnect
@@ -13,17 +14,23 @@ const STOP_LABEL = 'stop'
 
 
 class SoundControls extends React.Component {
+    state = {
+        loop: true
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.soundControls.playingState !== this.props.soundControls.playingState
+        return (
+            nextProps.soundControls.playingState !== this.props.soundControls.playingState
+            || nextProps.soundControls.loop !== this.props.soundControls.loop
+        )
     }
 
     render() {
-        console.log('rendering sound controls menu section.....')
         const {
-            soundControls: {playingState},
-            actions: {setPlayingState}
+            soundControls: {playingState, loop},
+            actions: {setPlayingState, toggleLoopState}
         } = this.props
+        console.log('rendering sound controls menu section.....', loop)
         return (
             <MenuSection label="Sound Controls">
                 <MenuItem
@@ -54,6 +61,18 @@ class SoundControls extends React.Component {
                     <span>Stop</span>
                     <span className="icon">
                         <i className="fa fa-stop-circle" />
+                    </span>
+                </MenuItem>
+                <MenuItem
+                    label="loop"
+                    onClick={toggleLoopState}
+                    isActive={false}
+                >
+                    <span>Loop</span>
+                    <span className="toggle-wrapper">
+                        <Toggle
+                            checked={loop}
+                        />
                     </span>
                 </MenuItem>
             </MenuSection>

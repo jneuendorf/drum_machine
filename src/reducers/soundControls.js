@@ -18,6 +18,9 @@ export const soundControls = function(state=initialState, action) {
             const {playingState} = action
             return Object.assign({}, state, {playingState})
         }
+        case ActionTypes.TOGGLE_LOOP_STATE: {
+            return Object.assign({}, state, {loop: !state.loop})
+        }
         default:
             return state
     }

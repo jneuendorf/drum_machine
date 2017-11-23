@@ -28,6 +28,7 @@ export const ActionTypes = Enum([
 
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
+    'TOGGLE_LOOP_STATE',
 ])
 
 
@@ -173,4 +174,8 @@ export const setCurrentPlayPos = (measureIndex, time) => ({
 export const setPlayingState = (playingState) => ({
     type: ActionTypes.SET_PLAYING_STATE,
     playingState,
+})
+
+export const toggleLoopState = () => ({
+    type: ActionTypes.TOGGLE_LOOP_STATE,
 })

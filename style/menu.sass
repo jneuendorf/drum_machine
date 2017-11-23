@@ -1,3 +1,6 @@
+@import "~bulma/sass/utilities/variables"
+
+
 .menu
     margin-top: 1rem
 
@@ -10,6 +13,24 @@
         &.has-error
             color: #ff3860
 
-        .icon
+        .icon, .react-toggle
             position: absolute
             right: 10px
+        .react-toggle
+            pointer-events: none
+            transform: scale(0.85)
+
+    // Disable shadows since they are weird in Chrome.
+    .react-toggle--focus .react-toggle-thumb
+        box-shadow: none
+    .react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb
+        box-shadow: none
+    // Adjust color to the theme.
+    .react-toggle-track
+        background-color: $dark
+    .react-toggle-thumb
+        border-color: $dark
+    .react-toggle--checked .react-toggle-track
+        background-color: $primary
+    .react-toggle--checked .react-toggle-thumb
+        border-color: $primary
