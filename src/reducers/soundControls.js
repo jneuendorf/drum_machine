@@ -4,6 +4,8 @@ import {ActionTypes} from '../Actions'
 const initialState = {
     playingState: 'stop',
     currentPlayPos: [-1,-1],
+    loop: false,
+    freezeUiWhilePlaying: false,
 }
 
 export const soundControls = function(state=initialState, action) {
@@ -20,6 +22,9 @@ export const soundControls = function(state=initialState, action) {
         }
         case ActionTypes.TOGGLE_LOOP_STATE: {
             return Object.assign({}, state, {loop: !state.loop})
+        }
+        case ActionTypes.TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE: {
+            return Object.assign({}, state, {freezeUiWhilePlaying: !state.freezeUiWhilePlaying})
         }
         default:
             return state

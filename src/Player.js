@@ -74,6 +74,7 @@ class Player {
     static play(state, prevPlayingState) {
         const {
             tab: {measures},
+            soundControls: {loop, freezeUiWhilePlaying},
             drumkits,
         } = state
 
@@ -109,6 +110,7 @@ class Player {
                     // if (!soundGroups.get(time)) {
                     //     debugger
                     // }
+                    // console.log('tick...', time, tick)
                     const sounds = soundGroups.get(time)
                     if (sounds) {
                         for (const {instrument, volume} of soundGroups.get(time)) {
@@ -116,13 +118,18 @@ class Player {
                             howl.volume(volume, soundId)
                         }
                     }
-                    setCurrentPlayPos(index, time)
+                    if (!freezeUiWhilePlaying) {
+                        setCurrentPlayPos(index, time)
+                    }
                 },
-                complete: (time, tick, stopTime) => {
+                complete: (clock, time, tick, stopTime) => {
                     setTimeout(() => {
-                        const clockIndex = this.startClock(index + 1)
+                        clock.reset()
+                        const clockIndex = this.startNextClock(loop)
                         if (clockIndex >= 0) {
-                            setCurrentPlayPos(clockIndex, 0)
+                            if (!freezeUiWhilePlaying) {
+                                setCurrentPlayPos(clockIndex, 0)
+                            }
                         }
                         else {
                             setCurrentPlayPos(-1, -1)
@@ -132,18 +139,23 @@ class Player {
                 }
             })
         })
-        this.startClock(0)
+        this.startNextClock()
         setPlayingState('play')
     }
 
-    static startClock(index) {
-        if (index >= this.clocks.length) {
-            return -1
+    static startNextClock(loop=false) {
+        let nextIndex = this.clockIndex + 1
+        if (nextIndex >= this.clocks.length) {
+            nextIndex = loop ? 0 : -1
         }
-        console.log(`starting clock #${index}`)
-        this.clockIndex = index
-        this.clocks[index].start()
-        return index
+        this.clockIndex = nextIndex
+        const clock = this.clocks[this.clockIndex]
+        console.log('startNextClock...index=', nextIndex)
+        if (clock) {
+            console.log(`starting clock #${this.clockIndex}`)
+            clock.start()
+        }
+        return this.clockIndex
     }
 
     static pause() {

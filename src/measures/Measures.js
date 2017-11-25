@@ -6,7 +6,11 @@ import {defaultConnect} from '../utils'
 
 class Measures extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-        return !nextProps.soundControls.freezeUiWhilePlaying
+        const {soundControls} = nextProps
+        if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
+            return false
+        }
+        return true
     }
 
     render() {

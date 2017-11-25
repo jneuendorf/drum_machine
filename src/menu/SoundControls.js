@@ -15,20 +15,26 @@ const STOP_LABEL = 'stop'
 
 class SoundControls extends React.Component {
     state = {
-        loop: true
+        loop: true,
+        freezeUiWhilePlaying: false,
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.soundControls.playingState !== this.props.soundControls.playingState
             || nextProps.soundControls.loop !== this.props.soundControls.loop
+            || nextProps.soundControls.freezeUiWhilePlaying !== this.props.soundControls.freezeUiWhilePlaying
         )
     }
 
     render() {
         const {
-            soundControls: {playingState, loop},
-            actions: {setPlayingState, toggleLoopState}
+            soundControls: {playingState, loop, freezeUiWhilePlaying},
+            actions: {
+                setPlayingState,
+                toggleLoopState,
+                toggleFreezeUiWhilePlaying,
+            }
         } = this.props
         console.log('rendering sound controls menu section.....', loop)
         return (
@@ -72,6 +78,18 @@ class SoundControls extends React.Component {
                     <span className="toggle-wrapper">
                         <Toggle
                             checked={loop}
+                        />
+                    </span>
+                </MenuItem>
+                <MenuItem
+                    label="loop"
+                    onClick={toggleFreezeUiWhilePlaying}
+                    isActive={false}
+                >
+                    <span>Be performant</span>
+                    <span className="toggle-wrapper">
+                        <Toggle
+                            checked={freezeUiWhilePlaying}
                         />
                     </span>
                 </MenuItem>

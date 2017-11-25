@@ -29,6 +29,7 @@ export const ActionTypes = Enum([
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
     'TOGGLE_LOOP_STATE',
+    'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE',
 ])
 
 
@@ -178,4 +179,8 @@ export const setPlayingState = (playingState) => ({
 
 export const toggleLoopState = () => ({
     type: ActionTypes.TOGGLE_LOOP_STATE,
+})
+
+export const toggleFreezeUiWhilePlaying = () => ({
+    type: ActionTypes.TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE,
 })
