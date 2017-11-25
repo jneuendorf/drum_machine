@@ -10016,7 +10016,7 @@ label.panel-block:hover {
 
 .menu .menu-list li a .react-toggle {
   pointer-events: none;
-  transform: scale(0.85);
+  transform: scale(0.7);
 }
 
 .menu .react-toggle--focus .react-toggle-thumb {

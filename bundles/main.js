@@ -904,7 +904,7 @@ exports.f = __webpack_require__(19) ? Object.defineProperty : function definePro
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.setTupletMode = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
+exports.toggleFreezeUiWhilePlaying = exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.setTupletMode = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(269);
 
@@ -914,7 +914,7 @@ var _ListReducer = __webpack_require__(122);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_TUPLET_MODE', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_TUPLET_MODE', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE']);
 
 var setStoreState = exports.setStoreState = function setStoreState(state) {
     return {
@@ -1113,6 +1113,12 @@ var setPlayingState = exports.setPlayingState = function setPlayingState(playing
 var toggleLoopState = exports.toggleLoopState = function toggleLoopState() {
     return {
         type: ActionTypes.TOGGLE_LOOP_STATE
+    };
+};
+
+var toggleFreezeUiWhilePlaying = exports.toggleFreezeUiWhilePlaying = function toggleFreezeUiWhilePlaying() {
+    return {
+        type: ActionTypes.TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE
     };
 };
 
@@ -56520,7 +56526,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var initialState = {
     playingState: 'stop',
-    currentPlayPos: [-1, -1]
+    currentPlayPos: [-1, -1],
+    loop: false,
+    freezeUiWhilePlaying: false
 };
 
 var soundControls = exports.soundControls = function soundControls() {
@@ -56546,6 +56554,10 @@ var soundControls = exports.soundControls = function soundControls() {
         case _Actions.ActionTypes.TOGGLE_LOOP_STATE:
             {
                 return (0, _assign2.default)({}, state, { loop: !state.loop });
+            }
+        case _Actions.ActionTypes.TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE:
+            {
+                return (0, _assign2.default)({}, state, { freezeUiWhilePlaying: !state.freezeUiWhilePlaying });
             }
         default:
             return state;
@@ -56744,14 +56756,15 @@ var SoundControls = function (_React$Component) {
         }
 
         return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = SoundControls.__proto__ || (0, _getPrototypeOf2.default)(SoundControls)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            loop: true
+            loop: true,
+            freezeUiWhilePlaying: false
         }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(SoundControls, [{
         key: 'shouldComponentUpdate',
         value: function shouldComponentUpdate(nextProps, nextState) {
-            return nextProps.soundControls.playingState !== this.props.soundControls.playingState || nextProps.soundControls.loop !== this.props.soundControls.loop;
+            return nextProps.soundControls.playingState !== this.props.soundControls.playingState || nextProps.soundControls.loop !== this.props.soundControls.loop || nextProps.soundControls.freezeUiWhilePlaying !== this.props.soundControls.freezeUiWhilePlaying;
         }
     }, {
         key: 'render',
@@ -56760,9 +56773,11 @@ var SoundControls = function (_React$Component) {
                 _props$soundControls = _props.soundControls,
                 playingState = _props$soundControls.playingState,
                 loop = _props$soundControls.loop,
+                freezeUiWhilePlaying = _props$soundControls.freezeUiWhilePlaying,
                 _props$actions = _props.actions,
                 setPlayingState = _props$actions.setPlayingState,
-                toggleLoopState = _props$actions.toggleLoopState;
+                toggleLoopState = _props$actions.toggleLoopState,
+                toggleFreezeUiWhilePlaying = _props$actions.toggleFreezeUiWhilePlaying;
 
             console.log('rendering sound controls menu section.....', loop);
             return _react2.default.createElement(
@@ -56845,6 +56860,26 @@ var SoundControls = function (_React$Component) {
                         { className: 'toggle-wrapper' },
                         _react2.default.createElement(_reactToggle2.default, {
                             checked: loop
+                        })
+                    )
+                ),
+                _react2.default.createElement(
+                    _MenuItem2.default,
+                    {
+                        label: 'loop',
+                        onClick: toggleFreezeUiWhilePlaying,
+                        isActive: false
+                    },
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        'Be performant'
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'toggle-wrapper' },
+                        _react2.default.createElement(_reactToggle2.default, {
+                            checked: freezeUiWhilePlaying
                         })
                     )
                 )
@@ -56998,17 +57033,29 @@ var Measures = function (_React$Component) {
     }
 
     (0, _createClass3.default)(Measures, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate(nextProps, nextState) {
+            var soundControls = nextProps.soundControls;
+
+            if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
+                return false;
+            }
+            return true;
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _props = this.props,
                 measures = _props.tab.measures,
+                playingState = _props.soundControls.playingState,
                 _props$actions = _props.actions,
                 addClonedMeasure = _props$actions.addClonedMeasure,
                 addEmptyMeasure = _props$actions.addEmptyMeasure;
 
+            var style = playingState === 'stop' ? {} : { pointerEvents: 'none' };
             return _react2.default.createElement(
                 'div',
-                { className: 'measures' },
+                { className: 'measures', style: style },
                 measures.map(function (measure, index) {
                     return _react2.default.createElement(_Measure2.default, {
                         measure: measure,
@@ -57358,15 +57405,20 @@ var sizeStyle = {
 var Note = exports.Note = function (_React$Component) {
     (0, _inherits3.default)(Note, _React$Component);
 
-    function Note(props) {
+    function Note() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         (0, _classCallCheck3.default)(this, Note);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (Note.__proto__ || (0, _getPrototypeOf2.default)(Note)).call(this, props));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
 
-        _this.state = {
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Note.__proto__ || (0, _getPrototypeOf2.default)(Note)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
             isHoveredInTupletMode: false
-        };
-        return _this;
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(Note, [{
@@ -58215,6 +58267,9 @@ var Player = (_temp = _class = function () {
             var _this = this;
 
             var measures = state.tab.measures,
+                _state$soundControls = state.soundControls,
+                loop = _state$soundControls.loop,
+                freezeUiWhilePlaying = _state$soundControls.freezeUiWhilePlaying,
                 drumkits = state.drumkits;
 
             // resume
@@ -58249,6 +58304,7 @@ var Player = (_temp = _class = function () {
                         // if (!soundGroups.get(time)) {
                         //     debugger
                         // }
+                        // console.log('tick...', time, tick)
                         var sounds = soundGroups.get(time);
                         if (sounds) {
                             var _iteratorNormalCompletion = true;
@@ -58279,13 +58335,18 @@ var Player = (_temp = _class = function () {
                                 }
                             }
                         }
-                        setCurrentPlayPos(index, time);
+                        if (!freezeUiWhilePlaying) {
+                            setCurrentPlayPos(index, time);
+                        }
                     },
-                    complete: function complete(time, tick, stopTime) {
+                    complete: function complete(clock, time, tick, stopTime) {
                         setTimeout(function () {
-                            var clockIndex = _this.startClock(index + 1);
+                            clock.reset();
+                            var clockIndex = _this.startNextClock(loop);
                             if (clockIndex >= 0) {
-                                setCurrentPlayPos(clockIndex, 0);
+                                if (!freezeUiWhilePlaying) {
+                                    setCurrentPlayPos(clockIndex, 0);
+                                }
                             } else {
                                 setCurrentPlayPos(-1, -1);
                                 setPlayingState('stop');
@@ -58294,19 +58355,26 @@ var Player = (_temp = _class = function () {
                     }
                 });
             });
-            this.startClock(0);
+            this.startNextClock();
             setPlayingState('play');
         }
     }, {
-        key: 'startClock',
-        value: function startClock(index) {
-            if (index >= this.clocks.length) {
-                return -1;
+        key: 'startNextClock',
+        value: function startNextClock() {
+            var loop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+            var nextIndex = this.clockIndex + 1;
+            if (nextIndex >= this.clocks.length) {
+                nextIndex = loop ? 0 : -1;
             }
-            console.log('starting clock #' + index);
-            this.clockIndex = index;
-            this.clocks[index].start();
-            return index;
+            this.clockIndex = nextIndex;
+            var clock = this.clocks[this.clockIndex];
+            console.log('startNextClock...index=', nextIndex);
+            if (clock) {
+                console.log('starting clock #' + this.clockIndex);
+                clock.start();
+            }
+            return this.clockIndex;
         }
     }, {
         key: 'pause',
@@ -58404,7 +58472,6 @@ var TickTock = function () {
 
         this.is_running = false;
         this.timeout = null;
-        this.missed_ticks = null;
         this.start_time = 0;
         this.stop_time = 0;
         this.time = 0;
@@ -58433,6 +58500,7 @@ var TickTock = function () {
                 throw new Error('Cannot start. TickTock is already running.');
             }
             this._startTimer(performance.now());
+            return this;
         }
 
         // Stop the clock and clear the timeout
@@ -58446,6 +58514,7 @@ var TickTock = function () {
             this.stop_time = this.elapsed();
             this.is_running = false;
             clearTimeout(this.timeout);
+            return this;
         }
     }, {
         key: 'resume',
@@ -58454,12 +58523,16 @@ var TickTock = function () {
                 throw new Error('Cannot resume. TickTock is already running.');
             }
             this._startTimer(performance.now() - this.stop_time);
+            return this;
         }
     }, {
         key: 'reset',
         value: function reset() {
             this.start_time = 0;
+            this.stop_time = 0;
             this.time = 0;
+            this.tick = 0;
+            return this;
         }
 
         // Get the current clock time in ms.
@@ -58482,7 +58555,7 @@ var TickTock = function () {
             var timeout = this.interval(this.time, this.tick);
             if (!timeout) {
                 this.stop();
-                this.complete && this.complete(this.time, this.tick, this.stop_time);
+                this.complete && this.complete(this, this.time, this.tick, this.stop_time);
                 return;
             }
 
@@ -58492,8 +58565,8 @@ var TickTock = function () {
             var next_tick_in = this.start_time + this.time - performance.now();
 
             if (next_tick_in <= 0) {
-                this.missed_ticks = Math.floor(-next_tick_in / timeout);
-                this.time += this.missed_ticks * timeout;
+                var missed_ticks = Math.floor(-next_tick_in / timeout);
+                this.time += missed_ticks * timeout;
 
                 if (this.is_running) {
                     this._tick();
