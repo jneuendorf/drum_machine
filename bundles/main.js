@@ -56673,7 +56673,8 @@ var Menu = function (_React$Component) {
                 inRemoveTupletMode = _props$tab$notes.inRemoveTupletMode,
                 _props$actions = _props.actions,
                 setTupletMode = _props$actions.setTupletMode,
-                setRemoveTupletMode = _props$actions.setRemoveTupletMode;
+                setRemoveTupletMode = _props$actions.setRemoveTupletMode,
+                setStoreState = _props$actions.setStoreState;
 
             return _react2.default.createElement(
                 'aside',
@@ -56737,6 +56738,26 @@ var Menu = function (_React$Component) {
                             _react2.default.createElement('i', { className: 'fa fa-close' })
                         )] : null
                     )
+                ),
+                _react2.default.createElement(
+                    _MenuSection2.default,
+                    { label: 'Demos' },
+                    _react2.default.createElement(_MenuItem2.default, {
+                        label: 'Demo 1',
+                        isActive: false,
+                        onClick: function onClick() {
+                            return fetch('demos/demo1.txt', {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(function (response) {
+                                return response.text();
+                            }).then(function (serializedState) {
+                                return setStoreState(serializedState);
+                            });
+                        }
+                    })
                 )
             );
         }

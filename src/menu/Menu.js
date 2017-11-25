@@ -12,9 +12,16 @@ class Menu extends React.Component {
         const {
             menu: {measureTemplates},
             tab: {
-                notes: {inTupletMode, inRemoveTupletMode},
+                notes: {
+                    inTupletMode,
+                    inRemoveTupletMode,
+                },
             },
-            actions: {setTupletMode, setRemoveTupletMode}
+            actions: {
+                setTupletMode,
+                setRemoveTupletMode,
+                setStoreState
+            }
         } = this.props
         return (
             <aside className="menu">
@@ -67,6 +74,22 @@ class Menu extends React.Component {
                         }
 
                     </MenuItem>
+                </MenuSection>
+                <MenuSection label="Demos">
+                    <MenuItem
+                        label="Demo 1"
+                        isActive={false}
+                        onClick={() =>
+                            fetch('demos/demo1.txt', {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                }
+                            })
+                            .then(response => response.text())
+                            .then(serializedState => setStoreState(serializedState))
+                        }
+                    />
                 </MenuSection>
             </aside>
         )
