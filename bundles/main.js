@@ -904,7 +904,7 @@ exports.f = __webpack_require__(19) ? Object.defineProperty : function definePro
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.toggleFreezeUiWhilePlaying = exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.setTupletMode = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
+exports.toggleFreezeUiWhilePlaying = exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.setRemoveTupletMode = exports.setTupletMode = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.removeTuplet = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(269);
 
@@ -914,7 +914,7 @@ var _ListReducer = __webpack_require__(122);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_TUPLET_MODE', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'REMOVE_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_TUPLET_MODE', 'SET_REMOVE_TUPLET_MODE', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE']);
 
 var setStoreState = exports.setStoreState = function setStoreState(state) {
     return {
@@ -1008,6 +1008,14 @@ var addTuplet = exports.addTuplet = function addTuplet(measure, instrument, note
     };
 };
 
+var removeTuplet = exports.removeTuplet = function removeTuplet(measure, instrument, noteIndex) {
+    return {
+        type: ActionTypes.REMOVE_TUPLET,
+        measure: measure, instrument: instrument, noteIndex: noteIndex,
+        meta: _ListReducer.ListActions.update(measure)
+    };
+};
+
 var setBpm = exports.setBpm = function setBpm(measure, bpm) {
     return {
         type: ActionTypes.SET_BPM,
@@ -1093,6 +1101,13 @@ var setTupletMode = exports.setTupletMode = function setTupletMode(inTupletMode)
     return {
         type: ActionTypes.SET_TUPLET_MODE,
         inTupletMode: inTupletMode
+    };
+};
+
+var setRemoveTupletMode = exports.setRemoveTupletMode = function setRemoveTupletMode(inRemoveTupletMode) {
+    return {
+        type: ActionTypes.SET_REMOVE_TUPLET_MODE,
+        inRemoveTupletMode: inRemoveTupletMode
     };
 };
 
@@ -53212,9 +53227,9 @@ var _defineProperty2 = __webpack_require__(123);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-var _extends6 = __webpack_require__(38);
+var _extends7 = __webpack_require__(38);
 
-var _extends7 = _interopRequireDefault(_extends6);
+var _extends8 = _interopRequireDefault(_extends7);
 
 var _slicedToArray2 = __webpack_require__(39);
 
@@ -53345,7 +53360,7 @@ var measure = function measure(state, action, meta) {
                 var notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure.mapNotes)(notes[instrument], function (note, index) {
+                    notes: (0, _extends8.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure.mapNotes)(notes[instrument], function (note, index) {
                         return index === noteIndex ? note ^ 1 : note;
                     }, function (note, tIndex, nIndex) {
                         return nIndex === noteIndex && tIndex === tupletNoteIndex ? note ^ 1 : note;
@@ -53361,7 +53376,7 @@ var measure = function measure(state, action, meta) {
                 var _notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure.mapNotes)(_notes[_instrument], function (note, index) {
+                    notes: (0, _extends8.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure.mapNotes)(_notes[_instrument], function (note, index) {
                         return index === _noteIndex ? newVolume : note;
                     }, function (note, tIndex, nIndex) {
                         return nIndex === _noteIndex && tIndex === _tupletNoteIndex ? newVolume : note;
@@ -53374,11 +53389,11 @@ var measure = function measure(state, action, meta) {
                     _newVolume = action.volume;
                 var _notes2 = state.notes;
 
-                return setNextId((0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure.mapNotes)(_notes2[_instrument2], function (note) {
+                return (0, _assign2.default)({}, state, {
+                    notes: (0, _extends8.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure.mapNotes)(_notes2[_instrument2], function (note) {
                         return _newVolume;
                     })))
-                }));
+                });
             }
         case _Actions.ActionTypes.ADD_TUPLET:
             {
@@ -53389,9 +53404,20 @@ var measure = function measure(state, action, meta) {
                 var _notes3 = state.notes;
 
                 var instrumentNotes = _notes3[_instrument3];
-                return setNextId((0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes3, (0, _defineProperty3.default)({}, _instrument3, [].concat((0, _toConsumableArray3.default)(instrumentNotes.slice(0, _noteIndex2 >= 0 ? _noteIndex2 : 0)), [[notesToReplace].concat((0, _toConsumableArray3.default)((0, _utils.filledArray)(notesInTuplet, 1)))], (0, _toConsumableArray3.default)(instrumentNotes.slice(_noteIndex2 + notesToReplace)))))
-                }));
+                return (0, _assign2.default)({}, state, {
+                    notes: (0, _extends8.default)({}, _notes3, (0, _defineProperty3.default)({}, _instrument3, [].concat((0, _toConsumableArray3.default)(instrumentNotes.slice(0, _noteIndex2 >= 0 ? _noteIndex2 : 0)), [[notesToReplace].concat((0, _toConsumableArray3.default)((0, _utils.filledArray)(notesInTuplet, 1)))], (0, _toConsumableArray3.default)(instrumentNotes.slice(_noteIndex2 + notesToReplace)))))
+                });
+            }
+        case _Actions.ActionTypes.REMOVE_TUPLET:
+            {
+                var _instrument4 = action.instrument,
+                    _noteIndex3 = action.noteIndex;
+                var _notes4 = state.notes;
+
+                var _instrumentNotes = _notes4[_instrument4];
+                return (0, _assign2.default)({}, state, {
+                    notes: (0, _extends8.default)({}, _notes4, (0, _defineProperty3.default)({}, _instrument4, [].concat((0, _toConsumableArray3.default)(_instrumentNotes.slice(0, _noteIndex3 >= 0 ? _noteIndex3 : 0)), (0, _toConsumableArray3.default)((0, _utils.filledArray)(_instrumentNotes[_noteIndex3][0], 0)), (0, _toConsumableArray3.default)(_instrumentNotes.slice(_noteIndex3 + 1)))))
+                });
             }
         case _Actions.ActionTypes.SET_BPM:
             {
@@ -53406,16 +53432,16 @@ var measure = function measure(state, action, meta) {
 
                 var newState = (0, _assign2.default)({}, state, { numberOfBeats: numberOfBeats });
                 var numberOfNotes = (0, _measure.getNumberOfNotes)(newState);
-                var _notes4 = {};
+                var _notes5 = {};
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
                 var _iteratorError2 = undefined;
 
                 try {
                     for (var _iterator2 = (0, _getIterator3.default)((0, _keys2.default)(oldNotes)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var _instrument4 = _step2.value;
+                        var _instrument5 = _step2.value;
 
-                        _notes4[_instrument4] = (0, _utils.filledArray)(numberOfNotes, 0);
+                        _notes5[_instrument5] = (0, _utils.filledArray)(numberOfNotes, 0);
                     }
                 } catch (err) {
                     _didIteratorError2 = true;
@@ -53432,7 +53458,7 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)(newState, { notes: _notes4 });
+                return (0, _assign2.default)(newState, { notes: _notes5 });
             }
         case _Actions.ActionTypes.SET_NOTE_VALUE:
             {
@@ -53441,16 +53467,16 @@ var measure = function measure(state, action, meta) {
 
                 var _newState = (0, _assign2.default)({}, state, { noteValue: noteValue });
                 var _numberOfNotes = (0, _measure.getNumberOfNotes)(_newState);
-                var _notes5 = {};
+                var _notes6 = {};
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
                 var _iteratorError3 = undefined;
 
                 try {
                     for (var _iterator3 = (0, _getIterator3.default)((0, _keys2.default)(_oldNotes)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var _instrument5 = _step3.value;
+                        var _instrument6 = _step3.value;
 
-                        _notes5[_instrument5] = (0, _utils.filledArray)(_numberOfNotes, 0);
+                        _notes6[_instrument6] = (0, _utils.filledArray)(_numberOfNotes, 0);
                     }
                 } catch (err) {
                     _didIteratorError3 = true;
@@ -53467,7 +53493,7 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)(_newState, { notes: _notes5 });
+                return (0, _assign2.default)(_newState, { notes: _notes6 });
             }
         case _Actions.ActionTypes.SET_MIN_NOTE_VALUE:
             {
@@ -53476,7 +53502,7 @@ var measure = function measure(state, action, meta) {
 
                 var _newState2 = (0, _assign2.default)({}, state, { minNoteValue: minNoteValue });
                 var _numberOfNotes2 = (0, _measure.getNumberOfNotes)(_newState2);
-                var _notes6 = {};
+                var _notes7 = {};
                 var _iteratorNormalCompletion4 = true;
                 var _didIteratorError4 = false;
                 var _iteratorError4 = undefined;
@@ -53487,10 +53513,10 @@ var measure = function measure(state, action, meta) {
 
                         var _ref4 = (0, _slicedToArray3.default)(_ref3, 2);
 
-                        var _instrument6 = _ref4[0];
-                        var _instrumentNotes = _ref4[1];
+                        var _instrument7 = _ref4[0];
+                        var _instrumentNotes2 = _ref4[1];
 
-                        _notes6[_instrument6] = (0, _utils.arrayChangedSize)(_instrumentNotes, _numberOfNotes2, 0);
+                        _notes7[_instrument7] = (0, _utils.arrayChangedSize)(_instrumentNotes2, _numberOfNotes2, 0);
                     }
                 } catch (err) {
                     _didIteratorError4 = true;
@@ -53507,13 +53533,13 @@ var measure = function measure(state, action, meta) {
                     }
                 }
 
-                return (0, _assign2.default)(_newState2, { notes: _notes6 });
+                return (0, _assign2.default)(_newState2, { notes: _notes7 });
             }
         case _Actions.ActionTypes.CLEAR_MEASURE:
             {
                 var _oldNotes3 = state.notes;
 
-                var _notes7 = (0, _utils.dict)((0, _entries2.default)(_oldNotes3).map(function (_ref5) {
+                var _notes8 = (0, _utils.dict)((0, _entries2.default)(_oldNotes3).map(function (_ref5) {
                     var _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
                         instrument = _ref6[0],
                         instrumentNotes = _ref6[1];
@@ -53522,7 +53548,7 @@ var measure = function measure(state, action, meta) {
                         return 0;
                     })];
                 }));
-                return (0, _assign2.default)({}, state, { notes: _notes7 });
+                return (0, _assign2.default)({}, state, { notes: _notes8 });
             }
         default:
             return state;
@@ -56431,7 +56457,8 @@ var _Actions = __webpack_require__(16);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var initialNotes = {
-    inTupletMode: false
+    inTupletMode: false,
+    inRemoveTupletMode: false
 };
 
 var notes = exports.notes = function notes() {
@@ -56444,6 +56471,12 @@ var notes = exports.notes = function notes() {
                 var inTupletMode = action.inTupletMode;
 
                 return (0, _assign2.default)({}, state, { inTupletMode: inTupletMode });
+            }
+        case _Actions.ActionTypes.SET_REMOVE_TUPLET_MODE:
+            {
+                var inRemoveTupletMode = action.inRemoveTupletMode;
+
+                return (0, _assign2.default)({}, state, { inRemoveTupletMode: inRemoveTupletMode });
             }
         default:
             return state;
@@ -56635,8 +56668,12 @@ var Menu = function (_React$Component) {
         value: function render() {
             var _props = this.props,
                 measureTemplates = _props.menu.measureTemplates,
-                inTupletMode = _props.tab.notes.inTupletMode,
-                setTupletMode = _props.actions.setTupletMode;
+                _props$tab$notes = _props.tab.notes,
+                inTupletMode = _props$tab$notes.inTupletMode,
+                inRemoveTupletMode = _props$tab$notes.inRemoveTupletMode,
+                _props$actions = _props.actions,
+                setTupletMode = _props$actions.setTupletMode,
+                setRemoveTupletMode = _props$actions.setRemoveTupletMode;
 
             return _react2.default.createElement(
                 'aside',
@@ -56656,7 +56693,9 @@ var Menu = function (_React$Component) {
                             label: 'Add Tuplet',
                             isActive: inTupletMode,
                             onClick: function onClick() {
-                                return setTupletMode(!inTupletMode);
+                                if (!inRemoveTupletMode) {
+                                    setTupletMode(!inTupletMode);
+                                }
                             }
                         },
                         inTupletMode ? [_react2.default.createElement(
@@ -56667,6 +56706,31 @@ var Menu = function (_React$Component) {
                             'small',
                             { key: 'cancelLabel2' },
                             ' (Add Tuplet)'
+                        ), _react2.default.createElement(
+                            'span',
+                            { key: '1', className: 'icon' },
+                            _react2.default.createElement('i', { className: 'fa fa-close' })
+                        )] : null
+                    ),
+                    _react2.default.createElement(
+                        _MenuItem2.default,
+                        {
+                            label: 'Remove Tuplet',
+                            isActive: inRemoveTupletMode,
+                            onClick: function onClick() {
+                                if (!inTupletMode) {
+                                    setRemoveTupletMode(!inRemoveTupletMode);
+                                }
+                            }
+                        },
+                        inRemoveTupletMode ? [_react2.default.createElement(
+                            'span',
+                            { key: 'cancelLabel1' },
+                            'Cancel'
+                        ), _react2.default.createElement(
+                            'small',
+                            { key: 'cancelLabel2' },
+                            ' (Remove Tuplet)'
                         ), _react2.default.createElement(
                             'span',
                             { key: '1', className: 'icon' },
@@ -56866,14 +56930,14 @@ var SoundControls = function (_React$Component) {
                 _react2.default.createElement(
                     _MenuItem2.default,
                     {
-                        label: 'loop',
+                        label: 'freezeUiWhilePlaying',
                         onClick: toggleFreezeUiWhilePlaying,
                         isActive: false
                     },
                     _react2.default.createElement(
                         'span',
                         null,
-                        'Be performant'
+                        'Performant play'
                     ),
                     _react2.default.createElement(
                         'span',
@@ -57198,7 +57262,9 @@ var Measure = (_dec = (0, _reduxUi2.default)({
             var _props = this.props,
                 drumkits = _props.drumkits,
                 currentPlayPos = _props.soundControls.currentPlayPos,
-                inTupletMode = _props.tab.notes.inTupletMode,
+                _props$tab$notes = _props.tab.notes,
+                inTupletMode = _props$tab$notes.inTupletMode,
+                inRemoveTupletMode = _props$tab$notes.inRemoveTupletMode,
                 measure = _props.measure,
                 measureIndex = _props.index,
                 ui = _props.ui,
@@ -57208,7 +57274,9 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 _setVolume = _props$actions.setVolume,
                 setVolumes = _props$actions.setVolumes,
                 _addTuplet = _props$actions.addTuplet,
-                setTupletMode = _props$actions.setTupletMode;
+                _removeTuplet = _props$actions.removeTuplet,
+                setTupletMode = _props$actions.setTupletMode,
+                setRemoveTupletMode = _props$actions.setRemoveTupletMode;
             var drumkitName = measure.drumkit,
                 notes = measure.notes;
 
@@ -57248,22 +57316,14 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                         return _setVolume(measure, instrument, index, newVolume);
                                     },
                                     addTuplet: function addTuplet(notesToReplace, notesInTuplet) {
-                                        var tupletWasAdded = void 0;
-                                        try {
-                                            _addTuplet(measure, instrument, index, notesToReplace, notesInTuplet);
-                                            tupletWasAdded = true;
-                                        } catch (e) {
-                                            console.error(e);
-                                            tupletWasAdded = false;
-                                        }
-                                        if (tupletWasAdded) {
-                                            setTupletMode(false);
-                                        }
+                                        _addTuplet(measure, instrument, index, notesToReplace, notesInTuplet);
+                                        setTupletMode(false);
                                     },
                                     key: index,
                                     isFirstOfNoteValue: notePositions[index] % notesPerNoteValue === 0,
                                     isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
-                                    inTupletMode: inTupletMode
+                                    inTupletMode: inTupletMode,
+                                    inRemoveTupletMode: inRemoveTupletMode
                                 });
                             } else {
                                 var _note = (0, _toArray3.default)(note),
@@ -57277,13 +57337,19 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                     setVolume: function setVolume(tupletNoteIndex, newVolume) {
                                         return _setVolume(measure, instrument, index, tupletNoteIndex, newVolume);
                                     },
+                                    removeTuplet: function removeTuplet() {
+                                        _removeTuplet(measure, instrument, index);
+                                        setRemoveTupletMode(false);
+                                    },
                                     key: index,
                                     measureIndex: measureIndex,
                                     noteIndex: index,
                                     replacedNotes: replacedNotes,
                                     volumes: volumes,
                                     startTime: time,
-                                    duration: measureDuration / numberOfNotes * replacedNotes
+                                    duration: measureDuration / numberOfNotes * replacedNotes,
+                                    inTupletMode: inTupletMode,
+                                    inRemoveTupletMode: inRemoveTupletMode
                                 });
                             }
                         }),
@@ -57433,10 +57499,12 @@ var Note = exports.Note = function (_React$Component) {
                 toggle = _props.toggle,
                 setVolume = _props.setVolume,
                 addTuplet = _props.addTuplet,
-                inTupletMode = _props.inTupletMode;
+                inTupletMode = _props.inTupletMode,
+                inRemoveTupletMode = _props.inRemoveTupletMode;
 
             var className = 'note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             var style = this.state.isHoveredInTupletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
+            var volumeStyle = (0, _assign2.default)({ top: Math.abs(1 - volume) * 100 + '%' }, this.state.isHoveredInTupletMode ? { backgroundColor: '#3273dd' } : {});
             return _react2.default.createElement(
                 'div',
                 { className: 'column is-narrow' },
@@ -57446,9 +57514,9 @@ var Note = exports.Note = function (_React$Component) {
                         className: className,
                         style: style,
                         onClick: function onClick() {
-                            if (!inTupletMode) {
+                            if (!inTupletMode && !inRemoveTupletMode) {
                                 toggle();
-                            } else {
+                            } else if (!inRemoveTupletMode) {
                                 var notesInTuplet = parseInt(prompt('Enter the number of notes in the tuplet ' + '(e.g. 3 for a triplet)', '3'), 10);
                                 if (isNaN(notesInTuplet) || notesInTuplet <= 1) {
                                     return;
@@ -57464,7 +57532,7 @@ var Note = exports.Note = function (_React$Component) {
                             }
                         },
                         onMouseMove: function onMouseMove(event) {
-                            if (event.shiftKey && !inTupletMode) {
+                            if (event.shiftKey && !inTupletMode && !inRemoveTupletMode) {
                                 // using jquery to also work if parents are positioned absolutely/relatively
                                 var deltaY = event.pageY - (0, _jquery2.default)(event.currentTarget).offset().top;
                                 // deltaY < 0 <=> mouse is above note element
@@ -57483,7 +57551,7 @@ var Note = exports.Note = function (_React$Component) {
                             }
                         }
                     },
-                    _react2.default.createElement('div', { className: 'volume', style: { top: Math.abs(1 - volume) * 100 + '%' } })
+                    _react2.default.createElement('div', { className: 'volume', style: volumeStyle })
                 )
             );
         }
@@ -57543,18 +57611,33 @@ var Tuplet = function (_React$Component) {
     (0, _inherits3.default)(Tuplet, _React$Component);
 
     function Tuplet() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         (0, _classCallCheck3.default)(this, Tuplet);
-        return (0, _possibleConstructorReturn3.default)(this, (Tuplet.__proto__ || (0, _getPrototypeOf2.default)(Tuplet)).apply(this, arguments));
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Tuplet.__proto__ || (0, _getPrototypeOf2.default)(Tuplet)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            isHoveredInRemoveTupletMode: false
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(Tuplet, [{
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             var _props = this.props,
                 measureIndex = _props.measureIndex,
                 _toggle = _props.toggle,
+                removeTuplet = _props.removeTuplet,
                 _setVolume = _props.setVolume,
                 inTupletMode = _props.inTupletMode,
+                inRemoveTupletMode = _props.inRemoveTupletMode,
                 replacedNotes = _props.replacedNotes,
                 volumes = _props.volumes,
                 startTime = _props.startTime,
@@ -57567,10 +57650,30 @@ var Tuplet = function (_React$Component) {
             };
             return _react2.default.createElement(
                 'div',
-                { className: 'column is-narrow' },
+                {
+                    className: 'column is-narrow',
+                    onMouseEnter: function onMouseEnter() {
+                        if (inRemoveTupletMode) {
+                            _this2.setState({ isHoveredInRemoveTupletMode: true });
+                        }
+                    },
+                    onMouseLeave: function onMouseLeave() {
+                        if (inRemoveTupletMode) {
+                            _this2.setState({ isHoveredInRemoveTupletMode: false });
+                        }
+                    }
+                },
                 _react2.default.createElement(
                     'div',
-                    { className: 'tuplet', style: style },
+                    {
+                        className: 'tuplet',
+                        style: style,
+                        onClick: function onClick() {
+                            if (!inTupletMode) {
+                                removeTuplet();
+                            }
+                        }
+                    },
                     _react2.default.createElement(
                         'div',
                         { className: 'bracket', style: { width: replacedNotes * 30 - 4 } },
@@ -57592,7 +57695,9 @@ var Tuplet = function (_React$Component) {
                             },
                             key: tupletNoteIndex,
                             isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
-                            inTupletMode: inTupletMode
+                            inTupletMode: inTupletMode,
+                            inRemoveTupletMode: inRemoveTupletMode,
+                            tupletHoveredInRemoveTupletMode: _this2.state.isHoveredInRemoveTupletMode
                         });
                     })
                 )
@@ -57618,6 +57723,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.TupletNote = undefined;
+
+var _assign = __webpack_require__(11);
+
+var _assign2 = _interopRequireDefault(_assign);
 
 var _getPrototypeOf = __webpack_require__(4);
 
@@ -57674,16 +57783,25 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
                 volume = _props.volume,
                 toggle = _props.toggle,
                 setVolume = _props.setVolume,
-                inTupletMode = _props.inTupletMode;
+                inTupletMode = _props.inTupletMode,
+                inRemoveTupletMode = _props.inRemoveTupletMode,
+                tupletHoveredInRemoveTupletMode = _props.tupletHoveredInRemoveTupletMode;
 
             var className = 'tuplet-note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            var style = tupletHoveredInRemoveTupletMode ? { backgroundColor: '#3273dd' } : {};
+            var volumeStyle = (0, _assign2.default)({ top: Math.abs(1 - volume) * 100 + '%' }, tupletHoveredInRemoveTupletMode ? { backgroundColor: '#3273dd' } : {});
             return _react2.default.createElement(
                 'div',
                 {
                     className: className,
-                    onClick: toggle,
+                    style: style,
+                    onClick: function onClick() {
+                        if (!inTupletMode && !inRemoveTupletMode) {
+                            toggle();
+                        }
+                    },
                     onMouseMove: function onMouseMove(event) {
-                        if (event.shiftKey && !inTupletMode) {
+                        if (event.shiftKey && !inTupletMode && !inRemoveTupletMode) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             var deltaY = event.pageY - (0, _jquery2.default)(event.currentTarget).offset().top;
                             // deltaY < 0 <=> mouse is above note element
@@ -57692,7 +57810,7 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
                         }
                     }
                 },
-                _react2.default.createElement('div', { className: 'volume', style: { top: Math.abs(1 - volume) * 100 + '%' } })
+                _react2.default.createElement('div', { className: 'volume', style: volumeStyle })
             );
         }
     }]);

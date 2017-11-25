@@ -82,11 +82,11 @@ class SoundControls extends React.Component {
                     </span>
                 </MenuItem>
                 <MenuItem
-                    label="loop"
+                    label="freezeUiWhilePlaying"
                     onClick={toggleFreezeUiWhilePlaying}
                     isActive={false}
                 >
-                    <span>Be performant</span>
+                    <span>Performant play</span>
                     <span className="toggle-wrapper">
                         <Toggle
                             checked={freezeUiWhilePlaying}

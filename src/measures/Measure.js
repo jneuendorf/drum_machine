@@ -23,12 +23,20 @@ class Measure extends React.Component {
         const {
             drumkits,
             soundControls: {currentPlayPos},
-            tab: {notes: {inTupletMode}},
+            tab: {notes: {inTupletMode, inRemoveTupletMode}},
             measure,
             index: measureIndex,
             ui,
             updateUI,
-            actions: {toggleNote, setVolume, setVolumes, addTuplet, setTupletMode}
+            actions: {
+                toggleNote,
+                setVolume,
+                setVolumes,
+                addTuplet,
+                removeTuplet,
+                setTupletMode,
+                setRemoveTupletMode,
+            }
         } = this.props
         const {drumkit: drumkitName, notes} = measure
         const drumkit = drumkits[drumkitName]
@@ -65,18 +73,8 @@ class Measure extends React.Component {
                                                 setVolume(measure, instrument, index, newVolume)
                                             }
                                             addTuplet={(notesToReplace, notesInTuplet) => {
-                                                let tupletWasAdded
-                                                try {
-                                                    addTuplet(measure, instrument, index, notesToReplace, notesInTuplet)
-                                                    tupletWasAdded = true
-                                                }
-                                                catch (e) {
-                                                    console.error(e)
-                                                    tupletWasAdded = false
-                                                }
-                                                if (tupletWasAdded) {
-                                                    setTupletMode(false)
-                                                }
+                                                addTuplet(measure, instrument, index, notesToReplace, notesInTuplet)
+                                                setTupletMode(false)
                                             }}
                                             key={index}
                                             isFirstOfNoteValue={notePositions[index] % notesPerNoteValue === 0}
@@ -85,6 +83,7 @@ class Measure extends React.Component {
                                                 currentPlayPos
                                             )}
                                             inTupletMode={inTupletMode}
+                                            inRemoveTupletMode={inRemoveTupletMode}
                                         />
                                     )
                                 }
@@ -98,6 +97,10 @@ class Measure extends React.Component {
                                             setVolume={(tupletNoteIndex, newVolume) =>
                                                 setVolume(measure, instrument, index, tupletNoteIndex, newVolume)
                                             }
+                                            removeTuplet={() => {
+                                                removeTuplet(measure, instrument, index)
+                                                setRemoveTupletMode(false)
+                                            }}
                                             key={index}
                                             measureIndex={measureIndex}
                                             noteIndex={index}
@@ -105,6 +108,8 @@ class Measure extends React.Component {
                                             volumes={volumes}
                                             startTime={time}
                                             duration={measureDuration / numberOfNotes * replacedNotes}
+                                            inTupletMode={inTupletMode}
+                                            inRemoveTupletMode={inRemoveTupletMode}
                                         />
                                     )
                                 }

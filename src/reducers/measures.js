@@ -105,7 +105,7 @@ const measure = function(state, action, meta) {
         case ActionTypes.SET_VOLUMES: {
             const {instrument, volume: newVolume} = action
             const {notes} = state
-            return setNextId(Object.assign({}, state, {
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
                     [instrument]: mapNotes(
@@ -113,13 +113,13 @@ const measure = function(state, action, meta) {
                         note => newVolume,
                     ),
                 }
-            }))
+            })
         }
         case ActionTypes.ADD_TUPLET: {
             const {instrument, noteIndex, notesToReplace, notesInTuplet} = action
             const {notes} = state
             const instrumentNotes = notes[instrument]
-            return setNextId(Object.assign({}, state, {
+            return Object.assign({}, state, {
                 notes: {
                     ...notes,
                     [instrument]: [
@@ -128,7 +128,22 @@ const measure = function(state, action, meta) {
                         ...instrumentNotes.slice(noteIndex + notesToReplace)
                     ]
                 }
-            }))
+            })
+        }
+        case ActionTypes.REMOVE_TUPLET: {
+            const {instrument, noteIndex} = action
+            const {notes} = state
+            const instrumentNotes = notes[instrument]
+            return Object.assign({}, state, {
+                notes: {
+                    ...notes,
+                    [instrument]: [
+                        ...instrumentNotes.slice(0, noteIndex >= 0 ? noteIndex : 0),
+                        ...filledArray(instrumentNotes[noteIndex][0], 0),
+                        ...instrumentNotes.slice(noteIndex + 1)
+                    ]
+                }
+            })
         }
         case ActionTypes.SET_BPM: {
             const {bpm} = action

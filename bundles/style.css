@@ -10019,6 +10019,10 @@ label.panel-block:hover {
   transform: scale(0.7);
 }
 
+.menu .menu-list li a small {
+  font-size: 0.8rem;
+}
+
 .menu .react-toggle--focus .react-toggle-thumb {
   box-shadow: none;
 }

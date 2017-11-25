@@ -19,6 +19,7 @@ export class Note extends React.Component {
             isFirstOfNoteValue, isCurrentlyPlaying, volume,
             toggle, setVolume, addTuplet,
             inTupletMode,
+            inRemoveTupletMode,
         } = this.props
         const className = (
             `note `
@@ -30,16 +31,20 @@ export class Note extends React.Component {
             ? Object.assign({backgroundColor: '#3273dd'}, sizeStyle)
             : sizeStyle
         )
+        const volumeStyle = Object.assign(
+            {top: `${Math.abs(1 - volume)*100}%`},
+            this.state.isHoveredInTupletMode ? {backgroundColor: '#3273dd'} : {}
+        )
         return (
             <div className="column is-narrow">
                 <div
                     className={className}
                     style={style}
                     onClick={() => {
-                        if (!inTupletMode) {
+                        if (!inTupletMode && !inRemoveTupletMode) {
                             toggle()
                         }
-                        else {
+                        else if (!inRemoveTupletMode) {
                             const notesInTuplet = parseInt(prompt(
                                 (
                                     'Enter the number of notes in the tuplet '
@@ -64,7 +69,7 @@ export class Note extends React.Component {
                         }
                     }}
                     onMouseMove={(event) => {
-                        if (event.shiftKey && !inTupletMode) {
+                        if (event.shiftKey && !inTupletMode && !inRemoveTupletMode) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             const deltaY = event.pageY - $(event.currentTarget).offset().top
                             // deltaY < 0 <=> mouse is above note element
@@ -87,7 +92,7 @@ export class Note extends React.Component {
                         }
                     }}
                 >
-                    <div className="volume" style={{top: `${Math.abs(1 - volume)*100}%`}} />
+                    <div className="volume" style={volumeStyle} />
                 </div>
             </div>
         )

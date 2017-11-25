@@ -12,6 +12,7 @@ export const ActionTypes = Enum([
     'TOGGLE_NOTE',
     'SET_VOLUME',
     'ADD_TUPLET',
+    'REMOVE_TUPLET',
     'SET_VOLUMES',
     'SET_BPM',
     'SET_NUMBER_OF_BEATS',
@@ -25,6 +26,7 @@ export const ActionTypes = Enum([
     'DONE_LOADING_DRUMKIT',
 
     'SET_TUPLET_MODE',
+    'SET_REMOVE_TUPLET_MODE',
 
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
@@ -96,6 +98,12 @@ export const addTuplet = (measure, instrument, noteIndex, notesToReplace, notesI
     meta: ListActions.update(measure),
 })
 
+export const removeTuplet = (measure, instrument, noteIndex) => ({
+    type: ActionTypes.REMOVE_TUPLET,
+    measure, instrument, noteIndex,
+    meta: ListActions.update(measure),
+})
+
 export const setBpm = (measure, bpm) => ({
     type: ActionTypes.SET_BPM,
     bpm,
@@ -164,6 +172,11 @@ export const finishLoadingDrumkit = name => ({
 export const setTupletMode = (inTupletMode) => ({
     type: ActionTypes.SET_TUPLET_MODE,
     inTupletMode,
+})
+
+export const setRemoveTupletMode = (inRemoveTupletMode) => ({
+    type: ActionTypes.SET_REMOVE_TUPLET_MODE,
+    inRemoveTupletMode,
 })
 
 

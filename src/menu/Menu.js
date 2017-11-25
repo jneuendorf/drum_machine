@@ -12,9 +12,9 @@ class Menu extends React.Component {
         const {
             menu: {measureTemplates},
             tab: {
-                notes: {inTupletMode},
+                notes: {inTupletMode, inRemoveTupletMode},
             },
-            actions: {setTupletMode}
+            actions: {setTupletMode, setRemoveTupletMode}
         } = this.props
         return (
             <aside className="menu">
@@ -26,13 +26,39 @@ class Menu extends React.Component {
                     <MenuItem
                         label="Add Tuplet"
                         isActive={inTupletMode}
-                        onClick={() => setTupletMode(!inTupletMode)}
+                        onClick={() => {
+                            if (!inRemoveTupletMode) {
+                                setTupletMode(!inTupletMode)
+                            }
+                        }}
                     >
                         {
                             inTupletMode
                             ? [
                                 <span key="cancelLabel1">Cancel</span>,
                                 <small key="cancelLabel2"> (Add Tuplet)</small>,
+                                <span key="1" className="icon">
+                                    <i className="fa fa-close" />
+                                </span>
+                            ]
+                            : null
+                        }
+
+                    </MenuItem>
+                    <MenuItem
+                        label="Remove Tuplet"
+                        isActive={inRemoveTupletMode}
+                        onClick={() => {
+                            if (!inTupletMode) {
+                                setRemoveTupletMode(!inRemoveTupletMode)
+                            }
+                        }}
+                    >
+                        {
+                            inRemoveTupletMode
+                            ? [
+                                <span key="cancelLabel1">Cancel</span>,
+                                <small key="cancelLabel2"> (Remove Tuplet)</small>,
                                 <span key="1" className="icon">
                                     <i className="fa fa-close" />
                                 </span>

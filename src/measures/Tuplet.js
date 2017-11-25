@@ -7,11 +7,16 @@ import {roundedTime} from '../utils/measure'
 
 
 class Tuplet extends React.Component {
+    state = {
+        isHoveredInRemoveTupletMode: false,
+    }
+
     render() {
         const {
             measureIndex,
-            toggle, setVolume,
+            toggle, removeTuplet, setVolume,
             inTupletMode,
+            inRemoveTupletMode,
             replacedNotes,
             volumes,
             startTime,
@@ -23,8 +28,28 @@ class Tuplet extends React.Component {
             width: replacedNotes * 30,
         }
         return (
-            <div className="column is-narrow">
-                <div className="tuplet" style={style}>
+            <div
+                className="column is-narrow"
+                onMouseEnter={() => {
+                    if (inRemoveTupletMode) {
+                        this.setState({isHoveredInRemoveTupletMode: true})
+                    }
+                }}
+                onMouseLeave={() => {
+                    if (inRemoveTupletMode) {
+                        this.setState({isHoveredInRemoveTupletMode: false})
+                    }
+                }}
+            >
+                <div
+                    className="tuplet"
+                    style={style}
+                    onClick={() => {
+                        if (!inTupletMode) {
+                            removeTuplet()
+                        }
+                    }}
+                >
                     <div className="bracket" style={{width: replacedNotes*30 - 4}}>
                         <div className="enclosed-notes">
                             {volumes.length}
@@ -47,6 +72,8 @@ class Tuplet extends React.Component {
                                     currentPlayPos
                                 )}
                                 inTupletMode={inTupletMode}
+                                inRemoveTupletMode={inRemoveTupletMode}
+                                tupletHoveredInRemoveTupletMode={this.state.isHoveredInRemoveTupletMode}
                             />
                         )
                     })}
