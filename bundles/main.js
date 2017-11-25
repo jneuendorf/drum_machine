@@ -2656,7 +2656,7 @@ module.exports = { "default": __webpack_require__(278), __esModule: true };
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.modifyNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = undefined;
+exports.mapNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = undefined;
 
 var _toConsumableArray2 = __webpack_require__(40);
 
@@ -2900,7 +2900,7 @@ var getNotePositions = exports.getNotePositions = function getNotePositions(note
 
 // @param modifier [Function] This callback is applied to all atomic notes (-> not tuplets).
 // @return [Array] The result of the modifier for each note.
-var modifyNotes = exports.modifyNotes = function modifyNotes(notes, modifier) {
+var mapNotes = exports.mapNotes = function mapNotes(notes, modifier) {
     var tupletModifier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
     if (!tupletModifier) {
@@ -53345,10 +53345,10 @@ var measure = function measure(state, action, meta) {
                 var notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure.modifyNotes)(notes[instrument], function (note, index) {
+                    notes: (0, _extends7.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure.mapNotes)(notes[instrument], function (note, index) {
                         return index === noteIndex ? note ^ 1 : note;
-                    }, function (note, index) {
-                        return index === tupletNoteIndex ? note ^ 1 : note;
+                    }, function (note, tIndex, nIndex) {
+                        return nIndex === noteIndex && tIndex === tupletNoteIndex ? note ^ 1 : note;
                     })))
                 });
             }
@@ -53361,10 +53361,10 @@ var measure = function measure(state, action, meta) {
                 var _notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure.modifyNotes)(_notes[_instrument], function (note, index) {
+                    notes: (0, _extends7.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure.mapNotes)(_notes[_instrument], function (note, index) {
                         return index === _noteIndex ? newVolume : note;
-                    }, function (note, index) {
-                        return index === _tupletNoteIndex ? newVolume : note;
+                    }, function (note, tIndex, nIndex) {
+                        return nIndex === _noteIndex && tIndex === _tupletNoteIndex ? newVolume : note;
                     })))
                 });
             }
@@ -53375,7 +53375,7 @@ var measure = function measure(state, action, meta) {
                 var _notes2 = state.notes;
 
                 return setNextId((0, _assign2.default)({}, state, {
-                    notes: (0, _extends7.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure.modifyNotes)(_notes2[_instrument2], function (note) {
+                    notes: (0, _extends7.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure.mapNotes)(_notes2[_instrument2], function (note) {
                         return _newVolume;
                     })))
                 }));
@@ -53518,7 +53518,7 @@ var measure = function measure(state, action, meta) {
                         instrument = _ref6[0],
                         instrumentNotes = _ref6[1];
 
-                    return [instrument, (0, _measure.modifyNotes)(instrumentNotes, function (note) {
+                    return [instrument, (0, _measure.mapNotes)(instrumentNotes, function (note) {
                         return 0;
                     })];
                 }));

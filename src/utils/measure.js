@@ -115,7 +115,7 @@ export const getNotePositions = function(notes) {
 
 // @param modifier [Function] This callback is applied to all atomic notes (-> not tuplets).
 // @return [Array] The result of the modifier for each note.
-export const modifyNotes = function(notes, modifier, tupletModifier=null) {
+export const mapNotes = function(notes, modifier, tupletModifier=null) {
     if (!tupletModifier) {
         tupletModifier = modifier
     }

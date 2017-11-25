@@ -10,7 +10,7 @@ import {
 } from '../utils'
 import {
     getNumberOfNotes,
-    modifyNotes,
+    mapNotes,
 } from '../utils/measure'
 
 
@@ -80,10 +80,10 @@ const measure = function(state, action, meta) {
             return Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: modifyNotes(
+                    [instrument]: mapNotes(
                         notes[instrument],
                         (note, index) => index === noteIndex ? note^1 : note,
-                        (note, index) => index === tupletNoteIndex ? note^1 : note,
+                        (note, tIndex, nIndex) => nIndex === noteIndex && tIndex === tupletNoteIndex ? note^1 : note,
                     ),
                 }
             })
@@ -94,10 +94,10 @@ const measure = function(state, action, meta) {
             return Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: modifyNotes(
+                    [instrument]: mapNotes(
                         notes[instrument],
                         (note, index) => index === noteIndex ? newVolume : note,
-                        (note, index) => index === tupletNoteIndex ? newVolume : note,
+                        (note, tIndex, nIndex) => nIndex === noteIndex && tIndex === tupletNoteIndex ? newVolume : note,
                     ),
                 }
             })
@@ -108,7 +108,7 @@ const measure = function(state, action, meta) {
             return setNextId(Object.assign({}, state, {
                 notes: {
                     ...notes,
-                    [instrument]: modifyNotes(
+                    [instrument]: mapNotes(
                         notes[instrument],
                         note => newVolume,
                     ),
@@ -171,7 +171,7 @@ const measure = function(state, action, meta) {
             const {notes: oldNotes} = state
             const notes = dict(
                 Object.entries(oldNotes).map(([instrument, instrumentNotes]) =>
-                    [instrument, modifyNotes(instrumentNotes, note => 0)]
+                    [instrument, mapNotes(instrumentNotes, note => 0)]
                 )
             )
             return Object.assign({}, state, {notes})
