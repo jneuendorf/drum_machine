@@ -10,11 +10,8 @@ const sizeStyle = {
 
 
 export class Note extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            isHoveredInTupletMode: false,
-        }
+    state = {
+        isHoveredInTupletMode: false,
     }
 
     render() {

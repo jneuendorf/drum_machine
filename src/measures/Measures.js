@@ -5,13 +5,19 @@ import {defaultConnect} from '../utils'
 
 
 class Measures extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return !nextProps.soundControls.freezeUiWhilePlaying
+    }
+
     render() {
         const {
             tab: {measures},
+            soundControls: {playingState},
             actions: {addClonedMeasure, addEmptyMeasure}
         } = this.props
+        const style = playingState === 'stop' ? {} : {pointerEvents: 'none'}
         return (
-            <div className="measures">
+            <div className="measures" style={style}>
                 {measures.map((measure, index) => {
                     return (
                         <Measure
