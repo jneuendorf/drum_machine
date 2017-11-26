@@ -168,3 +168,9 @@ export const readTextFromFile = function(file, onSuccess) {
         )
     }
 }
+
+
+export const fetchDemo = function(name) {
+    return fetch(`demos/${name}.txt`, {method: 'GET'})
+        .then(response => response.text())
+}

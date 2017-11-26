@@ -29,6 +29,7 @@ export class Note extends React.Component {
             + `${isFirstOfNoteValue ? 'isFirstOfNoteValue ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
+        // TODO: Move more styles to CSS (also for TupletNotes).
         const style = (
             this.state.isHoveredInTupletMode
             ? Object.assign({backgroundColor: '#3273dd'}, sizeStyle)

@@ -4,7 +4,7 @@ import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
 import SoundControls from './SoundControls'
 import MeasureTemplates from './MeasureTemplates'
-import {defaultConnect} from '../utils'
+import {fetchDemo, defaultConnect} from '../utils'
 import {ActionTypes} from '../Actions'
 
 
@@ -93,13 +93,7 @@ class Menu extends React.Component {
                         label="Demo 1"
                         isActive={false}
                         onClick={() =>
-                            fetch('demos/demo1.txt', {
-                                method: 'GET',
-                                // headers: {
-                                //     'Content-Type': 'application/json',
-                                // }
-                            })
-                            .then(response => response.text())
+                            fetchDemo('demo1')
                             .then(serializedState => setStoreState(serializedState))
                         }
                     />

@@ -492,7 +492,7 @@ module.exports = { "default": __webpack_require__(193), __esModule: true };
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.dict = exports.unique = exports.arrayChangedSize = exports.partition = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.isInt = exports.defaultConnect = undefined;
+exports.fetchDemo = exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.dict = exports.unique = exports.arrayChangedSize = exports.partition = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.isInt = exports.defaultConnect = undefined;
 
 var _assign = __webpack_require__(10);
 
@@ -756,6 +756,12 @@ var readTextFromFile = exports.readTextFromFile = function readTextFromFile(file
     } else {
         alert('The File APIs are not fully supported by your browser. ' + 'Thus the file cannot be imported.');
     }
+};
+
+var fetchDemo = exports.fetchDemo = function fetchDemo(name) {
+    return fetch('demos/' + name + '.txt', { method: 'GET' }).then(function (response) {
+        return response.text();
+    });
 };
 
 /***/ }),
@@ -56542,14 +56548,7 @@ var Menu = function (_React$Component) {
                         label: 'Demo 1',
                         isActive: false,
                         onClick: function onClick() {
-                            return fetch('demos/demo1.txt', {
-                                method: 'GET'
-                                // headers: {
-                                //     'Content-Type': 'application/json',
-                                // }
-                            }).then(function (response) {
-                                return response.text();
-                            }).then(function (serializedState) {
+                            return (0, _utils.fetchDemo)('demo1').then(function (serializedState) {
                                 return setStoreState(serializedState);
                             });
                         }
@@ -57728,6 +57727,7 @@ var Note = exports.Note = function (_React$Component) {
                 currentInteraction = _props.currentInteraction;
 
             var className = 'note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
+            // TODO: Move more styles to CSS (also for TupletNotes).
             var style = this.state.isHoveredInTupletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
             var volumeStyle = (0, _assign2.default)({ top: Math.abs(1 - volume) * 100 + '%' }, this.state.isHoveredInTupletMode ? { backgroundColor: '#3273dd' } : {});
             return _react2.default.createElement(
