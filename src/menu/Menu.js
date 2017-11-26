@@ -1,28 +1,33 @@
 import React from 'react'
 
-import {defaultConnect} from '../utils'
 import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
 import SoundControls from './SoundControls'
 import MeasureTemplates from './MeasureTemplates'
+import {defaultConnect} from '../utils'
+import {ActionTypes} from '../Actions'
+
+
+const {ADD_TUPLET, REMOVE_TUPLET, CONTINUE_NOTE_PATTERN} = ActionTypes
 
 
 class Menu extends React.Component {
     render() {
         const {
-            menu: {measureTemplates},
-            tab: {
-                notes: {
-                    inTupletMode,
-                    inRemoveTupletMode,
-                },
+            menu: {
+                measureTemplates,
+                currentInteraction,
             },
             actions: {
-                setTupletMode,
-                setRemoveTupletMode,
-                setStoreState
+                setStoreState,
+                setCurrentMenuInteraction,
             }
         } = this.props
+
+        const toggleCurrentMenuInteraction = type => () =>
+            setCurrentMenuInteraction(
+                currentInteraction === type ? null : type
+            )
         return (
             <aside className="menu">
                 <SoundControls />
@@ -32,15 +37,11 @@ class Menu extends React.Component {
                 <MenuSection label="Notes">
                     <MenuItem
                         label="Add Tuplet"
-                        isActive={inTupletMode}
-                        onClick={() => {
-                            if (!inRemoveTupletMode) {
-                                setTupletMode(!inTupletMode)
-                            }
-                        }}
+                        isActive={currentInteraction === ADD_TUPLET}
+                        onClick={toggleCurrentMenuInteraction(ADD_TUPLET)}
                     >
                         {
-                            inTupletMode
+                            currentInteraction === ADD_TUPLET
                             ? [
                                 <span key="cancelLabel1">Cancel</span>,
                                 <small key="cancelLabel2"> (Add Tuplet)</small>,
@@ -54,15 +55,11 @@ class Menu extends React.Component {
                     </MenuItem>
                     <MenuItem
                         label="Remove Tuplet"
-                        isActive={inRemoveTupletMode}
-                        onClick={() => {
-                            if (!inTupletMode) {
-                                setRemoveTupletMode(!inRemoveTupletMode)
-                            }
-                        }}
+                        isActive={currentInteraction === REMOVE_TUPLET}
+                        onClick={toggleCurrentMenuInteraction(REMOVE_TUPLET)}
                     >
                         {
-                            inRemoveTupletMode
+                            currentInteraction === REMOVE_TUPLET
                             ? [
                                 <span key="cancelLabel1">Cancel</span>,
                                 <small key="cancelLabel2"> (Remove Tuplet)</small>,
@@ -72,7 +69,23 @@ class Menu extends React.Component {
                             ]
                             : null
                         }
-
+                    </MenuItem>
+                    <MenuItem
+                        label="Continue pattern"
+                        isActive={currentInteraction === CONTINUE_NOTE_PATTERN}
+                        onClick={toggleCurrentMenuInteraction(CONTINUE_NOTE_PATTERN)}
+                    >
+                        {
+                            currentInteraction === CONTINUE_NOTE_PATTERN
+                            ? [
+                                <span key="cancelLabel1">Cancel</span>,
+                                <small key="cancelLabel2"> (Continue Pattern)</small>,
+                                <span key="1" className="icon">
+                                    <i className="fa fa-close" />
+                                </span>
+                            ]
+                            : null
+                        }
                     </MenuItem>
                 </MenuSection>
                 <MenuSection label="Demos">
@@ -82,9 +95,9 @@ class Menu extends React.Component {
                         onClick={() =>
                             fetch('demos/demo1.txt', {
                                 method: 'GET',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                }
+                                // headers: {
+                                //     'Content-Type': 'application/json',
+                                // }
                             })
                             .then(response => response.text())
                             .then(serializedState => setStoreState(serializedState))

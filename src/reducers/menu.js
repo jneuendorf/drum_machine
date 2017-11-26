@@ -2,16 +2,16 @@ import {ActionTypes} from '../Actions'
 
 
 const initialMenu = {
-    activeItem: null,
     measureTemplates: [],
+    currentInteraction: null,
 }
 
 
 export const menu = function(state=initialMenu, action) {
     switch (action.type) {
-        case ActionTypes.SELECT_MENU_ITEM: {
-            const {label: activeItem} = action
-            return Object.assign({}, state, {activeItem})
+        case ActionTypes.SET_CURRENT_MENU_INTERACTION: {
+            const {currentInteraction} = action
+            return Object.assign({}, state, {currentInteraction})
         }
         case ActionTypes.CREATE_MEASURE_TEMPLATE: {
             const {name, measure} = action

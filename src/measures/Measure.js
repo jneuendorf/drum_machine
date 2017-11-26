@@ -23,7 +23,7 @@ class Measure extends React.Component {
         const {
             drumkits,
             soundControls: {currentPlayPos},
-            tab: {notes: {inTupletMode, inRemoveTupletMode}},
+            menu: {currentInteraction},
             measure,
             index: measureIndex,
             ui,
@@ -34,8 +34,7 @@ class Measure extends React.Component {
                 setVolumes,
                 addTuplet,
                 removeTuplet,
-                setTupletMode,
-                setRemoveTupletMode,
+                setCurrentMenuInteraction,
             }
         } = this.props
         const {drumkit: drumkitName, notes} = measure
@@ -74,7 +73,7 @@ class Measure extends React.Component {
                                             }
                                             addTuplet={(notesToReplace, notesInTuplet) => {
                                                 addTuplet(measure, instrument, index, notesToReplace, notesInTuplet)
-                                                setTupletMode(false)
+                                                setCurrentMenuInteraction(null)
                                             }}
                                             key={index}
                                             isFirstOfNoteValue={notePositions[index] % notesPerNoteValue === 0}
@@ -82,8 +81,7 @@ class Measure extends React.Component {
                                                 [measureIndex, time],
                                                 currentPlayPos
                                             )}
-                                            inTupletMode={inTupletMode}
-                                            inRemoveTupletMode={inRemoveTupletMode}
+                                            currentInteraction={currentInteraction}
                                         />
                                     )
                                 }
@@ -99,7 +97,7 @@ class Measure extends React.Component {
                                             }
                                             removeTuplet={() => {
                                                 removeTuplet(measure, instrument, index)
-                                                setRemoveTupletMode(false)
+                                                setCurrentMenuInteraction(null)
                                             }}
                                             key={index}
                                             measureIndex={measureIndex}
@@ -108,8 +106,6 @@ class Measure extends React.Component {
                                             volumes={volumes}
                                             startTime={time}
                                             duration={measureDuration / numberOfNotes * replacedNotes}
-                                            inTupletMode={inTupletMode}
-                                            inRemoveTupletMode={inRemoveTupletMode}
                                         />
                                     )
                                 }

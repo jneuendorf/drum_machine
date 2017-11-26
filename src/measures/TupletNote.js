@@ -5,7 +5,6 @@ import $ from 'jquery'
 const size = 30
 
 
-
 export class TupletNote extends React.Component {
     constructor(props) {
         super(props)
@@ -18,8 +17,7 @@ export class TupletNote extends React.Component {
         const {
             isFirstOfNoteValue, isCurrentlyPlaying, volume,
             toggle, setVolume,
-            inTupletMode,
-            inRemoveTupletMode,
+            currentInteraction,
             tupletHoveredInRemoveTupletMode,
         } = this.props
         const className = (
@@ -41,12 +39,12 @@ export class TupletNote extends React.Component {
                 className={className}
                 style={style}
                 onClick={() => {
-                    if (!inTupletMode && !inRemoveTupletMode) {
+                    if (currentInteraction === null) {
                         toggle()
                     }
                 }}
                 onMouseMove={event => {
-                    if (event.shiftKey && !inTupletMode && !inRemoveTupletMode) {
+                    if (event.shiftKey && currentInteraction === null) {
                         // using jquery to also work if parents are positioned absolutely/relatively
                         const deltaY = event.pageY - $(event.currentTarget).offset().top
                         // deltaY < 0 <=> mouse is above note element

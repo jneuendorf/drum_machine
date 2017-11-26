@@ -1,6 +1,10 @@
 import React from 'react'
 import $ from 'jquery'
 
+import {ActionTypes} from '../Actions'
+
+
+const {ADD_TUPLET} = ActionTypes
 
 const size = 30
 const sizeStyle = {
@@ -18,8 +22,7 @@ export class Note extends React.Component {
         const {
             isFirstOfNoteValue, isCurrentlyPlaying, volume,
             toggle, setVolume, addTuplet,
-            inTupletMode,
-            inRemoveTupletMode,
+            currentInteraction,
         } = this.props
         const className = (
             `note `
@@ -41,10 +44,10 @@ export class Note extends React.Component {
                     className={className}
                     style={style}
                     onClick={() => {
-                        if (!inTupletMode && !inRemoveTupletMode) {
+                        if (currentInteraction === null) {
                             toggle()
                         }
-                        else if (!inRemoveTupletMode) {
+                        else if (currentInteraction === ADD_TUPLET) {
                             const notesInTuplet = parseInt(prompt(
                                 (
                                     'Enter the number of notes in the tuplet '
@@ -69,7 +72,7 @@ export class Note extends React.Component {
                         }
                     }}
                     onMouseMove={(event) => {
-                        if (event.shiftKey && !inTupletMode && !inRemoveTupletMode) {
+                        if (event.shiftKey && currentInteraction === null) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             const deltaY = event.pageY - $(event.currentTarget).offset().top
                             // deltaY < 0 <=> mouse is above note element
@@ -82,12 +85,12 @@ export class Note extends React.Component {
                         }
                     }}
                     onMouseEnter={() => {
-                        if (inTupletMode) {
+                        if (currentInteraction === ADD_TUPLET) {
                             this.setState({isHoveredInTupletMode: true})
                         }
                     }}
                     onMouseLeave={() => {
-                        if (inTupletMode) {
+                        if (currentInteraction === ADD_TUPLET) {
                             this.setState({isHoveredInTupletMode: false})
                         }
                     }}

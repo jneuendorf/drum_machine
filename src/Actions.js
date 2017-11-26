@@ -20,13 +20,13 @@ export const ActionTypes = Enum([
     'SET_MIN_NOTE_VALUE',
     'CLEAR_MEASURE',
     'REMOVE_MEASURE',
+
     'CREATE_MEASURE_TEMPLATE',
+    'SET_CURRENT_MENU_INTERACTION',
+    'CONTINUE_NOTE_PATTERN',
 
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
-
-    'SET_TUPLET_MODE',
-    'SET_REMOVE_TUPLET_MODE',
 
     'SET_CURRENT_PLAY_POS',
     'SET_PLAYING_STATE',
@@ -35,18 +35,18 @@ export const ActionTypes = Enum([
 ])
 
 
-export const setStoreState = (state) => ({
+export const setStoreState = state => ({
     type: ActionTypes.SET_STORE_STATE,
     state,
 })
 
-export const displayStoreState = (state) => ({
+export const displayStoreState = state => ({
     type: ActionTypes.DISPLAY_STORE_STATE,
     state,
 })
 
 
-export const addEmptyMeasure = (measure) => ({
+export const addEmptyMeasure = measure => ({
     type: ActionTypes.ADD_EMPTY_MEASURE,
     measure,
     meta: ListActions.append(measure),
@@ -128,19 +128,25 @@ export const setMinNoteValue = (measure, minNoteValue) => ({
     meta: ListActions.update(measure),
 })
 
-export const clearMeasure = (measure) => ({
+export const clearMeasure = measure => ({
     type: ActionTypes.CLEAR_MEASURE,
     meta: ListActions.update(measure),
 })
 
-export const removeMeasure = (measure) => ({
+export const removeMeasure = measure => ({
     type: ActionTypes.REMOVE_MEASURE,
     meta: ListActions.remove(measure),
 })
 
+
 export const createMeasureTemplate = (name, measure) => ({
     type: ActionTypes.CREATE_MEASURE_TEMPLATE,
     name, measure
+})
+
+export const setCurrentMenuInteraction = (currentInteraction) => ({
+    type: ActionTypes.SET_CURRENT_MENU_INTERACTION,
+    currentInteraction
 })
 
 
@@ -151,8 +157,8 @@ export const loadDrumkit = function(drumkitName, howl) {
             console.log('error')
         }).once('load', function() {
             dispatch(finishLoadingDrumkit(drumkitName))
-            // TODO: remove
-            howl.play("Hi-hat")
+            // // TODO: remove
+            // howl.play("Hi-hat")
         })
         howl.load()
     }
@@ -169,23 +175,12 @@ export const finishLoadingDrumkit = name => ({
 })
 
 
-export const setTupletMode = (inTupletMode) => ({
-    type: ActionTypes.SET_TUPLET_MODE,
-    inTupletMode,
-})
-
-export const setRemoveTupletMode = (inRemoveTupletMode) => ({
-    type: ActionTypes.SET_REMOVE_TUPLET_MODE,
-    inRemoveTupletMode,
-})
-
-
 export const setCurrentPlayPos = (measureIndex, time) => ({
     type: ActionTypes.SET_CURRENT_PLAY_POS,
     measureIndex, time,
 })
 
-export const setPlayingState = (playingState) => ({
+export const setPlayingState = playingState => ({
     type: ActionTypes.SET_PLAYING_STATE,
     playingState,
 })

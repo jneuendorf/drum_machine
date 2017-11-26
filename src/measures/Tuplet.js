@@ -3,7 +3,10 @@ import React from 'react'
 import TupletNote from './TupletNote'
 import {defaultConnect, arraysEqual} from '../utils'
 import {roundedTime} from '../utils/measure'
+import {ActionTypes} from '../Actions'
 
+
+const {REMOVE_TUPLET} = ActionTypes
 
 
 class Tuplet extends React.Component {
@@ -14,13 +17,14 @@ class Tuplet extends React.Component {
     render() {
         const {
             measureIndex,
-            toggle, removeTuplet, setVolume,
-            inTupletMode,
-            inRemoveTupletMode,
+            toggle,
+            removeTuplet,
+            setVolume,
             replacedNotes,
             volumes,
             startTime,
             duration,
+            menu: {currentInteraction},
             soundControls: {currentPlayPos},
         } = this.props
         const tupletNoteDuration = duration / volumes.length
@@ -31,12 +35,12 @@ class Tuplet extends React.Component {
             <div
                 className="column is-narrow"
                 onMouseEnter={() => {
-                    if (inRemoveTupletMode) {
+                    if (currentInteraction === REMOVE_TUPLET) {
                         this.setState({isHoveredInRemoveTupletMode: true})
                     }
                 }}
                 onMouseLeave={() => {
-                    if (inRemoveTupletMode) {
+                    if (currentInteraction === REMOVE_TUPLET) {
                         this.setState({isHoveredInRemoveTupletMode: false})
                     }
                 }}
@@ -45,7 +49,7 @@ class Tuplet extends React.Component {
                     className="tuplet"
                     style={style}
                     onClick={() => {
-                        if (!inTupletMode) {
+                        if (currentInteraction === REMOVE_TUPLET) {
                             removeTuplet()
                         }
                     }}
@@ -71,9 +75,8 @@ class Tuplet extends React.Component {
                                     [measureIndex, time],
                                     currentPlayPos
                                 )}
-                                inTupletMode={inTupletMode}
-                                inRemoveTupletMode={inRemoveTupletMode}
                                 tupletHoveredInRemoveTupletMode={this.state.isHoveredInRemoveTupletMode}
+                                currentInteraction={currentInteraction}
                             />
                         )
                     })}
