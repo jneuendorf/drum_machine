@@ -53577,6 +53577,7 @@ var measure = function measure(state, action, meta) {
             {
                 var lastMeasure = (0, _utils.last)(meta.list);
                 if (lastMeasure) {
+                    var numberOfNotes = (0, _measure.getNumberOfNotes)(lastMeasure);
                     // Use last measure's drumkit, BPM etc.
                     return (0, _assign2.default)(cloneMeasure(lastMeasure), {
                         notes: (0, _utils.dict)((0, _entries2.default)(lastMeasure.notes).map(function (_ref) {
@@ -53584,9 +53585,7 @@ var measure = function measure(state, action, meta) {
                                 instrument = _ref2[0],
                                 notes = _ref2[1];
 
-                            return [instrument, notes.map(function (note) {
-                                return 0;
-                            })];
+                            return [instrument, (0, _utils.filledArray)(numberOfNotes, 0)];
                         }))
                     });
                 }
@@ -53678,7 +53677,7 @@ var measure = function measure(state, action, meta) {
                 var oldNotes = state.notes;
 
                 var newState = (0, _assign2.default)({}, state, { numberOfBeats: numberOfBeats });
-                var numberOfNotes = (0, _measure.getNumberOfNotes)(newState);
+                var _numberOfNotes = (0, _measure.getNumberOfNotes)(newState);
                 var _notes5 = {};
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
@@ -53688,7 +53687,7 @@ var measure = function measure(state, action, meta) {
                     for (var _iterator2 = (0, _getIterator3.default)((0, _keys2.default)(oldNotes)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                         var _instrument5 = _step2.value;
 
-                        _notes5[_instrument5] = (0, _utils.filledArray)(numberOfNotes, 0);
+                        _notes5[_instrument5] = (0, _utils.filledArray)(_numberOfNotes, 0);
                     }
                 } catch (err) {
                     _didIteratorError2 = true;
@@ -53713,7 +53712,7 @@ var measure = function measure(state, action, meta) {
                 var _oldNotes = state.notes;
 
                 var _newState = (0, _assign2.default)({}, state, { noteValue: noteValue });
-                var _numberOfNotes = (0, _measure.getNumberOfNotes)(_newState);
+                var _numberOfNotes2 = (0, _measure.getNumberOfNotes)(_newState);
                 var _notes6 = {};
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
@@ -53723,7 +53722,7 @@ var measure = function measure(state, action, meta) {
                     for (var _iterator3 = (0, _getIterator3.default)((0, _keys2.default)(_oldNotes)), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                         var _instrument6 = _step3.value;
 
-                        _notes6[_instrument6] = (0, _utils.filledArray)(_numberOfNotes, 0);
+                        _notes6[_instrument6] = (0, _utils.filledArray)(_numberOfNotes2, 0);
                     }
                 } catch (err) {
                     _didIteratorError3 = true;
@@ -53748,7 +53747,7 @@ var measure = function measure(state, action, meta) {
                 var _oldNotes2 = state.notes;
 
                 var _newState2 = (0, _assign2.default)({}, state, { minNoteValue: minNoteValue });
-                var _numberOfNotes2 = (0, _measure.getNumberOfNotes)(_newState2);
+                var _numberOfNotes3 = (0, _measure.getNumberOfNotes)(_newState2);
                 var _notes7 = {};
                 var _iteratorNormalCompletion4 = true;
                 var _didIteratorError4 = false;
@@ -53763,7 +53762,7 @@ var measure = function measure(state, action, meta) {
                         var _instrument7 = _ref4[0];
                         var _instrumentNotes2 = _ref4[1];
 
-                        _notes7[_instrument7] = (0, _utils.arrayChangedSize)(_instrumentNotes2, _numberOfNotes2, 0);
+                        _notes7[_instrument7] = (0, _utils.arrayChangedSize)(_instrumentNotes2, _numberOfNotes3, 0);
                     }
                 } catch (err) {
                     _didIteratorError4 = true;
@@ -69404,13 +69403,9 @@ var _Actions = __webpack_require__(9);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ADD_TUPLET = _Actions.ActionTypes.ADD_TUPLET;
+// Must equal the $note-height in measures.sass
 
-
-var size = 30;
-var sizeStyle = {
-    width: size,
-    height: size
-};
+var noteHeight = 30;
 
 var Note = exports.Note = function (_React$Component) {
     (0, _inherits3.default)(Note, _React$Component);
@@ -69447,7 +69442,7 @@ var Note = exports.Note = function (_React$Component) {
 
             var className = 'note ' + ('' + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')) + ('' + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''));
             // TODO: Move more styles to CSS (also for TupletNotes).
-            var style = this.state.isHoveredInTupletMode ? (0, _assign2.default)({ backgroundColor: '#3273dd' }, sizeStyle) : sizeStyle;
+            var style = this.state.isHoveredInTupletMode ? { backgroundColor: '#3273dd' } : {};
             var volumeStyle = (0, _assign2.default)({ top: Math.abs(1 - volume) * 100 + '%' }, this.state.isHoveredInTupletMode ? { backgroundColor: '#3273dd' } : {});
             return _react2.default.createElement(
                 'div',
@@ -69480,7 +69475,7 @@ var Note = exports.Note = function (_React$Component) {
                                 // using jquery to also work if parents are positioned absolutely/relatively
                                 var deltaY = event.pageY - (0, _jquery2.default)(event.currentTarget).offset().top;
                                 // deltaY < 0 <=> mouse is above note element
-                                var _volume = deltaY < 0 ? 1 : deltaY > size ? 0 : 1 - deltaY / size;
+                                var _volume = deltaY < 0 ? 1 : deltaY > noteHeight ? 0 : 1 - deltaY / noteHeight;
                                 setVolume(_volume);
                             }
                         },
@@ -69554,6 +69549,9 @@ var _Actions = __webpack_require__(9);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var REMOVE_TUPLET = _Actions.ActionTypes.REMOVE_TUPLET;
+// Must equal the $note-width in measures.sass
+
+var noteWidth = 30;
 
 var Tuplet = function (_React$Component) {
     (0, _inherits3.default)(Tuplet, _React$Component);
@@ -69593,7 +69591,7 @@ var Tuplet = function (_React$Component) {
 
             var tupletNoteDuration = duration / volumes.length;
             var style = {
-                width: replacedNotes * 30
+                width: replacedNotes * noteWidth
             };
             return _react2.default.createElement(
                 'div',
@@ -69623,7 +69621,7 @@ var Tuplet = function (_React$Component) {
                     },
                     _react2.default.createElement(
                         'div',
-                        { className: 'bracket', style: { width: replacedNotes * 30 - 4 } },
+                        { className: 'bracket', style: { width: replacedNotes * noteWidth - 4 } },
                         _react2.default.createElement(
                             'div',
                             { className: 'enclosed-notes' },
@@ -69704,7 +69702,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var size = 30;
+var noteHeight = 30;
 
 var TupletNote = exports.TupletNote = function (_React$Component) {
     (0, _inherits3.default)(TupletNote, _React$Component);
@@ -69750,7 +69748,7 @@ var TupletNote = exports.TupletNote = function (_React$Component) {
                             // using jquery to also work if parents are positioned absolutely/relatively
                             var deltaY = event.pageY - (0, _jquery2.default)(event.currentTarget).offset().top;
                             // deltaY < 0 <=> mouse is above note element
-                            var _volume = deltaY < 0 ? 1 : deltaY > size ? 0 : 1 - deltaY / size;
+                            var _volume = deltaY < 0 ? 1 : deltaY > noteHeight ? 0 : 1 - deltaY / noteHeight;
                             setVolume(_volume);
                         }
                     }

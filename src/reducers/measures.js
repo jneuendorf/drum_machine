@@ -61,11 +61,12 @@ const measure = function(state, action, meta) {
         case ActionTypes.ADD_EMPTY_MEASURE: {
             let lastMeasure = last(meta.list)
             if (lastMeasure) {
+                const numberOfNotes = getNumberOfNotes(lastMeasure)
                 // Use last measure's drumkit, BPM etc.
                 return Object.assign(cloneMeasure(lastMeasure), {
                     notes: dict(Object.entries(lastMeasure.notes).map(
                         ([instrument, notes]) =>
-                            [instrument, notes.map(note => 0)]
+                            [instrument, filledArray(numberOfNotes, 0)]
                     ))
                 })
             }

@@ -2,7 +2,7 @@ import React from 'react'
 import $ from 'jquery'
 
 
-const size = 30
+const noteHeight = 30
 
 
 export class TupletNote extends React.Component {
@@ -51,7 +51,7 @@ export class TupletNote extends React.Component {
                         const volume = (
                             deltaY < 0
                             ? 1
-                            : (deltaY > size ? 0 : 1 - deltaY/size)
+                            : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
                         )
                         setVolume(volume)
                     }

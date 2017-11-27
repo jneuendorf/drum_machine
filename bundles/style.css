@@ -10048,7 +10048,9 @@ label.panel-block:hover {
 }
 
 .measures-container {
+  height: 650px;
   margin-top: 0.75rem;
+  overflow: scroll;
 }
 
 .measures {
@@ -10065,7 +10067,7 @@ label.panel-block:hover {
 
 .measures .measure {
   padding-bottom: 10px;
-  padding-top: 17px;
+  padding-top: 12px;
   position: relative;
 }
 
@@ -10083,7 +10085,7 @@ label.panel-block:hover {
 }
 
 .measures .measure .columns {
-  margin-bottom: 7px;
+  margin-bottom: 2px;
 }
 
 .measures .measure .instrument .tuplet,
@@ -10142,6 +10144,11 @@ label.panel-block:hover {
   background-color: #6bffe9;
 }
 
+.measures .measure .instrument .note {
+  height: 30px;
+  width: 30px;
+}
+
 .measures .measure .instrument .note.isFirstOfNoteValue::after {
   content: '\2022';
   bottom: 0;
@@ -10171,7 +10178,8 @@ label.panel-block:hover {
 
 .measures .measure .instrument .tag {
   margin-left: 5px;
-  opacity: 0.7;
+  opacity: 0.9;
+  transform: scale(0.9);
 }
 
 .store-state-manager {

@@ -5,12 +5,8 @@ import {ActionTypes} from '../Actions'
 
 
 const {ADD_TUPLET} = ActionTypes
-
-const size = 30
-const sizeStyle = {
-    width: size,
-    height: size,
-}
+// Must equal the $note-height in measures.sass
+const noteHeight = 30
 
 
 export class Note extends React.Component {
@@ -32,8 +28,8 @@ export class Note extends React.Component {
         // TODO: Move more styles to CSS (also for TupletNotes).
         const style = (
             this.state.isHoveredInTupletMode
-            ? Object.assign({backgroundColor: '#3273dd'}, sizeStyle)
-            : sizeStyle
+            ? {backgroundColor: '#3273dd'}
+            : {}
         )
         const volumeStyle = Object.assign(
             {top: `${Math.abs(1 - volume)*100}%`},
@@ -80,7 +76,7 @@ export class Note extends React.Component {
                             const volume = (
                                 deltaY < 0
                                 ? 1
-                                : (deltaY > size ? 0 : 1 - deltaY/size)
+                                : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
                             )
                             setVolume(volume)
                         }

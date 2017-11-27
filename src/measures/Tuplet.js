@@ -7,6 +7,8 @@ import {ActionTypes} from '../Actions'
 
 
 const {REMOVE_TUPLET} = ActionTypes
+// Must equal the $note-width in measures.sass
+const noteWidth = 30
 
 
 class Tuplet extends React.Component {
@@ -29,7 +31,7 @@ class Tuplet extends React.Component {
         } = this.props
         const tupletNoteDuration = duration / volumes.length
         const style = {
-            width: replacedNotes * 30,
+            width: replacedNotes * noteWidth,
         }
         return (
             <div
@@ -54,7 +56,7 @@ class Tuplet extends React.Component {
                         }
                     }}
                 >
-                    <div className="bracket" style={{width: replacedNotes*30 - 4}}>
+                    <div className="bracket" style={{width: replacedNotes*noteWidth - 4}}>
                         <div className="enclosed-notes">
                             {volumes.length}
                         </div>
