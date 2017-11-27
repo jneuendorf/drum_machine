@@ -149,6 +149,12 @@ export const setCurrentMenuInteraction = (currentInteraction) => ({
     currentInteraction
 })
 
+export const continueNotePattern = (measure, instrument) => ({
+    type: ActionTypes.CONTINUE_NOTE_PATTERN,
+    measure, instrument,
+    meta: ListActions.update(measure),
+})
+
 
 export const loadDrumkit = function(drumkitName, howl) {
     return (dispatch, getState) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 import ui from 'redux-ui'
+import {paramCase} from 'change-case'
 
 import Note from './Note'
 import Tuplet from './Tuplet'
@@ -10,6 +11,10 @@ import {
     getNumberOfNotes,
     getDuration
 } from '../utils/measure'
+import {ActionTypes} from '../Actions'
+
+
+const {CONTINUE_NOTE_PATTERN} = ActionTypes
 
 
 @ui({
@@ -34,6 +39,7 @@ class Measure extends React.Component {
                 setVolumes,
                 addTuplet,
                 removeTuplet,
+                continueNotePattern,
                 setCurrentMenuInteraction,
             }
         } = this.props
@@ -44,7 +50,11 @@ class Measure extends React.Component {
         const numberOfNotes = getNumberOfNotes(measure)
         const measureDuration = getDuration(measure)
         return (
-            <div className="measure has-border-bottom">
+            <div
+                className={
+                    `measure has-border-bottom ${paramCase(currentInteraction) || ''}`
+                }
+            >
                 {instruments.map(instrument => {
                     const instrumentNotes = notes[instrument]
                     const allNotesOn = instrumentNotes.every(note =>
@@ -57,6 +67,17 @@ class Measure extends React.Component {
                         <div
                             className="columns is-gapless instrument"
                             key={instrument}
+                            // 'onClick' on children is never called
+                            // because they have 'pointer-events: none'.
+                            onClick={event => {
+                                if (currentInteraction === CONTINUE_NOTE_PATTERN) {
+                                    continueNotePattern(measure, instrument)
+                                    // Stay in CONTINUE_NOTE_PATTERN mode if shift is held down.
+                                    if (!event.shiftKey) {
+                                        setCurrentMenuInteraction(null)
+                                    }
+                                }
+                            }}
                         >
                             {instrumentNotes.map((note, index) => {
                                 const time = notePositions[index] / numberOfNotes * measureDuration

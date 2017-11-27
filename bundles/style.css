@@ -10069,6 +10069,19 @@ label.panel-block:hover {
   position: relative;
 }
 
+.measures .measure.continue-note-pattern .columns:hover .column {
+  pointer-events: none;
+}
+
+.measures .measure.continue-note-pattern .columns:hover .note,
+.measures .measure.continue-note-pattern .columns:hover .tuplet {
+  background-color: #3273dd;
+}
+
+.measures .measure.continue-note-pattern .columns:hover .volume {
+  background-color: #89afec;
+}
+
 .measures .measure .columns {
   margin-bottom: 7px;
 }

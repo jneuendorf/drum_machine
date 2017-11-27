@@ -134,3 +134,13 @@ export const mapNotes = function(notes, modifier, tupletModifier=null) {
         }
     })
 }
+
+// Returns the number of 'normal' notes that are taken by a sequence of notes.
+// E.g. [0,0,0] -> 3, [1, [2,0,1,0], 0] -> 4.
+// @param notes [Array] List of notes (including tuplets).
+export const getNumberOfNoteValues = function(notes) {
+    return notes.reduce(
+        (num, note) => num + (Array.isArray(note) ? note[0] : 1),
+        0
+    )
+}

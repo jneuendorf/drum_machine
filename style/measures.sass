@@ -16,6 +16,13 @@ $row-margin: 7px
         padding-bottom: 10px
         padding-top: #{10px + $row-margin}
         position: relative
+        &.continue-note-pattern .columns:hover
+            .column
+                pointer-events: none
+            .note, .tuplet
+                background-color: #3273dd
+            .volume
+                background-color: lighten(#3273dd, 20%)
 
         .columns
             margin-bottom: $row-margin

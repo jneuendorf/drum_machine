@@ -1,3 +1,5 @@
+import takeRightWhile from 'lodash.takerightwhile'
+
 import {initialDrumkits} from './drumkits'
 import {ActionTypes} from '../Actions'
 import {listReducer} from './ListReducer'
@@ -10,6 +12,7 @@ import {
 } from '../utils'
 import {
     getNumberOfNotes,
+    getNumberOfNoteValues,
     mapNotes,
 } from '../utils/measure'
 
@@ -190,6 +193,33 @@ const measure = function(state, action, meta) {
                 )
             )
             return Object.assign({}, state, {notes})
+        }
+        case ActionTypes.CONTINUE_NOTE_PATTERN: {
+            const {instrument} = action
+            const {notes: allNotes} = state
+            const {[instrument]: notes} = allNotes
+            const emptyNotes = takeRightWhile(notes, note => note === 0)
+            const freeSlots = emptyNotes.length
+            const currentPattern = notes.slice(0, -freeSlots)
+            const currentPatternNumNotes = getNumberOfNoteValues(currentPattern)
+            // Add the entire current pattern until all notes are filled.
+            // This might result in a too long list of notes.
+            // That's why its truncated accordingly afterwards.
+            let continuedPattern = []
+            let consumableSlots = freeSlots
+            while (consumableSlots > 0) {
+                continuedPattern.push(...currentPattern)
+                consumableSlots -= currentPatternNumNotes
+            }
+            while (getNumberOfNoteValues(continuedPattern) > freeSlots) {
+                continuedPattern.splice(-1, 1)
+            }
+            return Object.assign({}, state, {
+                notes: {
+                    ...allNotes,
+                    [instrument]: [...currentPattern, ...continuedPattern],
+                }
+            })
         }
         default:
             return state
