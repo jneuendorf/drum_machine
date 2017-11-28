@@ -68928,6 +68928,11 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 {
                     className: 'measure has-border-bottom ' + ((0, _changeCase.paramCase)(currentInteraction) || '')
                 },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'count' },
+                    measureIndex + 1
+                ),
                 instruments.map(function (instrument) {
                     var instrumentNotes = notes[instrument];
                     var allNotesOn = instrumentNotes.every(function (note) {

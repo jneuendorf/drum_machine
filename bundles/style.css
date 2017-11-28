@@ -10066,9 +10066,12 @@ label.panel-block:hover {
 }
 
 .measures .measure {
-  padding-bottom: 10px;
-  padding-top: 12px;
+  padding: 10px 0 10px 0;
   position: relative;
+}
+
+.measures .measure .count {
+  font-size: 0.7rem;
 }
 
 .measures .measure.continue-note-pattern .columns:hover .column {

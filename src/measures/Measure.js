@@ -55,6 +55,7 @@ class Measure extends React.Component {
                     `measure has-border-bottom ${paramCase(currentInteraction) || ''}`
                 }
             >
+                <div className="count">{measureIndex + 1}</div>
                 {instruments.map(instrument => {
                     const instrumentNotes = notes[instrument]
                     const allNotesOn = instrumentNotes.every(note =>
