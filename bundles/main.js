@@ -70466,9 +70466,13 @@ var Player = (_temp = _class = function () {
 
                 var howl = drumkits[drumkitName].howl;
 
+                var measureElements = document.querySelectorAll('.measures .measure');
                 return new _TickTock2.default({
                     interval: intervals,
                     callback: function callback(clock, time, tick) {
+                        if (tick === 0) {
+                            measureElements[index].scrollIntoView();
+                        }
                         time = (0, _measure.roundedTime)(time);
                         // if (!soundGroups.get(time)) {
                         //     debugger

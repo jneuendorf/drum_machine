@@ -126,9 +126,13 @@ class Player {
             console.log(intervals)
 
             const {howl} = drumkits[drumkitName]
+            const measureElements = document.querySelectorAll('.measures .measure')
             return new TickTock({
                 interval: intervals,
                 callback: (clock, time, tick) => {
+                    if (tick === 0) {
+                        measureElements[index].scrollIntoView()
+                    }
                     time = roundedTime(time)
                     // if (!soundGroups.get(time)) {
                     //     debugger
