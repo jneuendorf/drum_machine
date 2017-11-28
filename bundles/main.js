@@ -429,7 +429,7 @@ var _ListReducer = __webpack_require__(126);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'REMOVE_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'SET_CURRENT_MENU_INTERACTION', 'CONTINUE_NOTE_PATTERN', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'REMOVE_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'SET_CURRENT_MENU_INTERACTION', 'CONTINUE_NOTE_PATTERN', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE', 'GO_TO_MEASURE']);
 
 var setStoreState = exports.setStoreState = function setStoreState(state) {
     return {
@@ -461,9 +461,11 @@ var addClonedMeasure = exports.addClonedMeasure = function addClonedMeasure() {
 };
 
 var addMeasureFromTemplate = exports.addMeasureFromTemplate = function addMeasureFromTemplate(_ref) {
-    var measure = _ref.measure;
+    var name = _ref.name,
+        measure = _ref.measure;
     return {
         type: ActionTypes.ADD_MEASURE_FROM_TEMPLATE,
+        name: name, measure: measure,
         meta: _ListReducer.ListActions.append(measure)
     };
 };
@@ -1899,7 +1901,7 @@ var storeEnhancer = (0, _redux.applyMiddleware)(_reduxThunk2.default, _reduxLogg
 var store = (0, _redux.createStore)(_reducers2.default, storeEnhancer);
 
 // TODO: make this a middleware?!
-var lastDispatchedAction = null;
+var lastDispatchedAction = undefined;
 var dispatch = exports.dispatch = function dispatch(action) {
     lastDispatchedAction = action;
     // console.log("my logger!!!", action);
@@ -53502,7 +53504,7 @@ var _ListReducer = __webpack_require__(126);
 
 var _utils = __webpack_require__(11);
 
-var _measure = __webpack_require__(45);
+var _measure2 = __webpack_require__(45);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -53528,7 +53530,7 @@ var createMeasure = function createMeasure() {
     var notesByInstrument = {};
     var instruments = _drumkits.initialDrumkits[drumkit].instruments;
 
-    var numberOfNotes = (0, _measure.getNumberOfNotes)({ numberOfBeats: numberOfBeats, noteValue: noteValue, minNoteValue: minNoteValue });
+    var numberOfNotes = (0, _measure2.getNumberOfNotes)({ numberOfBeats: numberOfBeats, noteValue: noteValue, minNoteValue: minNoteValue });
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -53558,6 +53560,7 @@ var createMeasure = function createMeasure() {
 
     return {
         id: getNextId(),
+        name: '',
         bpm: bpm,
         numberOfBeats: numberOfBeats,
         noteValue: noteValue,
@@ -53577,7 +53580,7 @@ var measure = function measure(state, action, meta) {
             {
                 var lastMeasure = (0, _utils.last)(meta.list);
                 if (lastMeasure) {
-                    var numberOfNotes = (0, _measure.getNumberOfNotes)(lastMeasure);
+                    var numberOfNotes = (0, _measure2.getNumberOfNotes)(lastMeasure);
                     // Use last measure's drumkit, BPM etc.
                     return (0, _assign2.default)(cloneMeasure(lastMeasure), {
                         notes: (0, _utils.dict)((0, _entries2.default)(lastMeasure.notes).map(function (_ref) {
@@ -53597,7 +53600,12 @@ var measure = function measure(state, action, meta) {
                 return _lastMeasure ? cloneMeasure(_lastMeasure) : createMeasure();
             }
         case _Actions.ActionTypes.ADD_MEASURE_FROM_TEMPLATE:
-            return cloneMeasure(state);
+            {
+                var name = action.name,
+                    _measure = action.measure;
+
+                return (0, _assign2.default)(cloneMeasure(_measure), { name: name });
+            }
         case _Actions.ActionTypes.TOGGLE_NOTE:
             {
                 var instrument = action.instrument,
@@ -53606,7 +53614,7 @@ var measure = function measure(state, action, meta) {
                 var notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends9.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure.mapNotes)(notes[instrument], function (note, index) {
+                    notes: (0, _extends9.default)({}, notes, (0, _defineProperty3.default)({}, instrument, (0, _measure2.mapNotes)(notes[instrument], function (note, index) {
                         return index === noteIndex ? note ^ 1 : note;
                     }, function (note, tIndex, nIndex) {
                         return nIndex === noteIndex && tIndex === tupletNoteIndex ? note ^ 1 : note;
@@ -53622,7 +53630,7 @@ var measure = function measure(state, action, meta) {
                 var _notes = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends9.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure.mapNotes)(_notes[_instrument], function (note, index) {
+                    notes: (0, _extends9.default)({}, _notes, (0, _defineProperty3.default)({}, _instrument, (0, _measure2.mapNotes)(_notes[_instrument], function (note, index) {
                         return index === _noteIndex ? newVolume : note;
                     }, function (note, tIndex, nIndex) {
                         return nIndex === _noteIndex && tIndex === _tupletNoteIndex ? newVolume : note;
@@ -53636,7 +53644,7 @@ var measure = function measure(state, action, meta) {
                 var _notes2 = state.notes;
 
                 return (0, _assign2.default)({}, state, {
-                    notes: (0, _extends9.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure.mapNotes)(_notes2[_instrument2], function (note) {
+                    notes: (0, _extends9.default)({}, _notes2, (0, _defineProperty3.default)({}, _instrument2, (0, _measure2.mapNotes)(_notes2[_instrument2], function (note) {
                         return _newVolume;
                     })))
                 });
@@ -53677,7 +53685,7 @@ var measure = function measure(state, action, meta) {
                 var oldNotes = state.notes;
 
                 var newState = (0, _assign2.default)({}, state, { numberOfBeats: numberOfBeats });
-                var _numberOfNotes = (0, _measure.getNumberOfNotes)(newState);
+                var _numberOfNotes = (0, _measure2.getNumberOfNotes)(newState);
                 var _notes5 = {};
                 var _iteratorNormalCompletion2 = true;
                 var _didIteratorError2 = false;
@@ -53712,7 +53720,7 @@ var measure = function measure(state, action, meta) {
                 var _oldNotes = state.notes;
 
                 var _newState = (0, _assign2.default)({}, state, { noteValue: noteValue });
-                var _numberOfNotes2 = (0, _measure.getNumberOfNotes)(_newState);
+                var _numberOfNotes2 = (0, _measure2.getNumberOfNotes)(_newState);
                 var _notes6 = {};
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
@@ -53747,7 +53755,7 @@ var measure = function measure(state, action, meta) {
                 var _oldNotes2 = state.notes;
 
                 var _newState2 = (0, _assign2.default)({}, state, { minNoteValue: minNoteValue });
-                var _numberOfNotes3 = (0, _measure.getNumberOfNotes)(_newState2);
+                var _numberOfNotes3 = (0, _measure2.getNumberOfNotes)(_newState2);
                 var _notes7 = {};
                 var _iteratorNormalCompletion4 = true;
                 var _didIteratorError4 = false;
@@ -53790,7 +53798,7 @@ var measure = function measure(state, action, meta) {
                         instrument = _ref6[0],
                         instrumentNotes = _ref6[1];
 
-                    return [instrument, (0, _measure.mapNotes)(instrumentNotes, function (note) {
+                    return [instrument, (0, _measure2.mapNotes)(instrumentNotes, function (note) {
                         return 0;
                     })];
                 }));
@@ -53807,7 +53815,7 @@ var measure = function measure(state, action, meta) {
                 });
                 var freeSlots = emptyNotes.length;
                 var currentPattern = _notes9.slice(0, -freeSlots);
-                var currentPatternNumNotes = (0, _measure.getNumberOfNoteValues)(currentPattern);
+                var currentPatternNumNotes = (0, _measure2.getNumberOfNoteValues)(currentPattern);
                 // Add the entire current pattern until all notes are filled.
                 // This might result in a too long list of notes.
                 // That's why its truncated accordingly afterwards.
@@ -53817,7 +53825,7 @@ var measure = function measure(state, action, meta) {
                     continuedPattern.push.apply(continuedPattern, (0, _toConsumableArray3.default)(currentPattern));
                     consumableSlots -= currentPatternNumNotes;
                 }
-                while ((0, _measure.getNumberOfNoteValues)(continuedPattern) > freeSlots) {
+                while ((0, _measure2.getNumberOfNoteValues)(continuedPattern) > freeSlots) {
                     continuedPattern.splice(-1, 1);
                 }
                 return (0, _assign2.default)({}, state, {
@@ -67746,7 +67754,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var initialState = {
     playingState: 'stop',
-    currentPlayPos: [-1, -1],
+    currentPlayPos: [0, -1],
     loop: false,
     freezeUiWhilePlaying: false
 };
@@ -68023,11 +68031,18 @@ var _MenuItem = __webpack_require__(80);
 
 var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
+var _Player = __webpack_require__(324);
+
+var _Player2 = _interopRequireDefault(_Player);
+
+var _Actions = __webpack_require__(9);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var PLAY = 'play';
 var PAUSE_LABEL = 'pause';
 var STOP_LABEL = 'stop';
+var GO_TO_MEASURE = _Actions.ActionTypes.GO_TO_MEASURE;
 
 var SoundControls = function (_React$Component) {
     (0, _inherits3.default)(SoundControls, _React$Component);
@@ -68052,7 +68067,7 @@ var SoundControls = function (_React$Component) {
     (0, _createClass3.default)(SoundControls, [{
         key: 'shouldComponentUpdate',
         value: function shouldComponentUpdate(nextProps, nextState) {
-            return nextProps.soundControls.playingState !== this.props.soundControls.playingState || nextProps.soundControls.loop !== this.props.soundControls.loop || nextProps.soundControls.freezeUiWhilePlaying !== this.props.soundControls.freezeUiWhilePlaying;
+            return nextProps.soundControls.playingState !== this.props.soundControls.playingState || nextProps.soundControls.loop !== this.props.soundControls.loop || nextProps.soundControls.freezeUiWhilePlaying !== this.props.soundControls.freezeUiWhilePlaying || nextProps.menu.currentInteraction !== this.props.menu.currentInteraction;
         }
     }, {
         key: 'render',
@@ -68062,12 +68077,19 @@ var SoundControls = function (_React$Component) {
                 playingState = _props$soundControls.playingState,
                 loop = _props$soundControls.loop,
                 freezeUiWhilePlaying = _props$soundControls.freezeUiWhilePlaying,
+                currentInteraction = _props.menu.currentInteraction,
                 _props$actions = _props.actions,
                 setPlayingState = _props$actions.setPlayingState,
                 toggleLoopState = _props$actions.toggleLoopState,
-                toggleFreezeUiWhilePlaying = _props$actions.toggleFreezeUiWhilePlaying;
+                toggleFreezeUiWhilePlaying = _props$actions.toggleFreezeUiWhilePlaying,
+                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction;
 
             console.log('rendering sound controls menu section.....', loop);
+            var toggleCurrentMenuInteraction = function toggleCurrentMenuInteraction(type) {
+                return function () {
+                    return setCurrentMenuInteraction(currentInteraction === type ? null : type);
+                };
+            };
             return _react2.default.createElement(
                 _MenuSection2.default,
                 { label: 'Sound Controls' },
@@ -68134,8 +68156,29 @@ var SoundControls = function (_React$Component) {
                 _react2.default.createElement(
                     _MenuItem2.default,
                     {
+                        label: 'goto',
+                        onClick: toggleCurrentMenuInteraction(GO_TO_MEASURE),
+                        isActive: currentInteraction === GO_TO_MEASURE
+                    },
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        'Go to measure'
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'icon' },
+                        _react2.default.createElement('i', { className: 'fa fa-arrow-right' })
+                    )
+                ),
+                _react2.default.createElement(
+                    _MenuItem2.default,
+                    {
                         label: 'loop',
-                        onClick: toggleLoopState,
+                        onClick: function onClick() {
+                            toggleLoopState();
+                            _Player2.default.invalidateCache();
+                        },
                         isActive: false
                     },
                     _react2.default.createElement(
@@ -68155,7 +68198,10 @@ var SoundControls = function (_React$Component) {
                     _MenuItem2.default,
                     {
                         label: 'freezeUiWhilePlaying',
-                        onClick: toggleFreezeUiWhilePlaying,
+                        onClick: function onClick() {
+                            toggleFreezeUiWhilePlaying();
+                            _Player2.default.invalidateCache();
+                        },
                         isActive: false
                     },
                     _react2.default.createElement(
@@ -68750,7 +68796,7 @@ var Measures = function (_React$Component) {
                 addClonedMeasure = _props$actions.addClonedMeasure,
                 addEmptyMeasure = _props$actions.addEmptyMeasure;
 
-            var style = playingState === 'stop' ? {} : { pointerEvents: 'none' };
+            var style = playingState === 'play' ? { pointerEvents: 'none' } : {};
             return _react2.default.createElement(
                 'div',
                 { className: 'measures', style: style },
@@ -68871,6 +68917,10 @@ var _MeasureSettings = __webpack_require__(323);
 
 var _MeasureSettings2 = _interopRequireDefault(_MeasureSettings);
 
+var _Player = __webpack_require__(324);
+
+var _Player2 = _interopRequireDefault(_Player);
+
 var _utils = __webpack_require__(11);
 
 var _measure = __webpack_require__(45);
@@ -68879,7 +68929,8 @@ var _Actions = __webpack_require__(9);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var CONTINUE_NOTE_PATTERN = _Actions.ActionTypes.CONTINUE_NOTE_PATTERN;
+var CONTINUE_NOTE_PATTERN = _Actions.ActionTypes.CONTINUE_NOTE_PATTERN,
+    GO_TO_MEASURE = _Actions.ActionTypes.GO_TO_MEASURE;
 var Measure = (_dec = (0, _reduxUi2.default)({
     key: function key(props) {
         return props.uiKey;
@@ -68896,6 +68947,13 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     }
 
     (0, _createClass3.default)(Measure, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            if (!(0, _utils.areEqual)(this.props.measure, nextProps.measure)) {
+                _Player2.default.invalidateCache();
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _props = this.props,
@@ -68913,9 +68971,12 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 _addTuplet = _props$actions.addTuplet,
                 _removeTuplet = _props$actions.removeTuplet,
                 continueNotePattern = _props$actions.continueNotePattern,
-                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction;
+                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction,
+                setCurrentPlayPos = _props$actions.setCurrentPlayPos,
+                setPlayingState = _props$actions.setPlayingState;
             var drumkitName = measure.drumkit,
-                notes = measure.notes;
+                notes = measure.notes,
+                name = measure.name;
 
             var drumkit = drumkits[drumkitName];
             var instruments = drumkit.instruments;
@@ -68926,12 +68987,21 @@ var Measure = (_dec = (0, _reduxUi2.default)({
             return _react2.default.createElement(
                 'div',
                 {
-                    className: 'measure has-border-bottom ' + ((0, _changeCase.paramCase)(currentInteraction) || '')
+                    className: 'measure has-border-bottom ' + ((0, _changeCase.paramCase)(currentInteraction) || ''),
+                    onClick: function onClick() {
+                        if (currentInteraction === GO_TO_MEASURE) {
+                            setCurrentMenuInteraction(null);
+                            setCurrentPlayPos(measureIndex, 0);
+                            setPlayingState('pause');
+                        }
+                    }
                 },
                 _react2.default.createElement(
                     'div',
                     { className: 'count' },
-                    measureIndex + 1
+                    measureIndex + 1,
+                    '\xA0',
+                    name !== '' ? '(' + name + ')' : ''
                 ),
                 instruments.map(function (instrument) {
                     var instrumentNotes = notes[instrument];
@@ -69039,7 +69109,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                     'a',
                     {
                         className: 'button is-info',
-                        style: { position: 'absolute', top: '17px', right: 0 },
+                        style: { position: 'absolute', top: '26px', right: 0 },
                         onClick: function onClick() {
                             return updateUI('showSettings', !ui.showSettings);
                         }
@@ -70265,7 +70335,12 @@ var _measure = __webpack_require__(45);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var SET_CURRENT_PLAY_POS = _Actions.ActionTypes.SET_CURRENT_PLAY_POS,
+    SET_PLAYING_STATE = _Actions.ActionTypes.SET_PLAYING_STATE,
+    SET_STORE_STATE = _Actions.ActionTypes.SET_STORE_STATE;
+
 // Bind dispatch to action.
+
 var setCurrentPlayPos = function setCurrentPlayPos(measureIndex, time) {
     (0, _store.dispatch)((0, _Actions.setCurrentPlayPos)(measureIndex, time));
 };
@@ -70279,57 +70354,93 @@ var Player = (_temp = _class = function () {
     }
 
     (0, _createClass3.default)(Player, null, [{
-        key: 'onStateChange',
+        key: 'shouldHandleAction',
+        value: function shouldHandleAction() {
+            var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+            switch (action.type) {
+                case SET_STORE_STATE:
+                case SET_CURRENT_PLAY_POS:
+                case SET_PLAYING_STATE:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         // Decides what method should be called.
+
+        // This should match the 'soundControls'-reducer's initial state.
+
+    }, {
+        key: 'onStateChange',
         value: function onStateChange(state, action) {
-            if (action && action.type === _Actions.ActionTypes.SET_STORE_STATE) {
-                setPlayingState('stop');
-                this.stop();
-            }
-
-            var playingState = state.soundControls.playingState;
-
-            var _ref = this.prevState.soundControls || {},
-                prevPlayingState = _ref.playingState;
-            // The prev state must be saved here because some actions
-            // are dispatched from the player's methods so this method can
-            // get called before the switch statement is done.
-
-
-            this.prevState = state;
-
-            if (playingState !== prevPlayingState) {
-                if (state.tab.measures.length === 0) {
-                    setPlayingState('stop');
-                    return;
-                }
-                // Stop/pause only if the player was previously playing.
-                if (prevPlayingState === 'play') {
-                    if (playingState === 'stop') {
-                        this.stop();
-                    } else if (playingState === 'pause') {
-                        this.pause();
-                    } else {
+            switch (action.type) {
+                case SET_STORE_STATE:
+                    {
                         setPlayingState('stop');
+                        this.stop();
+                        return;
                     }
-                }
-                // Play only if the player was previously stopped/paused.
-                else {
-                        if (playingState === 'play') {
-                            this.play(state, prevPlayingState);
-                        } else {
-                            setPlayingState('stop');
+                case SET_CURRENT_PLAY_POS:
+                    {
+                        var measureIndex = action.measureIndex;
+
+                        this.clockIndex = measureIndex;
+                        return;
+                    }
+                case SET_PLAYING_STATE:
+                    {
+                        var playingState = state.soundControls.playingState;
+
+                        var _ref = this.prevState.soundControls || {},
+                            prevPlayingState = _ref.playingState;
+                        // The prev state must be saved here because some actions
+                        // are dispatched from the player's methods so this method can
+                        // get called before the switch statement is done.
+
+
+                        this.prevState = state;
+
+                        if (playingState !== prevPlayingState) {
+                            if (state.tab.measures.length === 0) {
+                                setPlayingState('stop');
+                                return;
+                            }
+                            this.ensureClocks(state);
+                            switch (playingState) {
+                                case 'play':
+                                    if (prevPlayingState === 'pause') {
+                                        this.resume();
+                                    } else {
+                                        this.play();
+                                    }
+                                    break;
+                                case 'pause':
+                                    this.pause();
+                                    break;
+                                case 'stop':
+                                    this.stop();
+                                    break;
+                            }
                         }
                     }
             }
         }
-        // This should match the 'soundControls'-reducer's initial state.
+    }, {
+        key: 'ensureClocks',
+        value: function ensureClocks(state) {
+            if (this.clocks.length === 0) {
+                console.log('populating the cache......');
+                this.populateCache(state);
+            }
+        }
+
+        // Force creates the data required for playing sounds.
 
     }, {
-        key: 'play',
-        value: function play(state, prevPlayingState) {
+        key: 'populateCache',
+        value: function populateCache(state) {
             var _this = this;
 
             var measures = state.tab.measures,
@@ -70337,14 +70448,6 @@ var Player = (_temp = _class = function () {
                 loop = _state$soundControls.loop,
                 freezeUiWhilePlaying = _state$soundControls.freezeUiWhilePlaying,
                 drumkits = state.drumkits;
-
-            // resume
-
-            if (prevPlayingState === 'pause') {
-                console.log('resuming playback');
-                this.resume();
-                return;
-            }
 
             this.clocks = measures.map(function (measure, index) {
                 var drumkitName = measure.drumkit;
@@ -70414,15 +70517,25 @@ var Player = (_temp = _class = function () {
                                     setCurrentPlayPos(clockIndex, 0);
                                 }
                             } else {
-                                setCurrentPlayPos(-1, -1);
+                                setCurrentPlayPos(0, -1);
                                 setPlayingState('stop');
                             }
                         }, nextMeasureDelay);
                     }
                 });
             });
-            this.startNextClock();
-            setPlayingState('play');
+        }
+    }, {
+        key: 'invalidateCache',
+        value: function invalidateCache() {
+            console.log('resetting the cache......');
+            this.clocks = [];
+        }
+    }, {
+        key: 'play',
+        value: function play() {
+            // this.startNextClock()
+            this.clocks[0].start();
         }
     }, {
         key: 'startNextClock',
@@ -70445,7 +70558,7 @@ var Player = (_temp = _class = function () {
     }, {
         key: 'pause',
         value: function pause() {
-            this.clocks[this.clockIndex].pause();
+            this.clocks[this.clockIndex].stop();
         }
     }, {
         key: 'resume',
@@ -70459,36 +70572,27 @@ var Player = (_temp = _class = function () {
             // The clock might not exist.
             // This happens if a measure is created
             if (clock) {
-                try {
-                    // Clock is already stopped after last measure was played.
-                    // That's ok because the clock was already stopped because
-                    // setPlayingState(stop) is called from the complete callback.
-                    clock.stop();
-                } catch (error) {} finally {
-                    clock.reset();
-                }
+                // Clock is already stopped after last measure was played.
+                // That's ok because the clock was already stopped because
+                // setPlayingState(stop) is called from the complete callback.
+                clock.stop();
+                clock.reset();
             }
-            setCurrentPlayPos(-1, -1);
-            this.clocks = [];
-            this.clockIndex = -1;
+            setCurrentPlayPos(0, -1);
+            // this.clocks = []
+            // this.clockIndex = -1
         }
     }]);
     return Player;
-}(), _class.prevState = {}, _class.clocks = [], _class.clockIndex = -1, _temp);
+}(), _class.prevState = {}, _class.clocks = [], _class.clockIndex = 0, _temp);
 
-// store.subscribe(function(state, action) {
 
 (0, _store.subscribe)(function (state, action) {
-    console.log('subscribe', state, action);
-    Player.onStateChange(state, action);
-    // Player.onStateChange(store.getState())
+    if (Player.shouldHandleAction(action)) {
+        console.log('subscribe', state, action);
+        Player.onStateChange(state, action);
+    }
 });
-
-// store.onSetState(function(store) {
-//     store.subscribe(function() {
-//         Player.onStateChange(store.getState())
-//     })
-// })
 
 exports.Player = Player;
 exports.default = Player;
@@ -70536,10 +70640,10 @@ var TickTock = function () {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         (0, _classCallCheck3.default)(this, TickTock);
 
-        this.is_running = false;
+        this.isRunning = false;
         this.timeout = null;
-        this.start_time = 0;
-        this.stop_time = 0;
+        this.startTime = 0;
+        this.stopTime = 0;
         this.time = 0;
         this.tick = 0;
 
@@ -70562,8 +70666,8 @@ var TickTock = function () {
     (0, _createClass3.default)(TickTock, [{
         key: 'start',
         value: function start() {
-            if (this.is_running) {
-                throw new Error('Cannot start. TickTock is already running.');
+            if (this.isRunning) {
+                console.warn('Cannot start. TickTock is already running.');
             }
             this._startTimer(performance.now());
             return this;
@@ -70574,28 +70678,28 @@ var TickTock = function () {
     }, {
         key: 'stop',
         value: function stop() {
-            if (!this.is_running) {
-                throw new Error('Cannot stop. TickTock is not running.');
+            if (!this.isRunning) {
+                console.warn('Cannot stop. TickTock is not running.');
             }
-            this.stop_time = this.elapsed();
-            this.is_running = false;
+            this.stopTime = this.elapsed();
+            this.isRunning = false;
             clearTimeout(this.timeout);
             return this;
         }
     }, {
         key: 'resume',
         value: function resume() {
-            if (this.is_running) {
-                throw new Error('Cannot resume. TickTock is already running.');
+            if (this.isRunning) {
+                console.warn('Cannot resume. TickTock is already running.');
             }
-            this._startTimer(performance.now() - this.stop_time);
+            this._startTimer(performance.now() - this.stopTime);
             return this;
         }
     }, {
         key: 'reset',
         value: function reset() {
-            this.start_time = 0;
-            this.stop_time = 0;
+            this.startTime = 0;
+            this.stopTime = 0;
             this.time = 0;
             this.tick = 0;
             return this;
@@ -70606,10 +70710,10 @@ var TickTock = function () {
     }, {
         key: 'elapsed',
         value: function elapsed() {
-            if (this.is_running) {
-                return performance.now() - this.start_time;
+            if (this.isRunning) {
+                return performance.now() - this.startTime;
             }
-            return this.stop_time;
+            return this.stopTime;
         }
 
         // Called for every tick.
@@ -70621,33 +70725,33 @@ var TickTock = function () {
             var timeout = this.interval(this.time, this.tick);
             if (!timeout) {
                 this.stop();
-                this.complete && this.complete(this, this.time, this.tick, this.stop_time);
+                this.complete && this.complete(this, this.time, this.tick, this.stopTime);
                 return;
             }
 
             this.time += timeout;
             this.tick += 1;
 
-            var next_tick_in = this.start_time + this.time - performance.now();
+            var nextTickIn = this.startTime + this.time - performance.now();
 
-            if (next_tick_in <= 0) {
-                var missed_ticks = Math.floor(-next_tick_in / timeout);
+            if (nextTickIn <= 0) {
+                var missed_ticks = Math.floor(-nextTickIn / timeout);
                 this.time += missed_ticks * timeout;
 
-                if (this.is_running) {
+                if (this.isRunning) {
                     this._tick();
                 }
-            } else if (this.is_running) {
-                this.timeout = setTimeout(this._tick, next_tick_in);
+            } else if (this.isRunning) {
+                this.timeout = setTimeout(this._tick, nextTickIn);
             }
         }
     }, {
         key: '_startTimer',
-        value: function _startTimer(start_time) {
-            this.start_time = start_time;
-            this.is_running = true;
+        value: function _startTimer(startTime) {
+            this.startTime = startTime;
+            this.isRunning = true;
             this.time = 0;
-            this.stop_time = 0;
+            this.stopTime = 0;
             this._tick();
         }
     }]);

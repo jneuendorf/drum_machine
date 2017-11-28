@@ -13,6 +13,13 @@ import {
 } from './utils/measure'
 
 
+const {
+    SET_CURRENT_PLAY_POS,
+    SET_PLAYING_STATE,
+    SET_STORE_STATE,
+} = ActionTypes
+
+
 // Bind dispatch to action.
 const setCurrentPlayPos = function(measureIndex, time) {
     dispatch(setCurrentPlayPosActionCreator(measureIndex, time))
@@ -26,65 +33,81 @@ class Player {
     // This should match the 'soundControls'-reducer's initial state.
     static prevState = {}
     static clocks = []
-    static clockIndex = -1
+    static clockIndex = 0
+
+    static shouldHandleAction(action={}) {
+        switch (action.type) {
+            case SET_STORE_STATE:
+            case SET_CURRENT_PLAY_POS:
+            case SET_PLAYING_STATE:
+                return true
+            default:
+                return false
+        }
+    }
 
     // Decides what method should be called.
     static onStateChange(state, action) {
-        if (action && action.type === ActionTypes.SET_STORE_STATE) {
-            setPlayingState('stop')
-            this.stop()
-        }
-
-        const {playingState} = state.soundControls
-        const {playingState: prevPlayingState} = (this.prevState.soundControls || {})
-        // The prev state must be saved here because some actions
-        // are dispatched from the player's methods so this method can
-        // get called before the switch statement is done.
-        this.prevState = state
-
-        if (playingState !== prevPlayingState) {
-            if (state.tab.measures.length === 0) {
+        switch (action.type) {
+            case SET_STORE_STATE: {
                 setPlayingState('stop')
+                this.stop()
                 return
             }
-            // Stop/pause only if the player was previously playing.
-            if (prevPlayingState === 'play') {
-                if (playingState === 'stop') {
-                    this.stop()
-                }
-                else if (playingState === 'pause') {
-                    this.pause()
-                }
-                else {
-                    setPlayingState('stop')
-                }
+            case SET_CURRENT_PLAY_POS: {
+                const {measureIndex} = action
+                this.clockIndex = measureIndex
+                return
             }
-            // Play only if the player was previously stopped/paused.
-            else {
-                if (playingState === 'play') {
-                    this.play(state, prevPlayingState)
-                }
-                else {
-                    setPlayingState('stop')
+            case SET_PLAYING_STATE: {
+                const {playingState} = state.soundControls
+                const {playingState: prevPlayingState} = (this.prevState.soundControls || {})
+                // The prev state must be saved here because some actions
+                // are dispatched from the player's methods so this method can
+                // get called before the switch statement is done.
+                this.prevState = state
+
+                if (playingState !== prevPlayingState) {
+                    if (state.tab.measures.length === 0) {
+                        setPlayingState('stop')
+                        return
+                    }
+                    this.ensureClocks(state)
+                    switch (playingState) {
+                        case 'play':
+                            if (prevPlayingState === 'pause') {
+                                this.resume()
+                            }
+                            else {
+                                this.play()
+                            }
+                            break
+                        case 'pause':
+                            this.pause()
+                            break
+                        case 'stop':
+                            this.stop()
+                            break
+                    }
                 }
             }
         }
     }
 
-    static play(state, prevPlayingState) {
+    static ensureClocks(state) {
+        if (this.clocks.length === 0) {
+            console.log('populating the cache......')
+            this.populateCache(state)
+        }
+    }
+
+    // Force creates the data required for playing sounds.
+    static populateCache(state) {
         const {
             tab: {measures},
             soundControls: {loop, freezeUiWhilePlaying},
             drumkits,
         } = state
-
-        // resume
-        if (prevPlayingState === 'pause') {
-            console.log('resuming playback')
-            this.resume()
-            return
-        }
-
         this.clocks = measures.map((measure, index) => {
             const {drumkit: drumkitName} = measure
             const duration = getDuration(measure)
@@ -132,15 +155,23 @@ class Player {
                             }
                         }
                         else {
-                            setCurrentPlayPos(-1, -1)
+                            setCurrentPlayPos(0, -1)
                             setPlayingState('stop')
                         }
                     }, nextMeasureDelay)
                 }
             })
         })
-        this.startNextClock()
-        setPlayingState('play')
+    }
+
+    static invalidateCache() {
+        console.log('resetting the cache......')
+        this.clocks = []
+    }
+
+    static play() {
+        // this.startNextClock()
+        this.clocks[0].start()
     }
 
     static startNextClock(loop=false) {
@@ -159,7 +190,7 @@ class Player {
     }
 
     static pause() {
-        this.clocks[this.clockIndex].pause()
+        this.clocks[this.clockIndex].stop()
     }
 
     static resume() {
@@ -171,36 +202,25 @@ class Player {
         // The clock might not exist.
         // This happens if a measure is created
         if (clock) {
-            try {
-                // Clock is already stopped after last measure was played.
-                // That's ok because the clock was already stopped because
-                // setPlayingState(stop) is called from the complete callback.
-                clock.stop()
-            }
-            catch (error) {}
-            finally {
-                clock.reset()
-            }
+            // Clock is already stopped after last measure was played.
+            // That's ok because the clock was already stopped because
+            // setPlayingState(stop) is called from the complete callback.
+            clock.stop()
+            clock.reset()
         }
-        setCurrentPlayPos(-1, -1)
-        this.clocks = []
-        this.clockIndex = -1
+        setCurrentPlayPos(0, -1)
+        // this.clocks = []
+        // this.clockIndex = -1
     }
 }
 
 
-// store.subscribe(function(state, action) {
 subscribe(function(state, action) {
-    console.log('subscribe', state, action)
-    Player.onStateChange(state, action)
-    // Player.onStateChange(store.getState())
+    if (Player.shouldHandleAction(action)) {
+        console.log('subscribe', state, action)
+        Player.onStateChange(state, action)
+    }
 })
-
-// store.onSetState(function(store) {
-//     store.subscribe(function() {
-//         Player.onStateChange(store.getState())
-//     })
-// })
 
 export {Player}
 export default Player

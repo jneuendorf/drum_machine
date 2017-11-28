@@ -3,7 +3,7 @@ import {ActionTypes} from '../Actions'
 
 const initialState = {
     playingState: 'stop',
-    currentPlayPos: [-1,-1],
+    currentPlayPos: [0, -1],
     loop: false,
     freezeUiWhilePlaying: false,
 }

@@ -19,7 +19,7 @@ class Measures extends React.Component {
             soundControls: {playingState},
             actions: {addClonedMeasure, addEmptyMeasure}
         } = this.props
-        const style = playingState === 'stop' ? {} : {pointerEvents: 'none'}
+        const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
         return (
             <div className="measures" style={style}>
                 {measures.map((measure, index) => {

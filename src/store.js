@@ -14,7 +14,7 @@ const store = createStore(rootReducer, storeEnhancer)
 
 
 // TODO: make this a middleware?!
-let lastDispatchedAction = null
+let lastDispatchedAction = undefined
 export const dispatch = function(action) {
     lastDispatchedAction = action
     // console.log("my logger!!!", action);

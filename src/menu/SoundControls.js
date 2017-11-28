@@ -6,11 +6,14 @@ import {
 } from '../utils'
 import MenuSection from './MenuSection'
 import MenuItem from './MenuItem'
+import Player from '../Player'
+import {ActionTypes} from '../Actions'
 
 
 const PLAY = 'play'
 const PAUSE_LABEL = 'pause'
 const STOP_LABEL = 'stop'
+const {GO_TO_MEASURE} = ActionTypes
 
 
 class SoundControls extends React.Component {
@@ -24,19 +27,26 @@ class SoundControls extends React.Component {
             nextProps.soundControls.playingState !== this.props.soundControls.playingState
             || nextProps.soundControls.loop !== this.props.soundControls.loop
             || nextProps.soundControls.freezeUiWhilePlaying !== this.props.soundControls.freezeUiWhilePlaying
+            || nextProps.menu.currentInteraction !== this.props.menu.currentInteraction
         )
     }
 
     render() {
         const {
             soundControls: {playingState, loop, freezeUiWhilePlaying},
+            menu: {currentInteraction},
             actions: {
                 setPlayingState,
                 toggleLoopState,
                 toggleFreezeUiWhilePlaying,
+                setCurrentMenuInteraction,
             }
         } = this.props
         console.log('rendering sound controls menu section.....', loop)
+        const toggleCurrentMenuInteraction = type => () =>
+            setCurrentMenuInteraction(
+                currentInteraction === type ? null : type
+            )
         return (
             <MenuSection label="Sound Controls">
                 <MenuItem
@@ -70,8 +80,21 @@ class SoundControls extends React.Component {
                     </span>
                 </MenuItem>
                 <MenuItem
+                    label="goto"
+                    onClick={toggleCurrentMenuInteraction(GO_TO_MEASURE)}
+                    isActive={currentInteraction === GO_TO_MEASURE}
+                >
+                    <span>Go to measure</span>
+                    <span className="icon">
+                        <i className="fa fa-arrow-right" />
+                    </span>
+                </MenuItem>
+                <MenuItem
                     label="loop"
-                    onClick={toggleLoopState}
+                    onClick={() => {
+                        toggleLoopState()
+                        Player.invalidateCache()
+                    }}
                     isActive={false}
                 >
                     <span>Loop</span>
@@ -83,7 +106,10 @@ class SoundControls extends React.Component {
                 </MenuItem>
                 <MenuItem
                     label="freezeUiWhilePlaying"
-                    onClick={toggleFreezeUiWhilePlaying}
+                    onClick={() => {
+                        toggleFreezeUiWhilePlaying()
+                        Player.invalidateCache()
+                    }}
                     isActive={false}
                 >
                     <span>Performant play</span>

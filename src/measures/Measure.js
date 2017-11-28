@@ -5,7 +5,12 @@ import {paramCase} from 'change-case'
 import Note from './Note'
 import Tuplet from './Tuplet'
 import MeasureSettings from './MeasureSettings'
-import {defaultConnect, arraysEqual} from '../utils'
+import Player from '../Player'
+import {
+    defaultConnect,
+    arraysEqual,
+    areEqual,
+} from '../utils'
 import {
     getNotePositions,
     getNumberOfNotes,
@@ -14,7 +19,7 @@ import {
 import {ActionTypes} from '../Actions'
 
 
-const {CONTINUE_NOTE_PATTERN} = ActionTypes
+const {CONTINUE_NOTE_PATTERN, GO_TO_MEASURE} = ActionTypes
 
 
 @ui({
@@ -24,6 +29,12 @@ const {CONTINUE_NOTE_PATTERN} = ActionTypes
     },
 })
 class Measure extends React.Component {
+    componentWillReceiveProps(nextProps) {
+        if (!areEqual(this.props.measure, nextProps.measure)) {
+            Player.invalidateCache()
+        }
+    }
+
     render() {
         const {
             drumkits,
@@ -41,9 +52,10 @@ class Measure extends React.Component {
                 removeTuplet,
                 continueNotePattern,
                 setCurrentMenuInteraction,
+                setCurrentPlayPos,
+                setPlayingState,
             }
         } = this.props
-        const {drumkit: drumkitName, notes} = measure
         const {drumkit: drumkitName, notes, name} = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
@@ -55,8 +67,14 @@ class Measure extends React.Component {
                 className={
                     `measure has-border-bottom ${paramCase(currentInteraction) || ''}`
                 }
+                onClick={() => {
+                    if (currentInteraction === GO_TO_MEASURE) {
+                        setCurrentMenuInteraction(null)
+                        setCurrentPlayPos(measureIndex, 0)
+                        setPlayingState('pause')
+                    }
+                }}
             >
-                <div className="count">{measureIndex + 1}</div>
                 <div className="count">
                     {measureIndex + 1}
                     &nbsp;
@@ -161,7 +179,6 @@ class Measure extends React.Component {
                 })}
                 <a
                     className="button is-info"
-                    style={{position: 'absolute', top: '17px', right: 0}}
                     style={{position: 'absolute', top: '26px', right: 0}}
                     onClick={() => updateUI('showSettings', !ui.showSettings)}
                 >

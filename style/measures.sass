@@ -20,9 +20,6 @@ $note-height: 30px
         padding: 10px 0 10px 0
         position: relative
 
-        .count
-            font-size: 0.7rem
-
         &.continue-note-pattern .columns:hover
             .column
                 pointer-events: none
@@ -30,6 +27,11 @@ $note-height: 30px
                 background-color: #3273dd
             .volume
                 background-color: lighten(#3273dd, 20%)
+        &.go-to-measure:hover
+            box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.75)
+
+        .count
+            font-size: 0.7rem
 
         .columns
             margin-bottom: $row-margin

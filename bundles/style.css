@@ -10070,10 +10070,6 @@ label.panel-block:hover {
   position: relative;
 }
 
-.measures .measure .count {
-  font-size: 0.7rem;
-}
-
 .measures .measure.continue-note-pattern .columns:hover .column {
   pointer-events: none;
 }
@@ -10085,6 +10081,14 @@ label.panel-block:hover {
 
 .measures .measure.continue-note-pattern .columns:hover .volume {
   background-color: #89afec;
+}
+
+.measures .measure.go-to-measure:hover {
+  box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.75);
+}
+
+.measures .measure .count {
+  font-size: 0.7rem;
 }
 
 .measures .measure .columns {
