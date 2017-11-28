@@ -32,6 +32,7 @@ export const ActionTypes = Enum([
     'SET_PLAYING_STATE',
     'TOGGLE_LOOP_STATE',
     'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE',
+    'GO_TO_MEASURE',
 ])
 
 
@@ -57,8 +58,9 @@ export const addClonedMeasure = () => ({
     meta: ListActions.append(),
 })
 
-export const addMeasureFromTemplate = ({measure}) => ({
+export const addMeasureFromTemplate = ({name, measure}) => ({
     type: ActionTypes.ADD_MEASURE_FROM_TEMPLATE,
+    name, measure,
     meta: ListActions.append(measure),
 })
 

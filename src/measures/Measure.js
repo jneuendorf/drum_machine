@@ -44,6 +44,7 @@ class Measure extends React.Component {
             }
         } = this.props
         const {drumkit: drumkitName, notes} = measure
+        const {drumkit: drumkitName, notes, name} = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
         const notesPerNoteValue = measure.minNoteValue / measure.noteValue
@@ -56,6 +57,11 @@ class Measure extends React.Component {
                 }
             >
                 <div className="count">{measureIndex + 1}</div>
+                <div className="count">
+                    {measureIndex + 1}
+                    &nbsp;
+                    {name !== '' ? `(${name})` : ''}
+                </div>
                 {instruments.map(instrument => {
                     const instrumentNotes = notes[instrument]
                     const allNotesOn = instrumentNotes.every(note =>
@@ -156,6 +162,7 @@ class Measure extends React.Component {
                 <a
                     className="button is-info"
                     style={{position: 'absolute', top: '17px', right: 0}}
+                    style={{position: 'absolute', top: '26px', right: 0}}
                     onClick={() => updateUI('showSettings', !ui.showSettings)}
                 >
                     <span className="icon is-small">
