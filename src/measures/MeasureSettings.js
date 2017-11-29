@@ -33,6 +33,19 @@ class MeasureSettings extends React.Component {
                 createMeasureTemplate,
             }
         } = this.props
+        let namePlaceholder = ''
+        if (!name) {
+            /* eslint-disable no-unused-vars */
+            const {id, ...measureWithoutId} = measure
+            for (const {name, measure: {id, ...template}} of measureTemplates) {
+                if (areEqual(measureWithoutId, template)) {
+                    namePlaceholder = name
+                    break
+                }
+            }
+            // eslint-enable
+        }
+
         // TODO: Move inline styles to CSS!
         return (
             <div
@@ -54,6 +67,7 @@ class MeasureSettings extends React.Component {
                                 className="input"
                                 type="text"
                                 value={name}
+                                placeholder={namePlaceholder}
                                 onChange={event => setName(measure, event.target.value)}
                             />
                         </div>
