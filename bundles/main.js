@@ -1971,7 +1971,11 @@ exports.default = store;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.getNumberOfNoteValues = exports.mapNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = undefined;
+exports.measuresEqual = exports.getNumberOfNoteValues = exports.mapNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = undefined;
+
+var _objectWithoutProperties2 = __webpack_require__(36);
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
 var _toConsumableArray2 = __webpack_require__(43);
 
@@ -1994,6 +1998,8 @@ var _slicedToArray2 = __webpack_require__(42);
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
 var _immutableSorted = __webpack_require__(291);
+
+var _ = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2242,6 +2248,20 @@ var getNumberOfNoteValues = exports.getNumberOfNoteValues = function getNumberOf
         return num + (Array.isArray(note) ? note[0] : 1);
     }, 0);
 };
+
+var measuresEqual = function measuresEqual(a, b) {
+    /* eslint-disable no-unused-vars */
+    var idA = a.id,
+        nameA = a.name,
+        dataA = (0, _objectWithoutProperties3.default)(a, ['id', 'name']);
+    var idB = b.id,
+        nameB = b.name,
+        dataB = (0, _objectWithoutProperties3.default)(b, ['id', 'name']);
+    // eslint-enable
+
+    return (0, _.areEqual)(dataA, dataB);
+};
+exports.measuresEqual = measuresEqual;
 
 /***/ }),
 /* 46 */
@@ -68906,6 +68926,10 @@ var _toArray2 = __webpack_require__(130);
 
 var _toArray3 = _interopRequireDefault(_toArray2);
 
+var _getIterator2 = __webpack_require__(29);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
 var _getPrototypeOf = __webpack_require__(4);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -68980,6 +69004,47 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     }
 
     (0, _createClass3.default)(Measure, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _props = this.props,
+                measure = _props.measure,
+                measureTemplates = _props.menu.measureTemplates,
+                setName = _props.actions.setName;
+            var name = measure.name;
+
+            if (!name) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(measureTemplates), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _ref = _step.value;
+                        var templateName = _ref.name,
+                            template = _ref.measure;
+
+                        if ((0, _measure.measuresEqual)(measure, template)) {
+                            setName(measure, templateName);
+                            break;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }
+    }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
             if (!(0, _utils.areEqual)(this.props.measure, nextProps.measure)) {
@@ -68989,24 +69054,24 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     }, {
         key: 'render',
         value: function render() {
-            var _props = this.props,
-                drumkits = _props.drumkits,
-                currentPlayPos = _props.soundControls.currentPlayPos,
-                currentInteraction = _props.menu.currentInteraction,
-                measure = _props.measure,
-                measureIndex = _props.index,
-                ui = _props.ui,
-                updateUI = _props.updateUI,
-                _props$actions = _props.actions,
-                toggleNote = _props$actions.toggleNote,
-                _setVolume = _props$actions.setVolume,
-                setVolumes = _props$actions.setVolumes,
-                _addTuplet = _props$actions.addTuplet,
-                _removeTuplet = _props$actions.removeTuplet,
-                continueNotePattern = _props$actions.continueNotePattern,
-                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction,
-                setCurrentPlayPos = _props$actions.setCurrentPlayPos,
-                setPlayingState = _props$actions.setPlayingState;
+            var _props2 = this.props,
+                drumkits = _props2.drumkits,
+                currentPlayPos = _props2.soundControls.currentPlayPos,
+                currentInteraction = _props2.menu.currentInteraction,
+                measure = _props2.measure,
+                measureIndex = _props2.index,
+                ui = _props2.ui,
+                updateUI = _props2.updateUI,
+                _props2$actions = _props2.actions,
+                toggleNote = _props2$actions.toggleNote,
+                _setVolume = _props2$actions.setVolume,
+                setVolumes = _props2$actions.setVolumes,
+                _addTuplet = _props2$actions.addTuplet,
+                _removeTuplet = _props2$actions.removeTuplet,
+                continueNotePattern = _props2$actions.continueNotePattern,
+                setCurrentMenuInteraction = _props2$actions.setCurrentMenuInteraction,
+                setCurrentPlayPos = _props2$actions.setCurrentPlayPos,
+                setPlayingState = _props2$actions.setPlayingState;
             var drumkitName = measure.drumkit,
                 notes = measure.notes,
                 name = measure.name;
@@ -69954,6 +70019,7 @@ var MeasureSettings = function (_React$Component) {
                 clearMeasure = _props$actions.clearMeasure,
                 removeMeasure = _props$actions.removeMeasure,
                 createMeasureTemplate = _props$actions.createMeasureTemplate;
+
             // TODO: Move inline styles to CSS!
 
             return _react2.default.createElement(

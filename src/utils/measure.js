@@ -1,5 +1,7 @@
 import {SortedMap} from 'immutable-sorted'
 
+import {areEqual} from '.'
+
 
 // Creates a group of sounds for each tick.
 // Here, a sound means {instrument, volume}.
@@ -143,4 +145,12 @@ export const getNumberOfNoteValues = function(notes) {
         (num, note) => num + (Array.isArray(note) ? note[0] : 1),
         0
     )
+}
+
+export const measuresEqual = function(a, b) {
+    /* eslint-disable no-unused-vars */
+    const {id: idA, name: nameA, ...dataA} = a
+    const {id: idB, name: nameB, ...dataB} = b
+    // eslint-enable
+    return areEqual(dataA, dataB)
 }

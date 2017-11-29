@@ -14,7 +14,8 @@ import {
 import {
     getNotePositions,
     getNumberOfNotes,
-    getDuration
+    getDuration,
+    measuresEqual,
 } from '../utils/measure'
 import {ActionTypes} from '../Actions'
 
@@ -29,6 +30,23 @@ const {CONTINUE_NOTE_PATTERN, GO_TO_MEASURE} = ActionTypes
     },
 })
 class Measure extends React.Component {
+    componentDidMount() {
+        const {
+            measure,
+            menu: {measureTemplates},
+            actions: {setName}
+        } = this.props
+        const {name} = measure
+        if (!name) {
+            for (const {name: templateName, measure: template} of measureTemplates) {
+                if (measuresEqual(measure, template)) {
+                    setName(measure, templateName)
+                    break
+                }
+            }
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!areEqual(this.props.measure, nextProps.measure)) {
             Player.invalidateCache()
