@@ -12,10 +12,18 @@ class MeasureSettings extends React.Component {
     render() {
         const {
             measure,
-            measure: {numberOfBeats, noteValue, minNoteValue, drumkit, bpm},
+            measure: {
+                numberOfBeats,
+                noteValue,
+                minNoteValue,
+                drumkit,
+                bpm,
+                name,
+            },
             menu: {measureTemplates},
             drumkits,
             actions: {
+                setName,
                 setBpm,
                 setNumberOfBeats,
                 setNoteValue,
@@ -25,6 +33,7 @@ class MeasureSettings extends React.Component {
                 createMeasureTemplate,
             }
         } = this.props
+        // TODO: Move inline styles to CSS!
         return (
             <div
                 style={{
@@ -38,6 +47,18 @@ class MeasureSettings extends React.Component {
                 }}
             >
                 <div style={{paddingBottom: 10, width: '70%'}}>
+                    <div className="field">
+                        <label className="label">Name</label>
+                        <div className="control">
+                            <input
+                                className="input"
+                                type="text"
+                                value={name}
+                                onChange={event => setName(measure, event.target.value)}
+                            />
+                        </div>
+                    </div>
+
                     <div className="field">
                         <label className="label">BPM</label>
                         <div className="control">
@@ -87,7 +108,7 @@ class MeasureSettings extends React.Component {
                             Signature
                             &nbsp;
                             <span className="tag is-warning">
-                                Chaning the signature will reset all notes.
+                                Changing the signature will reset all notes.
                             </span>
                         </label>
                         <div className="columns">

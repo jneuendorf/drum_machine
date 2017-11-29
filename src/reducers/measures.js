@@ -152,6 +152,10 @@ const measure = function(state, action, meta) {
                 }
             })
         }
+        case ActionTypes.SET_NAME: {
+            const {name} = action
+            return Object.assign({}, state, {name})
+        }
         case ActionTypes.SET_BPM: {
             const {bpm} = action
             return Object.assign({}, state, {bpm})

@@ -419,7 +419,7 @@ $exports.store = store;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.toggleFreezeUiWhilePlaying = exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.continueNotePattern = exports.setCurrentMenuInteraction = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.removeTuplet = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
+exports.toggleFreezeUiWhilePlaying = exports.toggleLoopState = exports.setPlayingState = exports.setCurrentPlayPos = exports.finishLoadingDrumkit = exports.startLoadingDrumkit = exports.loadDrumkit = exports.continueNotePattern = exports.setCurrentMenuInteraction = exports.createMeasureTemplate = exports.removeMeasure = exports.clearMeasure = exports.setMinNoteValue = exports.setNumberOfBeats = exports.setNoteValue = exports.setBpm = exports.setName = exports.removeTuplet = exports.addTuplet = exports.setVolumes = exports.setVolume = exports.toggleNote = exports.addMeasureFromTemplate = exports.addClonedMeasure = exports.addEmptyMeasure = exports.displayStoreState = exports.setStoreState = exports.ActionTypes = undefined;
 
 var _Enum = __webpack_require__(275);
 
@@ -429,7 +429,7 @@ var _ListReducer = __webpack_require__(126);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'REMOVE_TUPLET', 'SET_VOLUMES', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'SET_CURRENT_MENU_INTERACTION', 'CONTINUE_NOTE_PATTERN', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE', 'GO_TO_MEASURE']);
+var ActionTypes = exports.ActionTypes = (0, _Enum2.default)(['SET_STORE_STATE', 'DISPLAY_STORE_STATE', 'ADD_EMPTY_MEASURE', 'ADD_CLONED_MEASURE', 'ADD_MEASURE_FROM_TEMPLATE', 'TOGGLE_NOTE', 'SET_VOLUME', 'ADD_TUPLET', 'REMOVE_TUPLET', 'SET_VOLUMES', 'SET_NAME', 'SET_BPM', 'SET_NUMBER_OF_BEATS', 'SET_NOTE_VALUE', 'SET_MIN_NOTE_VALUE', 'CLEAR_MEASURE', 'REMOVE_MEASURE', 'CREATE_MEASURE_TEMPLATE', 'SET_CURRENT_MENU_INTERACTION', 'CONTINUE_NOTE_PATTERN', 'START_LOADING_DRUMKIT', 'DONE_LOADING_DRUMKIT', 'SET_CURRENT_PLAY_POS', 'SET_PLAYING_STATE', 'TOGGLE_LOOP_STATE', 'TOGGLE_FREEZE_UI_WHILE_PLAYING_STATE', 'GO_TO_MEASURE']);
 
 var setStoreState = exports.setStoreState = function setStoreState(state) {
     return {
@@ -529,6 +529,14 @@ var removeTuplet = exports.removeTuplet = function removeTuplet(measure, instrum
     return {
         type: ActionTypes.REMOVE_TUPLET,
         measure: measure, instrument: instrument, noteIndex: noteIndex,
+        meta: _ListReducer.ListActions.update(measure)
+    };
+};
+
+var setName = exports.setName = function setName(measure, name) {
+    return {
+        type: ActionTypes.SET_NAME,
+        name: name,
         meta: _ListReducer.ListActions.update(measure)
     };
 };
@@ -53673,6 +53681,12 @@ var measure = function measure(state, action, meta) {
                     notes: (0, _extends9.default)({}, _notes4, (0, _defineProperty3.default)({}, _instrument4, [].concat((0, _toConsumableArray3.default)(_instrumentNotes.slice(0, _noteIndex3 >= 0 ? _noteIndex3 : 0)), (0, _toConsumableArray3.default)((0, _utils.filledArray)(_instrumentNotes[_noteIndex3][0], 0)), (0, _toConsumableArray3.default)(_instrumentNotes.slice(_noteIndex3 + 1)))))
                 });
             }
+        case _Actions.ActionTypes.SET_NAME:
+            {
+                var _name = action.name;
+
+                return (0, _assign2.default)({}, state, { name: _name });
+            }
         case _Actions.ActionTypes.SET_BPM:
             {
                 var bpm = action.bpm;
@@ -69909,9 +69923,11 @@ var MeasureSettings = function (_React$Component) {
                 minNoteValue = _props$measure.minNoteValue,
                 drumkit = _props$measure.drumkit,
                 bpm = _props$measure.bpm,
+                name = _props$measure.name,
                 measureTemplates = _props.menu.measureTemplates,
                 drumkits = _props.drumkits,
                 _props$actions = _props.actions,
+                setName = _props$actions.setName,
                 setBpm = _props$actions.setBpm,
                 setNumberOfBeats = _props$actions.setNumberOfBeats,
                 setNoteValue = _props$actions.setNoteValue,
@@ -69919,6 +69935,7 @@ var MeasureSettings = function (_React$Component) {
                 clearMeasure = _props$actions.clearMeasure,
                 removeMeasure = _props$actions.removeMeasure,
                 createMeasureTemplate = _props$actions.createMeasureTemplate;
+            // TODO: Move inline styles to CSS!
 
             return _react2.default.createElement(
                 'div',
@@ -69936,6 +69953,27 @@ var MeasureSettings = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     { style: { paddingBottom: 10, width: '70%' } },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'field' },
+                        _react2.default.createElement(
+                            'label',
+                            { className: 'label' },
+                            'Name'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'control' },
+                            _react2.default.createElement('input', {
+                                className: 'input',
+                                type: 'text',
+                                value: name,
+                                onChange: function onChange(event) {
+                                    return setName(measure, event.target.value);
+                                }
+                            })
+                        )
+                    ),
                     _react2.default.createElement(
                         'div',
                         { className: 'field' },
@@ -70040,7 +70078,7 @@ var MeasureSettings = function (_React$Component) {
                             _react2.default.createElement(
                                 'span',
                                 { className: 'tag is-warning' },
-                                'Chaning the signature will reset all notes.'
+                                'Changing the signature will reset all notes.'
                             )
                         ),
                         _react2.default.createElement(

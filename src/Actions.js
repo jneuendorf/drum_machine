@@ -14,6 +14,7 @@ export const ActionTypes = Enum([
     'ADD_TUPLET',
     'REMOVE_TUPLET',
     'SET_VOLUMES',
+    'SET_NAME',
     'SET_BPM',
     'SET_NUMBER_OF_BEATS',
     'SET_NOTE_VALUE',
@@ -103,6 +104,12 @@ export const addTuplet = (measure, instrument, noteIndex, notesToReplace, notesI
 export const removeTuplet = (measure, instrument, noteIndex) => ({
     type: ActionTypes.REMOVE_TUPLET,
     measure, instrument, noteIndex,
+    meta: ListActions.update(measure),
+})
+
+export const setName = (measure, name) => ({
+    type: ActionTypes.SET_NAME,
+    name,
     meta: ListActions.update(measure),
 })
 
