@@ -67820,6 +67820,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Menu = undefined;
 
+var _slicedToArray2 = __webpack_require__(42);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _entries = __webpack_require__(79);
+
+var _entries2 = _interopRequireDefault(_entries);
+
 var _getPrototypeOf = __webpack_require__(4);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -67894,6 +67902,10 @@ var Menu = function (_React$Component) {
                 return function () {
                     return setCurrentMenuInteraction(currentInteraction === type ? null : type);
                 };
+            };
+            var demos = {
+                'A beat': 'demo1',
+                'Reign of Darkness': 'taim-reign_of_darkness'
             };
             return _react2.default.createElement(
                 'aside',
@@ -67974,14 +67986,21 @@ var Menu = function (_React$Component) {
                 _react2.default.createElement(
                     _MenuSection2.default,
                     { label: 'Demos' },
-                    _react2.default.createElement(_MenuItem2.default, {
-                        label: 'Demo 1',
-                        isActive: false,
-                        onClick: function onClick() {
-                            return (0, _utils.fetchDemo)('demo1').then(function (serializedState) {
-                                return setStoreState(serializedState);
-                            });
-                        }
+                    (0, _entries2.default)(demos).map(function (_ref) {
+                        var _ref2 = (0, _slicedToArray3.default)(_ref, 2),
+                            label = _ref2[0],
+                            filename = _ref2[1];
+
+                        return _react2.default.createElement(_MenuItem2.default, {
+                            key: filename,
+                            label: label,
+                            isActive: false,
+                            onClick: function onClick() {
+                                return (0, _utils.fetchDemo)(filename).then(function (serializedState) {
+                                    return setStoreState(serializedState);
+                                });
+                            }
+                        });
                     })
                 )
             );

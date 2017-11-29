@@ -28,6 +28,9 @@ class Menu extends React.Component {
             setCurrentMenuInteraction(
                 currentInteraction === type ? null : type
             )
+        const demos = {
+            'A beat': 'demo1',
+        }
         return (
             <aside className="menu">
                 <SoundControls />
@@ -89,14 +92,17 @@ class Menu extends React.Component {
                     </MenuItem>
                 </MenuSection>
                 <MenuSection label="Demos">
-                    <MenuItem
-                        label="Demo 1"
-                        isActive={false}
-                        onClick={() =>
-                            fetchDemo('demo1')
-                            .then(serializedState => setStoreState(serializedState))
-                        }
-                    />
+                    {Object.entries(demos).map(([label, filename]) => (
+                        <MenuItem
+                            key={filename}
+                            label={label}
+                            isActive={false}
+                            onClick={() =>
+                                fetchDemo(filename)
+                                .then(serializedState => setStoreState(serializedState))
+                            }
+                        />
+                    ))}
                 </MenuSection>
             </aside>
         )
