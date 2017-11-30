@@ -6,15 +6,28 @@ import Measures from './measures/Measures'
 
 
 export class Root extends React.Component {
+    state = {
+        menuHeight: undefined
+    }
+
     render() {
         return (
             <div className="container">
                 <Navbar />
                 <div className="columns main">
                     <div className="column is-2">
-                        <Menu />
+                        <Menu
+                            onChangeSize={({height}) =>
+                                // We want the outer height so we need to add
+                                // padding and margin.
+                                this.setState({menuHeight: height + 24 + 16})
+                            }
+                        />
                     </div>
-                    <div className="column has-border-left measures-container">
+                    <div
+                        className="column has-border-left measures-container"
+                        style={{height: this.state.menuHeight}}
+                    >
                         <h5 className="is-size-5 is-uppercase has-text-weight-light">Measures</h5>
                         <Measures />
                     </div>

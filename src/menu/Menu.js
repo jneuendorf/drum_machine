@@ -12,6 +12,32 @@ const {ADD_TUPLET, REMOVE_TUPLET, CONTINUE_NOTE_PATTERN} = ActionTypes
 
 
 class Menu extends React.Component {
+    menuElement = null
+    prevSize = null
+
+    componentDidMount() {
+        this.onChangeSize()
+    }
+
+    componentDidUpdate() {
+        this.onChangeSize()
+    }
+
+    onChangeSize() {
+        const newSize = this.menuElement.getBoundingClientRect()
+        const sizeChanged = (
+            !this.prevSize
+            || (
+                this.prevSize.width !== newSize.width
+                || this.prevSize.height !== newSize.height
+            )
+        )
+        this.prevSize = newSize
+        if (sizeChanged) {
+            this.props.onChangeSize(this.menuElement.getBoundingClientRect())
+        }
+    }
+
     render() {
         const {
             menu: {
@@ -32,7 +58,10 @@ class Menu extends React.Component {
             'A beat': 'demo1',
         }
         return (
-            <aside className="menu">
+            <aside
+                className="menu"
+                ref={element => this.menuElement = element}
+            >
                 <SoundControls />
                 <MenuSection label="Measures">
                     {measureTemplates.length === 0 ? null : <MeasureTemplates />}
