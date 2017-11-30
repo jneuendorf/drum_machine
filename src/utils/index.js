@@ -14,13 +14,20 @@ const mapDispatchToProps = function(dispatch, ownProps) {
 }
 export const defaultConnect = function(component, storeKey) {
     if (!storeKey) {
-        return connect(mapStateToProps, mapDispatchToProps)(component)
+        return connect(
+            mapStateToProps,
+            mapDispatchToProps,
+            null,
+            {withRef: true}
+        )(component)
     }
     return connect(
         function(state, ownProps) {
             return mapStateToProps(state[storeKey], ownProps)
         },
-        mapDispatchToProps
+        mapDispatchToProps,
+        null,
+        {withRef: true}
     )(component)
 }
 
