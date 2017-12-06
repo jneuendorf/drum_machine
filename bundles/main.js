@@ -11353,8 +11353,8 @@ var createListReducer = function createListReducer(reducer) {
 
         if (meta.items) {
             var items = typeof meta.items === 'function' ? meta.items() : meta.items;
-            var newItems = items.map(function (item) {
-                return reducer(item, action, { list: state });
+            var newItems = items.map(function (item, index) {
+                return reducer(item, action, { list: state, index: index });
             });
             switch (type) {
                 case Types.APPEND:
@@ -53984,7 +53984,8 @@ var measure = function measure(state, action, meta) {
             {
                 var name = action.name;
 
-                return (0, _assign2.default)(cloneMeasure(state), { name: name });
+                var num = meta.index + 1;
+                return (0, _assign2.default)(cloneMeasure(state), { name: name + '#' + num });
             }
         case _Actions.ActionTypes.TOGGLE_NOTE:
             {
@@ -69478,10 +69479,6 @@ var _toArray2 = __webpack_require__(131);
 
 var _toArray3 = _interopRequireDefault(_toArray2);
 
-var _getIterator2 = __webpack_require__(24);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _getPrototypeOf = __webpack_require__(4);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -69556,48 +69553,25 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     }
 
     (0, _createClass3.default)(Measure, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _props = this.props,
-                measure = _props.measure,
-                measureTemplates = _props.menu.measureTemplates,
-                setName = _props.actions.setName;
-            var name = measure.name;
-
-            if (!name) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = (0, _getIterator3.default)(measureTemplates), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var _ref = _step.value;
-                        var templateName = _ref.name,
-                            template = _ref.measure;
-
-                        if ((0, _measure.measuresEqual)(measure, template)) {
-                            setName(measure, templateName);
-                            break;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        }
-    }, {
         key: 'componentWillReceiveProps',
+
+        // componentDidMount() {
+        //     const {
+        //         measure,
+        //         menu: {measureTemplates},
+        //         actions: {setName}
+        //     } = this.props
+        //     const {name} = measure
+        //     if (!name) {
+        //         for (const {name: templateName, measure: template} of measureTemplates) {
+        //             if (measuresEqual(measure, template)) {
+        //                 setName(measure, templateName)
+        //                 break
+        //             }
+        //         }
+        //     }
+        // }
+
         value: function componentWillReceiveProps(nextProps) {
             if (!(0, _utils.areEqual)(this.props.measure, nextProps.measure)) {
                 _Player2.default.invalidateCache();
@@ -69606,24 +69580,24 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     }, {
         key: 'render',
         value: function render() {
-            var _props2 = this.props,
-                drumkits = _props2.drumkits,
-                currentPlayPos = _props2.soundControls.currentPlayPos,
-                currentInteraction = _props2.menu.currentInteraction,
-                measure = _props2.measure,
-                measureIndex = _props2.index,
-                ui = _props2.ui,
-                updateUI = _props2.updateUI,
-                _props2$actions = _props2.actions,
-                toggleNote = _props2$actions.toggleNote,
-                _setVolume = _props2$actions.setVolume,
-                setVolumes = _props2$actions.setVolumes,
-                _addTuplet = _props2$actions.addTuplet,
-                _removeTuplet = _props2$actions.removeTuplet,
-                continueNotePattern = _props2$actions.continueNotePattern,
-                setCurrentMenuInteraction = _props2$actions.setCurrentMenuInteraction,
-                setCurrentPlayPos = _props2$actions.setCurrentPlayPos,
-                setPlayingState = _props2$actions.setPlayingState;
+            var _props = this.props,
+                drumkits = _props.drumkits,
+                currentPlayPos = _props.soundControls.currentPlayPos,
+                currentInteraction = _props.menu.currentInteraction,
+                measure = _props.measure,
+                measureIndex = _props.index,
+                ui = _props.ui,
+                updateUI = _props.updateUI,
+                _props$actions = _props.actions,
+                toggleNote = _props$actions.toggleNote,
+                _setVolume = _props$actions.setVolume,
+                setVolumes = _props$actions.setVolumes,
+                _addTuplet = _props$actions.addTuplet,
+                _removeTuplet = _props$actions.removeTuplet,
+                continueNotePattern = _props$actions.continueNotePattern,
+                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction,
+                setCurrentPlayPos = _props$actions.setCurrentPlayPos,
+                setPlayingState = _props$actions.setPlayingState;
             var drumkitName = measure.drumkit,
                 notes = measure.notes,
                 name = measure.name;

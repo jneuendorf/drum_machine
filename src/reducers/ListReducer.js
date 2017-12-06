@@ -47,7 +47,9 @@ const createListReducer = function(reducer, initialState=[]) {
         // Handling a multiple items.
         if (meta.items) {
             const items = typeof(meta.items) === 'function' ? meta.items() : meta.items
-            const newItems = items.map(item => reducer(item, action, {list: state}))
+            const newItems = items.map((item, index) =>
+                reducer(item, action, {list: state, index})
+            )
             switch (type) {
                 case Types.APPEND:
                     return state.concat(newItems)
