@@ -48,21 +48,20 @@ export const displayStoreState = state => ({
 })
 
 
-export const addEmptyMeasure = measure => ({
+export const addEmptyMeasure = () => ({
     type: ActionTypes.ADD_EMPTY_MEASURE,
-    measure,
-    meta: ListActions.append(measure),
+    meta: ListActions.append(null),
 })
 
 export const addClonedMeasure = () => ({
     type: ActionTypes.ADD_CLONED_MEASURE,
-    meta: ListActions.append(),
+    meta: ListActions.append(null),
 })
 
-export const addMeasureFromTemplate = ({name, measure}) => ({
+export const addMeasureFromTemplate = ({name, measures}) => ({
     type: ActionTypes.ADD_MEASURE_FROM_TEMPLATE,
-    name, measure,
-    meta: ListActions.append(measure),
+    name,
+    meta: ListActions.append(...measures),
 })
 
 export const toggleNote = (measure, instrument, noteIndex, tupletNoteIndex) => ({
@@ -148,9 +147,9 @@ export const removeMeasure = measure => ({
 })
 
 
-export const createMeasureTemplate = (name, measure) => ({
+export const createMeasureTemplates = (name, measures) => ({
     type: ActionTypes.CREATE_MEASURE_TEMPLATE,
-    name, measure
+    name, measures
 })
 
 export const setCurrentMenuInteraction = (currentInteraction) => ({

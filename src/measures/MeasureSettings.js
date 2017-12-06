@@ -4,9 +4,9 @@ import {areEqual} from '../utils'
 
 
 class MeasureSettings extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {templateName: ''}
+    state = {
+        templateName: '',
+        additionalMeasures: 0,
     }
 
     render() {
@@ -21,6 +21,8 @@ class MeasureSettings extends React.Component {
                 name,
             },
             menu: {measureTemplates},
+            tab: {measures},
+            index: measureIndex,
             drumkits,
             actions: {
                 setName,
@@ -30,7 +32,7 @@ class MeasureSettings extends React.Component {
                 setMinNoteValue,
                 clearMeasure,
                 removeMeasure,
-                createMeasureTemplate,
+                createMeasureTemplates,
             }
         } = this.props
 
@@ -191,6 +193,19 @@ class MeasureSettings extends React.Component {
                                     />
                                 </div>
                             </div>
+                            <div className="column is-3">
+                                <label className="label is-small">Additional measures</label>
+                                <div className="control">
+                                    <input
+                                        className="input"
+                                        type="number"
+                                        value={this.state.additionalMeasures}
+                                        onChange={(event) => this.setState({additionalMeasures: event.target.value})}
+                                        min="0"
+                                        step="1"
+                                    />
+                                </div>
+                            </div>
                             <div className="column is-narrow">
                                 <label className="label is-small">&nbsp;</label>
                                 <div className="control">
@@ -201,16 +216,18 @@ class MeasureSettings extends React.Component {
                                             if (templateName === '') {
                                                 return
                                             }
-                                            // measureTemplates
                                             const equalMeasureTemplateExists = measureTemplates.some(
                                                 template => areEqual(measure, template.measure)
                                             )
-                                            if (equalMeasureTemplateExists) {
-                                                if (!window.confirm("An equal measure template exists. Continue anyway?")) {
-                                                    return
-                                                }
+                                            if (!equalMeasureTemplateExists) {
+                                                createMeasureTemplates(
+                                                    templateName,
+                                                    measures.slice(
+                                                        measureIndex,
+                                                        this.state.additionalMeasures + 1
+                                                    )
+                                                )
                                             }
-                                            createMeasureTemplate(templateName, measure)
                                         }}
                                     >
                                         <span className="icon">

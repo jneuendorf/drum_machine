@@ -14,9 +14,9 @@ export const menu = function(state=initialMenu, action) {
             return Object.assign({}, state, {currentInteraction})
         }
         case ActionTypes.CREATE_MEASURE_TEMPLATE: {
-            const {name, measure} = action
+            const {name, measures} = action
             return Object.assign({}, state, {
-                measureTemplates: state.measureTemplates.concat([{name, measure}])
+                measureTemplates: state.measureTemplates.concat([{name, measures}])
             })
         }
         default:

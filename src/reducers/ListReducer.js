@@ -9,9 +9,9 @@ const Types = {
 }
 
 const ListActions = {
-    append: (item) => ({
+    append: (...items) => ({
         type: Types.APPEND,
-        item
+        items
     }),
     insertAt: (item, index) => ({
         type: Types.INSERT_AT,
@@ -33,7 +33,7 @@ const ListActions = {
     updateAt: (index) => ({
         type: Types.UPDATE_AT,
         index,
-    }),
+    })
 }
 
 
@@ -44,32 +44,48 @@ const createListReducer = function(reducer, initialState=[]) {
         }
         const {meta, ...action} = actionWithMeta
         const {type, index} = meta
-        let {item} = meta
-        if (typeof(item) === 'function') {
-            item = item()
+        // Handling a multiple items.
+        if (meta.items) {
+            const items = typeof(meta.items) === 'function' ? meta.items() : meta.items
+            const newItems = items.map(item => reducer(item, action, {list: state}))
+            switch (type) {
+                case Types.APPEND:
+                    return state.concat(newItems)
+                    default:
+                        throw new Error(
+                            `The action contains a 'meta' field which doesn't contain a`
+                            + ` correct 'type'. Most likely you forgot to use an`
+                            + ` action creator in your action's 'meta' in '${action.type}'`
+                            + ` (e.g. 'ListActions.append(item)').`
+                        )
+            }
         }
-        // apply single-item reducer
-        const newItem = reducer(item, action, {list: state})
-        switch (type) {
-            case Types.APPEND:
-                return state.concat([newItem])
-            case Types.INSERT_AT:
-                return state.slice(0, index).concat([newItem]).concat(state.slice(index))
-            case Types.REMOVE:
-                return state.filter(e => e !== item)
-            case Types.REMOVE_AT:
-                return state.filter((e, i) => i !== index)
-            case Types.UPDATE:
-                return state.map(e => e === item ? newItem : e)
-            case Types.UPDATE_AT:
-                return state.map((e, i) => i === index ? newItem : e)
-            default:
-                throw new Error(
-                    `The action contains a 'meta' field which doesn't contain a`
-                    + ` correct 'type'. Most likely you forgot to use an`
-                    + ` action creator in your action's 'meta' in '${action.type}'`
-                    + ` (e.g. 'ListActions.append(item)').`
-                )
+        // Handling a single item.
+        else {
+            const item = typeof(meta.item) === 'function' ? meta.item() : meta.item
+            // apply single-item reducer
+            const newItem = reducer(item, action, {list: state})
+            switch (type) {
+                // case Types.APPEND:
+                //     return state.concat([newItem])
+                case Types.INSERT_AT:
+                    return state.slice(0, index).concat([newItem]).concat(state.slice(index))
+                case Types.REMOVE:
+                    return state.filter(e => e !== item)
+                case Types.REMOVE_AT:
+                    return state.filter((e, i) => i !== index)
+                case Types.UPDATE:
+                    return state.map(e => e === item ? newItem : e)
+                case Types.UPDATE_AT:
+                    return state.map((e, i) => i === index ? newItem : e)
+                default:
+                    throw new Error(
+                        `The action contains a 'meta' field which doesn't contain a`
+                        + ` correct 'type'. Most likely you forgot to use an`
+                        + ` action creator in your action's 'meta' in '${action.type}'`
+                        + ` (e.g. 'ListActions.append(item)').`
+                    )
+            }
         }
     }
 }

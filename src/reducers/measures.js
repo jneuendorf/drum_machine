@@ -78,8 +78,8 @@ const measure = function(state, action, meta) {
             return lastMeasure ? cloneMeasure(lastMeasure) : createMeasure()
         }
         case ActionTypes.ADD_MEASURE_FROM_TEMPLATE: {
-            const {name, measure} = action
-            return Object.assign(cloneMeasure(measure), {name})
+            const {name} = action
+            return Object.assign(cloneMeasure(state), {name})
         }
         case ActionTypes.TOGGLE_NOTE: {
             const {instrument, noteIndex, tupletNoteIndex} = action
