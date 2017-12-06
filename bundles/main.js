@@ -1980,7 +1980,7 @@ module.exports = { "default": __webpack_require__(287), __esModule: true };
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.measuresEqual = exports.getNumberOfNoteValues = exports.mapNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = undefined;
+exports.measuresEqual = exports.getNumberOfNoteValues = exports.mapNotes = exports.getNotePositions = exports.getDuration = exports.getMsBetweenNotes = exports.getNumberOfNotes = exports.roundedTime = exports.getGroupedSounds = exports.getNextId = exports.resetIdGenerator = undefined;
 
 var _objectWithoutProperties2 = __webpack_require__(30);
 
@@ -2011,6 +2011,17 @@ var _immutableSorted = __webpack_require__(292);
 var _ = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var baseMeasureId = 0;
+var idCounter = 0;
+var resetIdGenerator = exports.resetIdGenerator = function resetIdGenerator(greatestUsedId) {
+    baseMeasureId = greatestUsedId + 1;
+    idCounter = 0;
+};
+
+var getNextId = exports.getNextId = function getNextId() {
+    return baseMeasureId + idCounter++;
+};
 
 // Creates a group of sounds for each tick.
 // Here, a sound means {instrument, volume}.
@@ -53751,6 +53762,10 @@ var _assign = __webpack_require__(12);
 
 var _assign2 = _interopRequireDefault(_assign);
 
+var _toConsumableArray2 = __webpack_require__(43);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 exports.default = function (state, action) {
     switch (action.type) {
         case _Actions.ActionTypes.SET_STORE_STATE:
@@ -53760,6 +53775,11 @@ exports.default = function (state, action) {
                 try {
                     stateToImport = JSON.parse(serializedState);
                     stateToImport.ui = (0, _immutable.fromJS)(stateToImport.ui);
+                    if (stateToImport.tab && stateToImport.tab.measures) {
+                        (0, _measure.resetIdGenerator)(Math.max.apply(Math, (0, _toConsumableArray3.default)(stateToImport.tab.measures.map(function (measure) {
+                            return measure.id;
+                        }))));
+                    }
                 } catch (e) {
                     stateToImport = {};
                     console.error(e);
@@ -53794,6 +53814,8 @@ var _drumkits2 = _interopRequireDefault(_drumkits);
 var _soundControls = __webpack_require__(294);
 
 var _soundControls2 = _interopRequireDefault(_soundControls);
+
+var _measure = __webpack_require__(46);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -53889,15 +53911,8 @@ var _measure = __webpack_require__(46);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var getNextId = function () {
-    var id = 0;
-    return function () {
-        return id++;
-    };
-}();
-
 var setNextId = function setNextId(measure) {
-    measure.id = getNextId();
+    measure.id = (0, _measure.getNextId)();
     return measure;
 };
 
@@ -53940,7 +53955,7 @@ var createMeasure = function createMeasure() {
     }
 
     return {
-        id: getNextId(),
+        id: (0, _measure.getNextId)(),
         name: '',
         bpm: bpm,
         numberOfBeats: numberOfBeats,

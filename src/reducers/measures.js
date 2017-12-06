@@ -11,19 +11,13 @@ import {
     dict,
 } from '../utils'
 import {
+    getNextId,
     getNumberOfNotes,
     getNumberOfNoteValues,
     mapNotes,
 } from '../utils/measure'
 
 
-
-const getNextId = (function() {
-    let id = 0
-    return function() {
-        return id++
-    }
-})()
 
 const setNextId = function(measure) {
     measure.id = getNextId()

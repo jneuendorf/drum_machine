@@ -7,6 +7,7 @@ import tab from './tab'
 import menu from './menu'
 import drumkits from './drumkits'
 import soundControls from './soundControls'
+import {resetIdGenerator} from '../utils/measure'
 
 
 const app = combineReducers({
@@ -25,6 +26,13 @@ export default function(state, action) {
             try {
                 stateToImport = JSON.parse(serializedState)
                 stateToImport.ui = fromJS(stateToImport.ui)
+                if (stateToImport.tab && stateToImport.tab.measures) {
+                    resetIdGenerator(
+                        Math.max(...stateToImport.tab.measures.map(
+                            measure => measure.id
+                        ))
+                    )
+                }
             }
             catch (e) {
                 stateToImport = {}

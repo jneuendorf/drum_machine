@@ -3,6 +3,19 @@ import {SortedMap} from 'immutable-sorted'
 import {areEqual} from '.'
 
 
+
+let baseMeasureId = 0
+let idCounter = 0
+export const resetIdGenerator = function(greatestUsedId) {
+    baseMeasureId = greatestUsedId + 1
+    idCounter = 0
+}
+
+export const getNextId = function() {
+    return baseMeasureId + idCounter++
+}
+
+
 // Creates a group of sounds for each tick.
 // Here, a sound means {instrument, volume}.
 // Each group knows how much time to wait until the next group has to be played.
