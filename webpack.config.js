@@ -19,6 +19,7 @@ module.exports = {
         path: path.resolve(__dirname, 'bundles'),
         publicPath: '/bundles/',
         filename: '[name]',
+        pathinfo: true,
     },
     module: {
         rules: [
