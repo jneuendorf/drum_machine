@@ -18,29 +18,32 @@ const app = combineReducers({
     ui,
 })
 
-export default function(state, action) {
-    switch (action.type) {
-        case ActionTypes.SET_STORE_STATE: {
-            const serializedState = action.state || '{}'
-            let stateToImport
-            try {
-                stateToImport = JSON.parse(serializedState)
-                stateToImport.ui = fromJS(stateToImport.ui)
-                if (stateToImport.tab && stateToImport.tab.measures) {
-                    resetIdGenerator(
-                        Math.max(...stateToImport.tab.measures.map(
-                            measure => measure.id
-                        ))
-                    )
+export default function(Player) {
+    return function(state, action) {
+        switch (action.type) {
+            case ActionTypes.SET_STORE_STATE: {
+                const serializedState = action.state || '{}'
+                let stateToImport
+                try {
+                    stateToImport = JSON.parse(serializedState)
+                    stateToImport.ui = fromJS(stateToImport.ui)
+                    if (stateToImport.tab && stateToImport.tab.measures) {
+                        resetIdGenerator(
+                            Math.max(...stateToImport.tab.measures.map(
+                                measure => measure.id
+                            ))
+                        )
+                    }
+                    Player.invalidateCache()
                 }
+                catch (e) {
+                    stateToImport = {}
+                    console.error(e)
+                }
+                return Object.assign({}, state, stateToImport)
             }
-            catch (e) {
-                stateToImport = {}
-                console.error(e)
-            }
-            return Object.assign({}, state, stateToImport)
+            default:
+                return app(state, action)
         }
-        default:
-            return app(state, action)
     }
 }

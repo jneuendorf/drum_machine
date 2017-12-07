@@ -4,7 +4,7 @@ import download from 'downloadjs'
 
 import Dropdown from './Dropdown'
 import StoreStateManager from './StoreStateManager'
-import store from '../store'
+import {store} from '../store'
 import {defaultConnect, serializeState} from "../utils"
 
 

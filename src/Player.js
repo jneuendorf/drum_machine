@@ -1,6 +1,6 @@
 import TickTock from '../lib/TickTock'
 
-import {subscribe, dispatch} from './store'
+import {dispatch} from './store'
 import {
     ActionTypes,
     setCurrentPlayPos as setCurrentPlayPosActionCreator,
@@ -108,6 +108,11 @@ class Player {
             soundControls: {loop, freezeUiWhilePlaying},
             drumkits,
         } = state
+
+        // The elements are rendered at a later time - for sure when starting playback.
+        // Thus we retrieve them when the 1st clock starts
+        let measureElements = null
+
         this.clocks = measures.map((measure, index) => {
             const {drumkit: drumkitName} = measure
             const duration = getDuration(measure)
@@ -126,11 +131,13 @@ class Player {
             console.log(intervals)
 
             const {howl} = drumkits[drumkitName]
-            const measureElements = document.querySelectorAll('.measures .measure')
             return new TickTock({
                 interval: intervals,
                 callback: (clock, time, tick) => {
                     if (tick === 0) {
+                        if (!measureElements) {
+                            measureElements = document.querySelectorAll('.measures .measure')
+                        }
                         measureElements[index].scrollIntoView()
                     }
                     time = roundedTime(time)
@@ -213,18 +220,8 @@ class Player {
             clock.reset()
         }
         setCurrentPlayPos(0, -1)
-        // this.clocks = []
-        // this.clockIndex = -1
     }
 }
-
-
-subscribe(function(state, action) {
-    if (Player.shouldHandleAction(action)) {
-        console.log('subscribe', state, action)
-        Player.onStateChange(state, action)
-    }
-})
 
 export {Player}
 export default Player

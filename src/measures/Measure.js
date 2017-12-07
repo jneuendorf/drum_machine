@@ -15,7 +15,7 @@ import {
     getNotePositions,
     getNumberOfNotes,
     getDuration,
-    measuresEqual,
+    // measuresEqual,
 } from '../utils/measure'
 import {ActionTypes} from '../Actions'
 

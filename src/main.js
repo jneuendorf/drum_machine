@@ -3,9 +3,7 @@ import ReactDOM from "react-dom"
 import {Provider} from 'react-redux'
 
 import Root from "./Root"
-import store from "./store"
-// import {getStore, onSetState} from "./store"
-import "./Player"
+import {store} from "./store"
 
 
 const rootElement = document.getElementById("root")
@@ -25,8 +23,3 @@ const renderApp = function(store) {
 }
 
 renderApp(store)
-
-// onSetState(function(store) {
-//     console.log('called store.setState');
-//     renderApp(store)
-// })
