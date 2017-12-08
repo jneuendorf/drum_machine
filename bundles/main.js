@@ -66645,7 +66645,9 @@ var MeasureSettings = function (_React$Component) {
                                         type: 'number',
                                         value: this.state.additionalMeasures,
                                         onChange: function onChange(event) {
-                                            return _this2.setState({ additionalMeasures: event.target.value });
+                                            return _this2.setState({
+                                                additionalMeasures: parseInt(event.target.value, 10)
+                                            });
                                         },
                                         min: '0',
                                         step: '1'
@@ -66673,12 +66675,7 @@ var MeasureSettings = function (_React$Component) {
                                                 if (templateName === '') {
                                                     return;
                                                 }
-                                                var equalMeasureTemplateExists = measureTemplates.some(function (template) {
-                                                    return (0, _utils.areEqual)(measure, template.measure);
-                                                });
-                                                if (!equalMeasureTemplateExists) {
-                                                    createMeasureTemplates(templateName, measures.slice(measureIndex, _this2.state.additionalMeasures + 1));
-                                                }
+                                                createMeasureTemplates(templateName, measures.slice(measureIndex, _this2.state.additionalMeasures + 1));
                                             }
                                         },
                                         _react2.default.createElement(

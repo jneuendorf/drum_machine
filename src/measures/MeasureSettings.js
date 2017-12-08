@@ -200,7 +200,11 @@ class MeasureSettings extends React.Component {
                                         className="input"
                                         type="number"
                                         value={this.state.additionalMeasures}
-                                        onChange={(event) => this.setState({additionalMeasures: event.target.value})}
+                                        onChange={(event) =>
+                                            this.setState({
+                                                additionalMeasures: parseInt(event.target.value, 10)
+                                            })
+                                        }
                                         min="0"
                                         step="1"
                                     />
@@ -216,18 +220,13 @@ class MeasureSettings extends React.Component {
                                             if (templateName === '') {
                                                 return
                                             }
-                                            const equalMeasureTemplateExists = measureTemplates.some(
-                                                template => areEqual(measure, template.measure)
-                                            )
-                                            if (!equalMeasureTemplateExists) {
-                                                createMeasureTemplates(
-                                                    templateName,
-                                                    measures.slice(
-                                                        measureIndex,
-                                                        this.state.additionalMeasures + 1
-                                                    )
+                                            createMeasureTemplates(
+                                                templateName,
+                                                measures.slice(
+                                                    measureIndex,
+                                                    this.state.additionalMeasures + 1
                                                 )
-                                            }
+                                            )
                                         }}
                                     >
                                         <span className="icon">
