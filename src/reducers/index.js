@@ -28,11 +28,16 @@ export default function(Player) {
                     stateToImport = JSON.parse(serializedState)
                     stateToImport.ui = fromJS(stateToImport.ui)
                     if (stateToImport.tab && stateToImport.tab.measures) {
-                        resetIdGenerator(
-                            Math.max(...stateToImport.tab.measures.map(
-                                measure => measure.id
-                            ))
-                        )
+                        if (stateToImport.tab.measures.length > 0) {
+                            resetIdGenerator(
+                                Math.max(...stateToImport.tab.measures.map(
+                                    measure => measure.id
+                                ))
+                            )
+                        }
+                        else {
+                            resetIdGenerator(-1)
+                        }
                     }
                     Player.invalidateCache()
                 }

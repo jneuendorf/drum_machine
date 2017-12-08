@@ -1,7 +1,5 @@
 import React from 'react'
 
-import {areEqual} from '../utils'
-
 
 class MeasureSettings extends React.Component {
     state = {
@@ -202,7 +200,7 @@ class MeasureSettings extends React.Component {
                                         value={this.state.additionalMeasures}
                                         onChange={(event) =>
                                             this.setState({
-                                                additionalMeasures: parseInt(event.target.value, 10)
+                                                additionalMeasures: parseInt(event.target.value, 10) || 0
                                             })
                                         }
                                         min="0"
@@ -224,7 +222,7 @@ class MeasureSettings extends React.Component {
                                                 templateName,
                                                 measures.slice(
                                                     measureIndex,
-                                                    this.state.additionalMeasures + 1
+                                                    measureIndex + this.state.additionalMeasures + 1
                                                 )
                                             )
                                         }}
