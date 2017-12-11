@@ -113,7 +113,7 @@ class Player {
         // Thus we retrieve them when the 1st clock starts
         let measureElements = null
 
-        this.clocks = measures.map((measure, index) => {
+        this.clocks = measures.filter(measure => typeof(measure) !== 'string').map((measure, index) => {
             const {drumkit: drumkitName} = measure
             const duration = getDuration(measure)
             const soundGroups = getGroupedSounds(measure)

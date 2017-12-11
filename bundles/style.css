@@ -10057,11 +10057,13 @@ label.panel-block:hover {
   margin-top: 10px;
 }
 
-.measures .add-measure {
+.measures .add-measure,
+.measures .add-comment {
   margin-top: 20px;
 }
 
-.measures .add-measure:not(:first-child) {
+.measures .add-measure:not(:first-child),
+.measures .add-comment:not(:first-child) {
   margin-left: 10px;
 }
 
@@ -10187,6 +10189,13 @@ label.panel-block:hover {
   margin-left: 5px;
   opacity: 0.9;
   transform: scale(0.9);
+}
+
+.measures .comment {
+  font-size: 1.5rem;
+  font-variant: small-caps;
+  font-weight: 300;
+  padding: 10px;
 }
 
 .store-state-manager {

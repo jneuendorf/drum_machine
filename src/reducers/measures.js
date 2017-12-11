@@ -54,7 +54,10 @@ const cloneMeasure = function(measure) {
 const measure = function(state, action, meta) {
     switch (action.type) {
         case ActionTypes.ADD_EMPTY_MEASURE: {
-            let lastMeasure = last(meta.list)
+            let lastMeasure = last(
+                meta.list,
+                measure => typeof(measure) !== 'string'
+            )
             if (lastMeasure) {
                 const numberOfNotes = getNumberOfNotes(lastMeasure)
                 // Use last measure's drumkit, BPM etc.
@@ -68,8 +71,14 @@ const measure = function(state, action, meta) {
             return createMeasure()
         }
         case ActionTypes.ADD_CLONED_MEASURE: {
-            const lastMeasure = last(meta.list)
+            const lastMeasure = last(
+                meta.list,
+                measure => typeof(measure) !== 'string'
+            )
             return lastMeasure ? cloneMeasure(lastMeasure) : createMeasure()
+        }
+        case ActionTypes.ADD_COMMENT: {
+            return action.comment
         }
         case ActionTypes.ADD_MEASURE_FROM_TEMPLATE: {
             const {name} = action

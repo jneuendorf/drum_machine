@@ -8,6 +8,7 @@ export const ActionTypes = Enum([
 
     'ADD_EMPTY_MEASURE',
     'ADD_CLONED_MEASURE',
+    'ADD_COMMENT',
     'ADD_MEASURE_FROM_TEMPLATE',
     'TOGGLE_NOTE',
     'SET_VOLUME',
@@ -55,6 +56,12 @@ export const addEmptyMeasure = () => ({
 
 export const addClonedMeasure = () => ({
     type: ActionTypes.ADD_CLONED_MEASURE,
+    meta: ListActions.append(null),
+})
+
+export const addComment = comment => ({
+    type: ActionTypes.ADD_COMMENT,
+    comment,
     meta: ListActions.append(null),
 })
 

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Measure from './Measure'
+import Comment from './Comment'
 import {defaultConnect} from '../utils'
 
 
@@ -17,23 +18,33 @@ class Measures extends React.Component {
         const {
             tab: {measures},
             soundControls: {playingState},
-            actions: {addClonedMeasure, addEmptyMeasure}
+            actions: {addClonedMeasure, addEmptyMeasure, addComment}
         } = this.props
         const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
+
+        let measureIndex = 0
+
         return (
             <div className="measures" style={style}>
-                {measures.map((measure, index) => {
-                    return (
-                        <Measure
-                            measure={measure}
-                            index={index}
-                            key={measure.id}
-                            uiKey={`Measure${measure.id}`}
-                        />
-                    )
+                {measures.map((measureOrComment, index) => {
+                    if (typeof(measureOrComment) === 'string') {
+                        const comment = measureOrComment
+                        return <Comment comment={comment} />
+                    }
+                    else {
+                        const measure = measureOrComment
+                        return (
+                            <Measure
+                                measure={measure}
+                                index={measureIndex++}
+                                key={measure.id}
+                                uiKey={`Measure${measure.id}`}
+                            />
+                        )
+                    }
                 })}
                 {
-                    measures.length === 0
+                    measures.filter(measure => typeof(measure) !== 'string').length === 0
                     ? null
                     : (
                         <button
@@ -55,6 +66,20 @@ class Measures extends React.Component {
                         <i className="fa fa-plus" />
                     </span>
                     <span>Add empty measure</span>
+                </button>
+                <button
+                    className="button is-small add-comment"
+                    onClick={() => {
+                        const comment = prompt('Enter your comment!', '')
+                        if (comment) {
+                            addComment(comment)
+                        }
+                    }}
+                >
+                    <span className="icon is-small">
+                        <i className="fa fa-comment" />
+                    </span>
+                    <span>Add comment</span>
                 </button>
             </div>
         )

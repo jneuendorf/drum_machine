@@ -78,9 +78,21 @@ export const chunkArray = function(array, chunkSize=1) {
     return chunks
 }
 
-export const last = function(array) {
-    return array[array.length - 1]
+export const last = function(array, condition) {
+    let i = array.length - 1
+    if (!condition) {
+        return array[i]
+    }
+    while (!condition(array[i])) {
+        i--
+        if (i < 0) {
+            return undefined
+        }
+    }
+    return array[i]
 }
+
+// export const noop = () => {}
 
 // Splits the array into 2 classes:
 // One containing elements fulfilling the condition,
