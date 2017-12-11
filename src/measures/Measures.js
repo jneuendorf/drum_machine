@@ -44,7 +44,13 @@ class Measures extends React.Component {
                 {measures.map((measureOrComment, index) => {
                     if (typeof(measureOrComment) === 'string') {
                         const comment = measureOrComment
-                        return <Comment key={`comment${index}`} comment={comment} />
+                        return (
+                            <Comment
+                                className="has-border-bottom"
+                                comment={comment}
+                                key={`comment${index}`}
+                            />
+                        )
                     }
                     else {
                         const measure = measureOrComment

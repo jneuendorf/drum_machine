@@ -18,7 +18,6 @@ class MeasureSettings extends React.Component {
                 bpm,
                 name,
             },
-            menu: {measureTemplates},
             tab: {measures},
             index: measureIndex,
             drumkits,
@@ -220,9 +219,13 @@ class MeasureSettings extends React.Component {
                                             }
                                             createMeasureTemplates(
                                                 templateName,
-                                                measures.slice(
-                                                    measureIndex,
-                                                    measureIndex + this.state.additionalMeasures + 1
+                                                (
+                                                    measures
+                                                    .filter(measure => typeof(measure) !== 'string')
+                                                    .slice(
+                                                        measureIndex,
+                                                        measureIndex + this.state.additionalMeasures + 1
+                                                    )
                                                 )
                                             )
                                         }}

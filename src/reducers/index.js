@@ -30,9 +30,11 @@ export default function(Player) {
                     if (stateToImport.tab && stateToImport.tab.measures) {
                         if (stateToImport.tab.measures.length > 0) {
                             resetIdGenerator(
-                                Math.max(...stateToImport.tab.measures.map(
-                                    measure => measure.id
-                                ))
+                                Math.max(
+                                    ...stateToImport.tab.measures
+                                    .filter(measure => typeof(measure) !== 'string')
+                                    .map(measure => measure.id)
+                                )
                             )
                         }
                         else {

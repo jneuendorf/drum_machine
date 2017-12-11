@@ -55171,7 +55171,9 @@ exports.default = function (Player) {
                         stateToImport.ui = (0, _immutable.fromJS)(stateToImport.ui);
                         if (stateToImport.tab && stateToImport.tab.measures) {
                             if (stateToImport.tab.measures.length > 0) {
-                                (0, _measure.resetIdGenerator)(Math.max.apply(Math, (0, _toConsumableArray3.default)(stateToImport.tab.measures.map(function (measure) {
+                                (0, _measure.resetIdGenerator)(Math.max.apply(Math, (0, _toConsumableArray3.default)(stateToImport.tab.measures.filter(function (measure) {
+                                    return typeof measure !== 'string';
+                                }).map(function (measure) {
                                     return measure.id;
                                 }))));
                             } else {
@@ -70987,7 +70989,11 @@ var Measures = function (_React$Component) {
                 measures.map(function (measureOrComment, index) {
                     if (typeof measureOrComment === 'string') {
                         var comment = measureOrComment;
-                        return _react2.default.createElement(_Comment2.default, { key: 'comment' + index, comment: comment });
+                        return _react2.default.createElement(_Comment2.default, {
+                            className: 'has-border-bottom',
+                            comment: comment,
+                            key: 'comment' + index
+                        });
                     } else {
                         var measure = measureOrComment;
                         return _react2.default.createElement(_Measure2.default, {
@@ -72253,7 +72259,6 @@ var MeasureSettings = function (_React$Component) {
                 drumkit = _props$measure.drumkit,
                 bpm = _props$measure.bpm,
                 name = _props$measure.name,
-                measureTemplates = _props.menu.measureTemplates,
                 measures = _props.tab.measures,
                 measureIndex = _props.index,
                 drumkits = _props.drumkits,
@@ -72616,7 +72621,9 @@ var MeasureSettings = function (_React$Component) {
                                                 if (templateName === '') {
                                                     return;
                                                 }
-                                                createMeasureTemplates(templateName, measures.slice(measureIndex, measureIndex + _this2.state.additionalMeasures + 1));
+                                                createMeasureTemplates(templateName, measures.filter(function (measure) {
+                                                    return typeof measure !== 'string';
+                                                }).slice(measureIndex, measureIndex + _this2.state.additionalMeasures + 1));
                                             }
                                         },
                                         _react2.default.createElement(
