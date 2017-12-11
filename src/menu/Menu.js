@@ -47,6 +47,7 @@ class Menu extends React.Component {
             actions: {
                 setStoreState,
                 setCurrentMenuInteraction,
+                setLoading,
             }
         } = this.props
 
@@ -126,10 +127,12 @@ class Menu extends React.Component {
                             key={filename}
                             label={label}
                             isActive={false}
-                            onClick={() =>
+                            onClick={() => {
+                                setLoading(true)
                                 fetchDemo(filename)
                                 .then(serializedState => setStoreState(serializedState))
-                            }
+                                .then(() => setLoading(false))
+                            }}
                         />
                     ))}
                 </MenuSection>

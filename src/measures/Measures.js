@@ -1,4 +1,5 @@
 import React from 'react'
+import MDSpinner from 'react-md-spinner'
 
 import Measure from './Measure'
 import Comment from './Comment'
@@ -16,10 +17,22 @@ class Measures extends React.Component {
 
     render() {
         const {
-            tab: {measures},
+            tab: {measures, isLoading},
             soundControls: {playingState},
             actions: {addClonedMeasure, addEmptyMeasure, addComment}
         } = this.props
+
+        if (isLoading) {
+            return (
+                <div style={{textAlign: 'center', marginTop: '150px'}}>
+                    <MDSpinner
+                        size={80}
+                        singleColor="#00d1b2"
+                    />
+                </div>
+            )
+        }
+
         const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
 
         let measureIndex = 0
@@ -29,7 +42,7 @@ class Measures extends React.Component {
                 {measures.map((measureOrComment, index) => {
                     if (typeof(measureOrComment) === 'string') {
                         const comment = measureOrComment
-                        return <Comment comment={comment} />
+                        return <Comment key={`comment${index}`} comment={comment} />
                     }
                     else {
                         const measure = measureOrComment

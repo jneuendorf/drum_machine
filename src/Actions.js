@@ -27,6 +27,8 @@ export const ActionTypes = Enum([
     'SET_CURRENT_MENU_INTERACTION',
     'CONTINUE_NOTE_PATTERN',
 
+    'SET_LOADING',
+
     'START_LOADING_DRUMKIT',
     'DONE_LOADING_DRUMKIT',
 
@@ -168,6 +170,12 @@ export const continueNotePattern = (measure, instrument) => ({
     type: ActionTypes.CONTINUE_NOTE_PATTERN,
     measure, instrument,
     meta: ListActions.update(measure),
+})
+
+
+export const setLoading = isLoading => ({
+    type: ActionTypes.SET_LOADING,
+    isLoading,
 })
 
 
