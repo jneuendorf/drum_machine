@@ -1,9 +1,14 @@
 import React from 'react'
-import MDSpinner from 'react-md-spinner'
 
 import Measure from './Measure'
 import Comment from './Comment'
 import {defaultConnect} from '../utils'
+
+
+// Preload ajax loader
+const SPINNER_URL = 'images/vinyl.gif'
+const image = new Image()
+image.src = SPINNER_URL
 
 
 class Measures extends React.Component {
@@ -25,18 +30,13 @@ class Measures extends React.Component {
         if (isLoading) {
             return (
                 <div style={{textAlign: 'center', marginTop: '150px'}}>
-                    <MDSpinner
-                        size={80}
-                        singleColor="#00d1b2"
-                    />
+                    <img src={SPINNER_URL} style={{width: '48px', height: '48px'}} />
                 </div>
             )
         }
 
         const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
-
         let measureIndex = 0
-
         return (
             <div className="measures" style={style}>
                 {measures.map((measureOrComment, index) => {
