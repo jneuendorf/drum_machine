@@ -9,6 +9,7 @@ class StoreStateExporter extends React.Component {
         const range = document.createRange()
         range.selectNode(this.stateText)
         selection.addRange(range)
+        // TODO: focus the element so keyboard shortcuts work
     }
 
     render() {

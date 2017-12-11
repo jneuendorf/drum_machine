@@ -1,5 +1,7 @@
 # drum_machine
 
+<img src="https://img.shields.io/badge/loader-icons8-5699dd.svg" alt="Using ajax loader from icons8" />
+
 A drum machine for the web.
 
 See demo [here](http://jneuendorf.github.io/drum_machine/).

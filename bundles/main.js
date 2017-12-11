@@ -820,10 +820,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.fetchDemo = exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.dict = exports.unique = exports.arrayChangedSize = exports.partition = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.isInt = exports.defaultConnect = undefined;
 
-var _assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 12);
-
-var _assign2 = _interopRequireDefault(_assign);
-
 var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 260);
 
 var _stringify2 = _interopRequireDefault(_stringify);
@@ -1068,17 +1064,15 @@ var dict = exports.dict = function dict(tuples) {
 var serializeState = function serializeState(storeState) {
     // eslint-disable-next-line
     var drumkits = storeState.drumkits,
-        state = (0, _objectWithoutProperties3.default)(storeState, ['drumkits']);
+        ui = storeState.ui,
+        state = (0, _objectWithoutProperties3.default)(storeState, ['drumkits', 'ui']);
 
-    return (0, _stringify2.default)((0, _assign2.default)({}, state, {
-        ui: state.ui.toJS()
-    }));
+    return (0, _stringify2.default)(state);
 };
 
 exports.serializeState = serializeState;
 var deserializeState = exports.deserializeState = function deserializeState(serializedState) {
     var state = JSON.parse(serializedState);
-    state.ui = (0, _immutable.fromJS)(state.ui);
     return state;
 };
 
@@ -54432,6 +54426,7 @@ var StoreStateExporter = function (_React$Component) {
             var range = document.createRange();
             range.selectNode(this.stateText);
             selection.addRange(range);
+            // TODO: focus the element so keyboard shortcuts work
         }
     }, {
         key: "render",
@@ -70941,6 +70936,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var SPINNER_URL = 'images/vinyl.gif';
 var image = new Image();
 image.src = SPINNER_URL;
+// Keep a reference (see https://stackoverflow.com/questions/3646036/javascript-preloading-images#comment41343860_3646036).
+window.image = image;
 
 var Measures = function (_React$Component) {
     (0, _inherits3.default)(Measures, _React$Component);

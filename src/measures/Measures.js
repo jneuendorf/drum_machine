@@ -9,6 +9,8 @@ import {defaultConnect} from '../utils'
 const SPINNER_URL = 'images/vinyl.gif'
 const image = new Image()
 image.src = SPINNER_URL
+// Keep a reference (see https://stackoverflow.com/questions/3646036/javascript-preloading-images#comment41343860_3646036).
+window.image = image
 
 
 class Measures extends React.Component {

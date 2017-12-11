@@ -155,17 +155,12 @@ export const dict = function(tuples) {
 
 export const serializeState = function(storeState) {
     // eslint-disable-next-line
-    const {drumkits, ...state} = storeState
-    return JSON.stringify(
-        Object.assign({}, state, {
-            ui: state.ui.toJS()
-        })
-    )
+    const {drumkits, ui, ...state} = storeState
+    return JSON.stringify(state)
 }
 
 export const deserializeState = function(serializedState) {
     const state = JSON.parse(serializedState)
-    state.ui = fromJS(state.ui)
     return state
 }
 
