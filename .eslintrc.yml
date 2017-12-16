@@ -23,6 +23,7 @@ rules:
     semi: [error, never]
     strict: 0
     react/jsx-boolean-value: 0
+    react/jsx-no-bind: 1
     react/jsx-no-undef: 1
     react/jsx-uses-react: 1
     react/jsx-uses-vars: 1

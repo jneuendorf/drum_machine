@@ -19,6 +19,7 @@ class Menu extends React.Component {
         this.onChangeSize()
     }
 
+    // TODO (PERFORMANCE): throttle (or rather debounce) for performance!
     componentDidUpdate() {
         this.onChangeSize()
     }

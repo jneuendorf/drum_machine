@@ -30,23 +30,7 @@ const {CONTINUE_NOTE_PATTERN, GO_TO_MEASURE} = ActionTypes
     },
 })
 class Measure extends React.Component {
-    // componentDidMount() {
-    //     const {
-    //         measure,
-    //         menu: {measureTemplates},
-    //         actions: {setName}
-    //     } = this.props
-    //     const {name} = measure
-    //     if (!name) {
-    //         for (const {name: templateName, measure: template} of measureTemplates) {
-    //             if (measuresEqual(measure, template)) {
-    //                 setName(measure, templateName)
-    //                 break
-    //             }
-    //         }
-    //     }
-    // }
-
+    // TODO (PERFORMANCE): Move this up 1 level (Measures) so it doesn't get called as often.
     componentWillReceiveProps(nextProps) {
         if (!areEqual(this.props.measure, nextProps.measure)) {
             Player.invalidateCache()
@@ -70,8 +54,6 @@ class Measure extends React.Component {
                 removeTuplet,
                 continueNotePattern,
                 setCurrentMenuInteraction,
-                setCurrentPlayPos,
-                setPlayingState,
             }
         } = this.props
         const {drumkit: drumkitName, notes, name} = measure
@@ -85,19 +67,20 @@ class Measure extends React.Component {
                 className={
                     `measure has-border-bottom ${paramCase(currentInteraction) || ''}`
                 }
-                onClick={() => {
-                    if (currentInteraction === GO_TO_MEASURE) {
-                        setCurrentMenuInteraction(null)
-                        setCurrentPlayPos(measureIndex, 0)
-                        setPlayingState('pause')
-                    }
-                }}
+                onClick={this.selectMeasure}
             >
                 <div className="count">
                     {measureIndex + 1}
                     &nbsp;
                     {name !== '' ? `(${name})` : ''}
                 </div>
+                {instruments.map(instrument => (
+                    <InstrumentNotes
+                        measure={measure}
+                        instrument={instrument}
+                        notes={notes[instrument]}
+                    />
+                ))}
                 {instruments.map(instrument => {
                     const instrumentNotes = notes[instrument]
                     const allNotesOn = instrumentNotes.every(note =>
@@ -141,6 +124,7 @@ class Measure extends React.Component {
                                             }}
                                             key={index}
                                             isFirstOfNoteValue={notePositions[index] % notesPerNoteValue === 0}
+                                            // TODO (PERFORMANCE): this is expensive...
                                             isCurrentlyPlaying={arraysEqual(
                                                 [measureIndex, time],
                                                 currentPlayPos
@@ -198,7 +182,7 @@ class Measure extends React.Component {
                 <a
                     className="button is-info"
                     style={{position: 'absolute', top: '26px', right: 0}}
-                    onClick={() => updateUI('showSettings', !ui.showSettings)}
+                    onClick={this.toggleSettings}
                 >
                     <span className="icon is-small">
                         <i className={`fa ${ui.showSettings ? 'fa-close' : 'fa-cogs'}`} />
@@ -213,6 +197,59 @@ class Measure extends React.Component {
         return (
             <MeasureSettings {...this.props} />
         )
+    }
+
+    selectMeasure = (event) => {
+        const {
+            menu: {currentInteraction},
+            index: measureIndex,
+            actions: {
+                setCurrentMenuInteraction,
+                setCurrentPlayPos,
+                setPlayingState,
+            }
+        } = this.props
+        if (currentInteraction === GO_TO_MEASURE) {
+            setCurrentMenuInteraction(null)
+            setCurrentPlayPos(measureIndex, 0)
+            setPlayingState('pause')
+        }
+    }
+
+    continueNotePattern = event => {
+        const {
+            menu: {currentInteraction},
+            measure,
+            actions: {
+                continueNotePattern,
+                setCurrentMenuInteraction,
+            }
+        } = this.props
+        if (currentInteraction === CONTINUE_NOTE_PATTERN) {
+            continueNotePattern(measure, instrument)
+            // Stay in CONTINUE_NOTE_PATTERN mode if shift is held down.
+            if (!event.shiftKey) {
+                setCurrentMenuInteraction(null)
+            }
+        }
+    }
+
+    toggleSettings = () => {
+        const {
+            ui,
+            actions: {
+                updateUI,
+            }
+        } = this.props
+        updateUI('showSettings', !ui.showSettings)
+    }
+
+    toggleNote = tupletNoteIndex => {
+        const {
+            measure,
+            actions: {toggleNote}
+        } = this.props
+        toggleNote(measure, instrument, index, tupletNoteIndex)
     }
 }
 

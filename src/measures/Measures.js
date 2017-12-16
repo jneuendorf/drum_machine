@@ -2,7 +2,7 @@ import React from 'react'
 
 import Measure from './Measure'
 import Comment from './Comment'
-import {defaultConnect} from '../utils'
+import {connected} from '../utils'
 
 
 // Preload ajax loader
@@ -13,20 +13,27 @@ image.src = SPINNER_URL
 window.image = image
 
 
-class Measures extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        const {soundControls} = nextProps
-        if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
-            return false
-        }
-        return true
-    }
+@connected(
+    (state, ownProps) => {
+        const {tab, soundControls} = state
+        return {tab, soundControls}
+    },
+    ownProps => ['addClonedMeasure', 'addEmptyMeasure', 'addComment']
+)
+class Measures extends React.PureComponent {
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     const {soundControls} = nextProps
+    //     if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
+    //         return false
+    //     }
+    //     return true
+    // }
 
     render() {
         const {
             tab: {measures, isLoading},
             soundControls: {playingState},
-            actions: {addClonedMeasure, addEmptyMeasure, addComment}
+            actions: {addClonedMeasure, addEmptyMeasure}
         } = this.props
 
         if (isLoading) {
@@ -70,7 +77,7 @@ class Measures extends React.Component {
                     : (
                         <button
                             className="button is-primary is-small add-measure"
-                            onClick={() => addClonedMeasure()}
+                            onClick={addClonedMeasure}
                         >
                             <span className="icon is-small">
                                 <i className="fa fa-plus" />
@@ -81,7 +88,7 @@ class Measures extends React.Component {
                 }
                 <button
                     className="button is-small add-measure"
-                    onClick={() => addEmptyMeasure()}
+                    onClick={addEmptyMeasure}
                 >
                     <span className="icon is-small">
                         <i className="fa fa-plus" />
@@ -90,12 +97,7 @@ class Measures extends React.Component {
                 </button>
                 <button
                     className="button is-small add-comment"
-                    onClick={() => {
-                        const comment = prompt('Enter your comment!', '')
-                        if (comment) {
-                            addComment(comment)
-                        }
-                    }}
+                    onClick={this.handleAddComment}
                 >
                     <span className="icon is-small">
                         <i className="fa fa-comment" />
@@ -105,9 +107,17 @@ class Measures extends React.Component {
             </div>
         )
     }
+
+    handleAddComment() {
+        const {actions: {addComment}} = this.props
+        const comment = prompt('Enter your comment!', '')
+        if (comment) {
+            addComment(comment)
+        }
+    }
 }
 
-Measures = defaultConnect(Measures)
+// Measures = defaultConnect(Measures)
 
 export {Measures}
 export default Measures

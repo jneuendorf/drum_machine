@@ -17,7 +17,7 @@ export const defaultConnect = function(component, storeKey) {
         return connect(
             mapStateToProps,
             mapDispatchToProps,
-            null,
+            undefined,
             {withRef: true}
         )(component)
     }
@@ -26,9 +26,39 @@ export const defaultConnect = function(component, storeKey) {
             return mapStateToProps(state[storeKey], ownProps)
         },
         mapDispatchToProps,
-        null,
+        undefined,
         {withRef: true}
     )(component)
+}
+
+
+// const boundActionCreators = bindActionCreators(Actions, actionTrackingDispatch)
+
+// Flexible decorator:
+// @param mapStateToProps [Function]
+// @param getActionNames [Function|Array] Can bei either:
+//      1. A function returning an Array of action names
+//      2. an Array of action names.
+//      The actions are taken from Actions.js
+export const connected = (mapStateToProps, getActionNames) => WrappedComponent => {
+    const mapDispatchToProps = (dispatch, ownProps) => {
+        const actions = {}
+        const actionNames = (
+            typeof(getActionNames) === 'function'
+            ? getActionNames(ownProps)
+            : getActionNames
+        )
+        for (const name of actionNames) {
+            actions[name] = Actions[name]
+        }
+        return {actions: bindActionCreators(actions, actionTrackingDispatch)}
+    }
+    return connect(
+        mapStateToProps,
+        mapDispatchToProps,
+        undefined,
+        {withRef: true}
+    )(WrappedComponent)
 }
 
 

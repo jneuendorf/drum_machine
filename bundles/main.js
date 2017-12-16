@@ -818,7 +818,7 @@ module.exports = $export;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.fetchDemo = exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.dict = exports.unique = exports.arrayChangedSize = exports.partition = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.isInt = exports.defaultConnect = undefined;
+exports.fetchDemo = exports.readTextFromFile = exports.deserializeState = exports.serializeState = exports.dict = exports.unique = exports.arrayChangedSize = exports.partition = exports.last = exports.chunkArray = exports.filledArray = exports.arraysEqual = exports.areEqual = exports.cloneDeep = exports.mergeDeep = exports.isInt = exports.connected = exports.defaultConnect = undefined;
 
 var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 260);
 
@@ -836,13 +836,13 @@ var _log = __webpack_require__(/*! babel-runtime/core-js/math/log2 */ 267);
 
 var _log2 = _interopRequireDefault(_log);
 
-var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 30);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _toConsumableArray2 = __webpack_require__(/*! babel-runtime/helpers/toConsumableArray */ 31);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 30);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 var _redux = __webpack_require__(/*! redux */ 34);
 
@@ -868,11 +868,55 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 };
 var defaultConnect = exports.defaultConnect = function defaultConnect(component, storeKey) {
     if (!storeKey) {
-        return (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps, null, { withRef: true })(component);
+        return (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps, undefined, { withRef: true })(component);
     }
     return (0, _reactRedux.connect)(function (state, ownProps) {
         return mapStateToProps(state[storeKey], ownProps);
-    }, mapDispatchToProps, null, { withRef: true })(component);
+    }, mapDispatchToProps, undefined, { withRef: true })(component);
+};
+
+// const boundActionCreators = bindActionCreators(Actions, actionTrackingDispatch)
+
+// Flexible decorator:
+// @param mapStateToProps [Function]
+// @param getActionNames [Function|Array] Can bei either:
+//      1. A function returning an Array of action names
+//      2. an Array of action names.
+//      The actions are taken from Actions.js
+var connected = exports.connected = function connected(mapStateToProps, getActionNames) {
+    return function (WrappedComponent) {
+        var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+            var actions = {};
+            var actionNames = typeof getActionNames === 'function' ? getActionNames(ownProps) : getActionNames;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = (0, _getIterator3.default)(actionNames), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var name = _step.value;
+
+                    actions[name] = Actions[name];
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return { actions: (0, _redux.bindActionCreators)(actions, _store.dispatch) };
+        };
+        return (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps, undefined, { withRef: true })(WrappedComponent);
+    };
 };
 
 var isInt = exports.isInt = function isInt(n) {
@@ -957,13 +1001,13 @@ var last = exports.last = function last(array, condition) {
 var partition = exports.partition = function partition(array, condition) {
     var trueish = [];
     var falsy = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
-        for (var _iterator = (0, _getIterator3.default)(array), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var element = _step.value;
+        for (var _iterator2 = (0, _getIterator3.default)(array), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var element = _step2.value;
 
             if (condition(element)) {
                 trueish.push(element);
@@ -972,16 +1016,16 @@ var partition = exports.partition = function partition(array, condition) {
             }
         }
     } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
     } finally {
         try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
             }
         } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
+            if (_didIteratorError2) {
+                throw _iteratorError2;
             }
         }
     }
@@ -1028,13 +1072,13 @@ var unique = exports.unique = function unique(iterable) {
 
 var dict = exports.dict = function dict(tuples) {
     var res = {};
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
 
     try {
-        for (var _iterator2 = (0, _getIterator3.default)(tuples), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _ref = _step2.value;
+        for (var _iterator3 = (0, _getIterator3.default)(tuples), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var _ref = _step3.value;
 
             var _ref2 = (0, _slicedToArray3.default)(_ref, 2);
 
@@ -1044,16 +1088,16 @@ var dict = exports.dict = function dict(tuples) {
             res[key] = value;
         }
     } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
     } finally {
         try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
             }
         } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
+            if (_didIteratorError3) {
+                throw _iteratorError3;
             }
         }
     }
@@ -2494,7 +2538,7 @@ var subscribe = exports.subscribe = function subscribe(listener) {
 
 subscribe(function (state, action) {
     if (_Player2.default.shouldHandleAction(action)) {
-        console.log('subscribe', state, action);
+        // console.log('subscribe', state, action)
         _Player2.default.onStateChange(state, action);
     }
 });
@@ -69949,6 +69993,9 @@ var Menu = function (_React$Component) {
         value: function componentDidMount() {
             this.onChangeSize();
         }
+
+        // TODO (PERFORMANCE): throttle (or rather debounce) for performance!
+
     }, {
         key: 'componentDidUpdate',
         value: function componentDidUpdate() {
@@ -70918,6 +70965,8 @@ var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 6);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _dec, _class;
+
 var _react = __webpack_require__(/*! react */ 1);
 
 var _react2 = _interopRequireDefault(_react);
@@ -70941,8 +70990,15 @@ image.src = SPINNER_URL;
 // Keep a reference (see https://stackoverflow.com/questions/3646036/javascript-preloading-images#comment41343860_3646036).
 window.image = image;
 
-var Measures = function (_React$Component) {
-    (0, _inherits3.default)(Measures, _React$Component);
+var Measures = (_dec = (0, _utils.connected)(function (state, ownProps) {
+    var tab = state.tab,
+        soundControls = state.soundControls;
+
+    return { tab: tab, soundControls: soundControls };
+}, function (ownProps) {
+    return ['addClonedMeasure', 'addEmptyMeasure', 'addComment'];
+}), _dec(_class = function (_React$PureComponent) {
+    (0, _inherits3.default)(Measures, _React$PureComponent);
 
     function Measures() {
         (0, _classCallCheck3.default)(this, Measures);
@@ -70950,17 +71006,16 @@ var Measures = function (_React$Component) {
     }
 
     (0, _createClass3.default)(Measures, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate(nextProps, nextState) {
-            var soundControls = nextProps.soundControls;
-
-            if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
-                return false;
-            }
-            return true;
-        }
-    }, {
         key: 'render',
+
+        // shouldComponentUpdate(nextProps, nextState) {
+        //     const {soundControls} = nextProps
+        //     if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
+        //         return false
+        //     }
+        //     return true
+        // }
+
         value: function render() {
             var _props = this.props,
                 _props$tab = _props.tab,
@@ -70969,8 +71024,7 @@ var Measures = function (_React$Component) {
                 playingState = _props.soundControls.playingState,
                 _props$actions = _props.actions,
                 addClonedMeasure = _props$actions.addClonedMeasure,
-                addEmptyMeasure = _props$actions.addEmptyMeasure,
-                addComment = _props$actions.addComment;
+                addEmptyMeasure = _props$actions.addEmptyMeasure;
 
 
             if (isLoading) {
@@ -71010,9 +71064,7 @@ var Measures = function (_React$Component) {
                     'button',
                     {
                         className: 'button is-primary is-small add-measure',
-                        onClick: function onClick() {
-                            return addClonedMeasure();
-                        }
+                        onClick: addClonedMeasure
                     },
                     _react2.default.createElement(
                         'span',
@@ -71029,9 +71081,7 @@ var Measures = function (_React$Component) {
                     'button',
                     {
                         className: 'button is-small add-measure',
-                        onClick: function onClick() {
-                            return addEmptyMeasure();
-                        }
+                        onClick: addEmptyMeasure
                     },
                     _react2.default.createElement(
                         'span',
@@ -71048,12 +71098,7 @@ var Measures = function (_React$Component) {
                     'button',
                     {
                         className: 'button is-small add-comment',
-                        onClick: function onClick() {
-                            var comment = prompt('Enter your comment!', '');
-                            if (comment) {
-                                addComment(comment);
-                            }
-                        }
+                        onClick: this.handleAddComment
                     },
                     _react2.default.createElement(
                         'span',
@@ -71068,11 +71113,21 @@ var Measures = function (_React$Component) {
                 )
             );
         }
+    }, {
+        key: 'handleAddComment',
+        value: function handleAddComment() {
+            var addComment = this.props.actions.addComment;
+
+            var comment = prompt('Enter your comment!', '');
+            if (comment) {
+                addComment(comment);
+            }
+        }
     }]);
     return Measures;
-}(_react2.default.Component);
+}(_react2.default.PureComponent)) || _class);
 
-exports.Measures = Measures = (0, _utils.defaultConnect)(Measures);
+// Measures = defaultConnect(Measures)
 
 exports.Measures = Measures;
 exports.default = Measures;
@@ -71167,30 +71222,64 @@ var Measure = (_dec = (0, _reduxUi2.default)({
     (0, _inherits3.default)(Measure, _React$Component);
 
     function Measure() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         (0, _classCallCheck3.default)(this, Measure);
-        return (0, _possibleConstructorReturn3.default)(this, (Measure.__proto__ || (0, _getPrototypeOf2.default)(Measure)).apply(this, arguments));
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Measure.__proto__ || (0, _getPrototypeOf2.default)(Measure)).call.apply(_ref, [this].concat(args))), _this), _this.selectMeasure = function (event) {
+            var _this$props = _this.props,
+                currentInteraction = _this$props.menu.currentInteraction,
+                measureIndex = _this$props.index,
+                _this$props$actions = _this$props.actions,
+                setCurrentMenuInteraction = _this$props$actions.setCurrentMenuInteraction,
+                setCurrentPlayPos = _this$props$actions.setCurrentPlayPos,
+                setPlayingState = _this$props$actions.setPlayingState;
+
+            if (currentInteraction === GO_TO_MEASURE) {
+                setCurrentMenuInteraction(null);
+                setCurrentPlayPos(measureIndex, 0);
+                setPlayingState('pause');
+            }
+        }, _this.continueNotePattern = function (event) {
+            var _this$props2 = _this.props,
+                currentInteraction = _this$props2.menu.currentInteraction,
+                measure = _this$props2.measure,
+                _this$props2$actions = _this$props2.actions,
+                continueNotePattern = _this$props2$actions.continueNotePattern,
+                setCurrentMenuInteraction = _this$props2$actions.setCurrentMenuInteraction;
+
+            if (currentInteraction === CONTINUE_NOTE_PATTERN) {
+                continueNotePattern(measure, instrument);
+                // Stay in CONTINUE_NOTE_PATTERN mode if shift is held down.
+                if (!event.shiftKey) {
+                    setCurrentMenuInteraction(null);
+                }
+            }
+        }, _this.toggleSettings = function () {
+            var _this$props3 = _this.props,
+                ui = _this$props3.ui,
+                updateUI = _this$props3.actions.updateUI;
+
+            updateUI('showSettings', !ui.showSettings);
+        }, _this.toggleNote = function (tupletNoteIndex) {
+            var _this$props4 = _this.props,
+                measure = _this$props4.measure,
+                toggleNote = _this$props4.actions.toggleNote;
+
+            toggleNote(measure, instrument, index, tupletNoteIndex);
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
     }
 
     (0, _createClass3.default)(Measure, [{
         key: 'componentWillReceiveProps',
 
-        // componentDidMount() {
-        //     const {
-        //         measure,
-        //         menu: {measureTemplates},
-        //         actions: {setName}
-        //     } = this.props
-        //     const {name} = measure
-        //     if (!name) {
-        //         for (const {name: templateName, measure: template} of measureTemplates) {
-        //             if (measuresEqual(measure, template)) {
-        //                 setName(measure, templateName)
-        //                 break
-        //             }
-        //         }
-        //     }
-        // }
-
+        // TODO (PERFORMANCE): Move this up 1 level (Measures) so it doesn't get called as often.
         value: function componentWillReceiveProps(nextProps) {
             if (!(0, _utils.areEqual)(this.props.measure, nextProps.measure)) {
                 _Player2.default.invalidateCache();
@@ -71214,9 +71303,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 _addTuplet = _props$actions.addTuplet,
                 _removeTuplet = _props$actions.removeTuplet,
                 continueNotePattern = _props$actions.continueNotePattern,
-                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction,
-                setCurrentPlayPos = _props$actions.setCurrentPlayPos,
-                setPlayingState = _props$actions.setPlayingState;
+                setCurrentMenuInteraction = _props$actions.setCurrentMenuInteraction;
             var drumkitName = measure.drumkit,
                 notes = measure.notes,
                 name = measure.name;
@@ -71231,13 +71318,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                 'div',
                 {
                     className: 'measure has-border-bottom ' + ((0, _changeCase.paramCase)(currentInteraction) || ''),
-                    onClick: function onClick() {
-                        if (currentInteraction === GO_TO_MEASURE) {
-                            setCurrentMenuInteraction(null);
-                            setCurrentPlayPos(measureIndex, 0);
-                            setPlayingState('pause');
-                        }
-                    }
+                    onClick: this.selectMeasure
                 },
                 _react2.default.createElement(
                     'div',
@@ -71246,6 +71327,13 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                     '\xA0',
                     name !== '' ? '(' + name + ')' : ''
                 ),
+                instruments.map(function (instrument) {
+                    return _react2.default.createElement(InstrumentNotes, {
+                        measure: measure,
+                        instrument: instrument,
+                        notes: notes[instrument]
+                    });
+                }),
                 instruments.map(function (instrument) {
                     var instrumentNotes = notes[instrument];
                     var allNotesOn = instrumentNotes.every(function (note) {
@@ -71288,8 +71376,9 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                                         setCurrentMenuInteraction(null);
                                     },
                                     key: index,
-                                    isFirstOfNoteValue: notePositions[index] % notesPerNoteValue === 0,
-                                    isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
+                                    isFirstOfNoteValue: notePositions[index] % notesPerNoteValue === 0
+                                    // TODO (PERFORMANCE): this is expensive...
+                                    , isCurrentlyPlaying: (0, _utils.arraysEqual)([measureIndex, time], currentPlayPos),
                                     currentInteraction: currentInteraction
                                 });
                             } else {
@@ -71353,9 +71442,7 @@ var Measure = (_dec = (0, _reduxUi2.default)({
                     {
                         className: 'button is-info',
                         style: { position: 'absolute', top: '26px', right: 0 },
-                        onClick: function onClick() {
-                            return updateUI('showSettings', !ui.showSettings);
-                        }
+                        onClick: this.toggleSettings
                     },
                     _react2.default.createElement(
                         'span',

@@ -32,7 +32,7 @@ export const subscribe = function(listener) {
 
 subscribe(function(state, action) {
     if (Player.shouldHandleAction(action)) {
-        console.log('subscribe', state, action)
+        // console.log('subscribe', state, action)
         Player.onStateChange(state, action)
     }
 })
