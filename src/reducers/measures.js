@@ -212,6 +212,10 @@ const measure = function(state, action, meta) {
             const {[instrument]: notes} = allNotes
             const emptyNotes = takeRightWhile(notes, note => note === 0)
             const freeSlots = emptyNotes.length
+            // Prevent infinite loop when an empty note row was clicked.
+            if (freeSlots === notes.length) {
+                return state
+            }
             const currentPattern = notes.slice(0, -freeSlots)
             const currentPatternNumNotes = getNumberOfNoteValues(currentPattern)
             // Add the entire current pattern until all notes are filled.
