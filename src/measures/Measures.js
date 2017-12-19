@@ -1,8 +1,15 @@
 import React from 'react'
+import {paramCase} from 'change-case'
 
 import Measure from './Measure'
 import Comment from './Comment'
 import {connected} from '../utils'
+import {
+    getMeasures,
+    getIsLoading,
+    getPlayingState,
+    getCurrentInteraction,
+} from '../selectors'
 
 
 // Preload ajax loader
@@ -15,10 +22,14 @@ window.image = image
 
 @connected(
     (state, ownProps) => {
-        const {tab, soundControls} = state
-        return {tab, soundControls}
+        return {
+            measures: getMeasures(state),
+            isLoading: getIsLoading(state),
+            playingState: getPlayingState(state),
+            currentInteraction: getCurrentInteraction(state),
+        }
     },
-    ownProps => ['addClonedMeasure', 'addEmptyMeasure', 'addComment']
+    ['addClonedMeasure', 'addEmptyMeasure', 'addComment']
 )
 class Measures extends React.PureComponent {
     // shouldComponentUpdate(nextProps, nextState) {
@@ -31,9 +42,14 @@ class Measures extends React.PureComponent {
 
     render() {
         const {
-            tab: {measures, isLoading},
-            soundControls: {playingState},
-            actions: {addClonedMeasure, addEmptyMeasure}
+            measures,
+            isLoading,
+            playingState,
+            currentInteraction,
+            actions: {
+                addClonedMeasure,
+                addEmptyMeasure
+            }
         } = this.props
 
         if (isLoading) {
@@ -47,7 +63,10 @@ class Measures extends React.PureComponent {
         const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
         let measureIndex = 0
         return (
-            <div className="measures" style={style}>
+            <div
+                className={`measures ${paramCase(currentInteraction) || ''}`}
+                style={style}
+            >
                 {measures.map((measureOrComment, index) => {
                     if (typeof(measureOrComment) === 'string') {
                         const comment = measureOrComment
@@ -116,8 +135,6 @@ class Measures extends React.PureComponent {
         }
     }
 }
-
-// Measures = defaultConnect(Measures)
 
 export {Measures}
 export default Measures

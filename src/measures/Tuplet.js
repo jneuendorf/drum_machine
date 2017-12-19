@@ -1,7 +1,8 @@
 import React from 'react'
 
 import TupletNote from './TupletNote'
-import {defaultConnect, arraysEqual} from '../utils'
+import {connected, arraysEqual} from '../utils'
+import {getCurrentInteraction, getCurrentPlayPos} from '../selectors'
 import {roundedTime} from '../utils/measure'
 import {ActionTypes} from '../Actions'
 
@@ -11,23 +12,32 @@ const {REMOVE_TUPLET} = ActionTypes
 const noteWidth = 30
 
 
-class Tuplet extends React.Component {
+@connected(
+    (state, ownProps) => {
+        return {
+            currentInteraction: getCurrentInteraction(state),
+            currentPlayPos: getCurrentPlayPos(state),
+        }
+    },
+    ['removeTuplet', 'setVolumes', 'continueNotePattern']
+)
+class Tuplet extends React.PureComponent {
     state = {
         isHoveredInRemoveTupletMode: false,
     }
 
     render() {
         const {
+            measure,
             measureIndex,
-            toggle,
-            removeTuplet,
-            setVolume,
+            instrument,
+            noteIndex,
             replacedNotes,
             volumes,
             startTime,
             duration,
-            menu: {currentInteraction},
-            soundControls: {currentPlayPos},
+            currentInteraction,
+            currentPlayPos,
         } = this.props
         const tupletNoteDuration = duration / volumes.length
         const style = {
@@ -36,25 +46,13 @@ class Tuplet extends React.Component {
         return (
             <div
                 className="column is-narrow"
-                onMouseEnter={() => {
-                    if (currentInteraction === REMOVE_TUPLET) {
-                        this.setState({isHoveredInRemoveTupletMode: true})
-                    }
-                }}
-                onMouseLeave={() => {
-                    if (currentInteraction === REMOVE_TUPLET) {
-                        this.setState({isHoveredInRemoveTupletMode: false})
-                    }
-                }}
+                onMouseEnter={this.onMouseEnter}
+                onMouseLeave={this.onMouseLeave}
             >
                 <div
                     className="tuplet"
                     style={style}
-                    onClick={() => {
-                        if (currentInteraction === REMOVE_TUPLET) {
-                            removeTuplet()
-                        }
-                    }}
+                    onClick={this.removeTuplet}
                 >
                     <div className="bracket" style={{width: replacedNotes*noteWidth - 4}}>
                         <div className="enclosed-notes">
@@ -65,13 +63,11 @@ class Tuplet extends React.Component {
                         const time = roundedTime(startTime + tupletNoteIndex * tupletNoteDuration)
                         return (
                             <TupletNote
+                                measure={measure}
+                                instrument={instrument}
+                                noteIndex={noteIndex}
+                                tupletNoteIndex={tupletNoteIndex}
                                 volume={volume}
-                                toggle={() =>
-                                    toggle(tupletNoteIndex)
-                                }
-                                setVolume={(newVolume) =>
-                                    setVolume(tupletNoteIndex, newVolume)
-                                }
                                 key={tupletNoteIndex}
                                 isCurrentlyPlaying={arraysEqual(
                                     [measureIndex, time],
@@ -86,9 +82,38 @@ class Tuplet extends React.Component {
             </div>
         )
     }
-}
 
-Tuplet = defaultConnect(Tuplet)
+    onMouseEnter = () => {
+        const {
+            currentInteraction,
+        } = this.props
+        if (currentInteraction === REMOVE_TUPLET) {
+            this.setState({isHoveredInRemoveTupletMode: true})
+        }
+    }
+
+    onMouseLeave = () => {
+        const {
+            currentInteraction,
+        } = this.props
+        if (currentInteraction === REMOVE_TUPLET) {
+            this.setState({isHoveredInRemoveTupletMode: false})
+        }
+    }
+
+    removeTuplet = () => {
+        const {
+            measure,
+            instrument,
+            noteIndex,
+            currentInteraction,
+            actions: {removeTuplet}
+        } = this.props
+        if (currentInteraction === REMOVE_TUPLET) {
+            removeTuplet(measure, instrument, noteIndex)
+        }
+    }
+}
 
 export {Tuplet}
 export default Tuplet

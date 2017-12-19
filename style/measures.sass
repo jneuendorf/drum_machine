@@ -16,19 +16,20 @@ $note-height: 30px
         &:not(:first-child)
             margin-left: 10px
 
+    // menu interactions
+    &.continue-note-pattern .measure .columns:hover
+        .column
+            pointer-events: none
+        .note, .tuplet
+            background-color: #3273dd
+        .volume
+            background-color: lighten(#3273dd, 20%)
+    &.go-to-measure .measure:hover
+        box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.75)
+
     .measure
         padding: 10px 0 10px 0
         position: relative
-
-        &.continue-note-pattern .columns:hover
-            .column
-                pointer-events: none
-            .note, .tuplet
-                background-color: #3273dd
-            .volume
-                background-color: lighten(#3273dd, 20%)
-        &.go-to-measure:hover
-            box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.75)
 
         .count
             font-size: 0.7rem

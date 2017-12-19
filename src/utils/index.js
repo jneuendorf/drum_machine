@@ -1,6 +1,7 @@
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {is, fromJS, Set} from 'immutable'
+import memoize from 'lodash.memoize'
 
 import * as Actions from '../Actions'
 import {dispatch as actionTrackingDispatch} from '../store'
@@ -32,7 +33,15 @@ export const defaultConnect = function(component, storeKey) {
 }
 
 
-// const boundActionCreators = bindActionCreators(Actions, actionTrackingDispatch)
+const boundActionCreators = bindActionCreators(Actions, actionTrackingDispatch)
+memoize.Cache = WeakMap
+const getActions = memoize(actionNames =>
+    dict(
+        actionNames.map(name =>
+            [name, boundActionCreators[name]]
+        )
+    )
+)
 
 // Flexible decorator:
 // @param mapStateToProps [Function]
@@ -40,22 +49,21 @@ export const defaultConnect = function(component, storeKey) {
 //      1. A function returning an Array of action names
 //      2. an Array of action names.
 //      The actions are taken from Actions.js
-export const connected = (mapStateToProps, getActionNames) => WrappedComponent => {
-    const mapDispatchToProps = (dispatch, ownProps) => {
-        const actions = {}
-        const actionNames = (
-            typeof(getActionNames) === 'function'
-            ? getActionNames(ownProps)
-            : getActionNames
-        )
-        for (const name of actionNames) {
-            actions[name] = Actions[name]
-        }
-        return {actions: bindActionCreators(actions, actionTrackingDispatch)}
-    }
+export const connected = (mapStateToProps, actionNames=[]) => WrappedComponent => {
     return connect(
         mapStateToProps,
-        mapDispatchToProps,
+        (
+            Array.isArray(actionNames) && actionNames.length === 0
+            ? undefined
+            : (dispatch, ownProps) => {
+                const names = (
+                    typeof(actionNames) === 'function'
+                    ? actionNames(ownProps)
+                    : actionNames
+                )
+                return {actions: getActions(names)}
+            }
+        ),
         undefined,
         {withRef: true}
     )(WrappedComponent)

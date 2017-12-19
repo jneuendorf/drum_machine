@@ -1,23 +1,33 @@
 import React from 'react'
 import $ from 'jquery'
 
+import {connected} from '../utils'
+import {getCurrentInteraction} from '../selectors'
+
 
 const noteHeight = 30
 
 
-export class TupletNote extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            isHoveredInTupletMode: false,
+@connected(
+    (state, ownProps) => {
+        return {
+            currentInteraction: getCurrentInteraction(state),
         }
+    },
+    [
+        'setVolume', 'toggleNote',
+    ]
+)
+export class TupletNote extends React.PureComponent {
+    state = {
+        isHoveredInTupletMode: false,
     }
 
     render() {
         const {
-            isFirstOfNoteValue, isCurrentlyPlaying, volume,
-            toggle, setVolume,
-            currentInteraction,
+            isFirstOfNoteValue,
+            isCurrentlyPlaying,
+            volume,
             tupletHoveredInRemoveTupletMode,
         } = this.props
         const className = (
@@ -38,28 +48,53 @@ export class TupletNote extends React.Component {
             <div
                 className={className}
                 style={style}
-                onClick={() => {
-                    if (currentInteraction === null) {
-                        toggle()
-                    }
-                }}
-                onMouseMove={event => {
-                    if (event.shiftKey && currentInteraction === null) {
-                        // using jquery to also work if parents are positioned absolutely/relatively
-                        const deltaY = event.pageY - $(event.currentTarget).offset().top
-                        // deltaY < 0 <=> mouse is above note element
-                        const volume = (
-                            deltaY < 0
-                            ? 1
-                            : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
-                        )
-                        setVolume(volume)
-                    }
-                }}
+                onClick={this.onClick}
+                onMouseMove={this.onMouseMove}
             >
                 <div className="volume" style={volumeStyle} />
             </div>
         )
+    }
+
+    onClick = () => {
+        const {currentInteraction} = this.props
+        if (currentInteraction === null) {
+            const {
+                measure,
+                instrument,
+                noteIndex,
+                tupletNoteIndex,
+                actions: {
+                    toggleNote,
+                },
+            } = this.props
+            toggleNote(measure, instrument, noteIndex, tupletNoteIndex)
+        }
+    }
+
+    onMouseMove = event => {
+        const {currentInteraction} = this.props
+        if (event.shiftKey && currentInteraction === null) {
+            const {
+                measure,
+                instrument,
+                noteIndex,
+                tupletNoteIndex,
+                actions: {
+                    setVolume,
+                },
+            } = this.props
+
+            // using jquery to also work if parents are positioned absolutely/relatively
+            const deltaY = event.pageY - $(event.currentTarget).offset().top
+            // deltaY < 0 <=> mouse is above note element
+            const volume = (
+                deltaY < 0
+                ? 1
+                : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
+            )
+            setVolume(measure, instrument, noteIndex, tupletNoteIndex, volume)
+        }
     }
 }
 

@@ -63,7 +63,7 @@ class Menu extends React.Component {
         return (
             <aside
                 className="menu"
-                ref={element => this.menuElement = element}
+                ref={this.setRef}
             >
                 <SoundControls />
                 <MenuSection label="Measures">
@@ -140,6 +140,10 @@ class Menu extends React.Component {
                 </MenuSection>
             </aside>
         )
+    }
+
+    setRef = element => {
+        this.menuElement = element
     }
 }
 

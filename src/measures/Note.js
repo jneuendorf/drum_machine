@@ -1,6 +1,8 @@
 import React from 'react'
 import $ from 'jquery'
 
+import {connected} from '../utils'
+import {getCurrentInteraction} from '../selectors'
 import {ActionTypes} from '../Actions'
 
 
@@ -9,16 +11,29 @@ const {ADD_TUPLET} = ActionTypes
 const noteHeight = 30
 
 
-export class Note extends React.Component {
+@connected(
+    (state, ownProps) => {
+        return {
+            currentInteraction: getCurrentInteraction(state),
+        }
+    },
+    [
+        'addTuplet',
+        'setCurrentMenuInteraction',
+        'setVolume',
+        'toggleNote',
+    ]
+)
+class Note extends React.PureComponent {
     state = {
         isHoveredInTupletMode: false,
     }
 
     render() {
         const {
-            isFirstOfNoteValue, isCurrentlyPlaying, volume,
-            toggle, setVolume, addTuplet,
-            currentInteraction,
+            isFirstOfNoteValue,
+            isCurrentlyPlaying,
+            volume,
         } = this.props
         const className = (
             `note `
@@ -40,63 +55,100 @@ export class Note extends React.Component {
                 <div
                     className={className}
                     style={style}
-                    onClick={() => {
-                        if (currentInteraction === null) {
-                            toggle()
-                        }
-                        else if (currentInteraction === ADD_TUPLET) {
-                            const notesInTuplet = parseInt(prompt(
-                                (
-                                    'Enter the number of notes in the tuplet '
-                                    + '(e.g. 3 for a triplet)'
-                                ),
-                                '3'
-                            ), 10)
-                            if (isNaN(notesInTuplet) || notesInTuplet <= 1) {
-                                return
-                            }
-                            const notesToReplace = parseInt(prompt(
-                                'Enter the number of notes to replace',
-                                '1'
-                            ), 10)
-                            if (isNaN(notesToReplace) || notesToReplace <= 0) {
-                                return
-                            }
-                            if (notesInTuplet === notesToReplace) {
-                                return
-                            }
-                            addTuplet(notesToReplace, notesInTuplet)
-                        }
-                    }}
-                    onMouseMove={(event) => {
-                        if (event.shiftKey && currentInteraction === null) {
-                            // using jquery to also work if parents are positioned absolutely/relatively
-                            const deltaY = event.pageY - $(event.currentTarget).offset().top
-                            // deltaY < 0 <=> mouse is above note element
-                            const volume = (
-                                deltaY < 0
-                                ? 1
-                                : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
-                            )
-                            setVolume(volume)
-                        }
-                    }}
-                    onMouseEnter={() => {
-                        if (currentInteraction === ADD_TUPLET) {
-                            this.setState({isHoveredInTupletMode: true})
-                        }
-                    }}
-                    onMouseLeave={() => {
-                        if (currentInteraction === ADD_TUPLET) {
-                            this.setState({isHoveredInTupletMode: false})
-                        }
-                    }}
+                    onClick={this.onClick}
+                    onMouseMove={this.onMouseMove}
+                    onMouseEnter={this.onMouseEnter}
+                    onMouseLeave={this.onMouseLeave}
                 >
                     <div className="volume" style={volumeStyle} />
                 </div>
             </div>
         )
     }
+
+    onMouseMove = event => {
+        const {
+            measure,
+            instrument,
+            noteIndex,
+            currentInteraction,
+            actions: {
+                setVolume,
+            },
+        } = this.props
+        if (event.shiftKey && currentInteraction === null) {
+            // using jquery to also work if parents are positioned absolutely/relatively
+            const deltaY = event.pageY - $(event.currentTarget).offset().top
+            // deltaY < 0 <=> mouse is above note element
+            const volume = (
+                deltaY < 0
+                ? 1
+                : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
+            )
+            setVolume(measure, instrument, noteIndex, volume)
+        }
+    }
+
+    onMouseEnter = event => {
+        const {
+            currentInteraction,
+        } = this.props
+        if (currentInteraction === ADD_TUPLET) {
+            this.setState({isHoveredInTupletMode: true})
+        }
+    }
+
+    onMouseLeave = event => {
+        const {
+            currentInteraction,
+        } = this.props
+        if (currentInteraction === ADD_TUPLET) {
+            this.setState({isHoveredInTupletMode: false})
+        }
+    }
+
+    onClick = () => {
+        const {
+            measure,
+            instrument,
+            noteIndex,
+            currentInteraction,
+            actions: {
+                toggleNote,
+                addTuplet,
+                setCurrentMenuInteraction,
+
+            },
+        } = this.props
+        if (currentInteraction === null) {
+            toggleNote(measure, instrument, noteIndex)
+        }
+        else if (currentInteraction === ADD_TUPLET) {
+            const notesInTuplet = parseInt(prompt(
+                (
+                    'Enter the number of notes in the tuplet '
+                    + '(e.g. 3 for a triplet)'
+                ),
+                '3'
+            ), 10)
+            if (isNaN(notesInTuplet) || notesInTuplet <= 1) {
+                return
+            }
+            const notesToReplace = parseInt(prompt(
+                'Enter the number of notes to replace',
+                '1'
+            ), 10)
+            if (isNaN(notesToReplace) || notesToReplace <= 0) {
+                return
+            }
+            if (notesInTuplet === notesToReplace) {
+                return
+            }
+            addTuplet(measure, instrument, noteIndex, notesToReplace, notesInTuplet)
+            setCurrentMenuInteraction(null)
+        }
+    }
 }
 
+export {Note}
 export default Note

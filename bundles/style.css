@@ -10067,26 +10067,26 @@ label.panel-block:hover {
   margin-left: 10px;
 }
 
-.measures .measure {
-  padding: 10px 0 10px 0;
-  position: relative;
-}
-
-.measures .measure.continue-note-pattern .columns:hover .column {
+.measures.continue-note-pattern .measure .columns:hover .column {
   pointer-events: none;
 }
 
-.measures .measure.continue-note-pattern .columns:hover .note,
-.measures .measure.continue-note-pattern .columns:hover .tuplet {
+.measures.continue-note-pattern .measure .columns:hover .note,
+.measures.continue-note-pattern .measure .columns:hover .tuplet {
   background-color: #3273dd;
 }
 
-.measures .measure.continue-note-pattern .columns:hover .volume {
+.measures.continue-note-pattern .measure .columns:hover .volume {
   background-color: #89afec;
 }
 
-.measures .measure.go-to-measure:hover {
+.measures.go-to-measure .measure:hover {
   box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.75);
+}
+
+.measures .measure {
+  padding: 10px 0 10px 0;
+  position: relative;
 }
 
 .measures .measure .count {
