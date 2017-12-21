@@ -1,8 +1,8 @@
 import React from 'react'
 
 import TupletNote from './TupletNote'
-import {connected, arraysEqual} from '../utils'
-import {getCurrentInteraction, getCurrentPlayPos} from '../selectors'
+import {connected} from '../utils'
+import {getCurrentInteraction} from '../selectors'
 import {roundedTime} from '../utils/measure'
 import {ActionTypes} from '../Actions'
 
@@ -16,7 +16,6 @@ const noteWidth = 30
     (state, ownProps) => {
         return {
             currentInteraction: getCurrentInteraction(state),
-            currentPlayPos: getCurrentPlayPos(state),
         }
     },
     ['removeTuplet', 'setVolumes', 'continueNotePattern']
@@ -28,7 +27,6 @@ class Tuplet extends React.PureComponent {
 
     render() {
         const {
-            measure,
             measureIndex,
             instrument,
             noteIndex,
@@ -37,7 +35,7 @@ class Tuplet extends React.PureComponent {
             startTime,
             duration,
             currentInteraction,
-            currentPlayPos,
+            currentPlayTime,
         } = this.props
         const tupletNoteDuration = duration / volumes.length
         const style = {
@@ -63,16 +61,13 @@ class Tuplet extends React.PureComponent {
                         const time = roundedTime(startTime + tupletNoteIndex * tupletNoteDuration)
                         return (
                             <TupletNote
-                                measure={measure}
+                                measureIndex={measureIndex}
                                 instrument={instrument}
                                 noteIndex={noteIndex}
                                 tupletNoteIndex={tupletNoteIndex}
                                 volume={volume}
                                 key={tupletNoteIndex}
-                                isCurrentlyPlaying={arraysEqual(
-                                    [measureIndex, time],
-                                    currentPlayPos
-                                )}
+                                isCurrentlyPlaying={time === currentPlayTime}
                                 tupletHoveredInRemoveTupletMode={this.state.isHoveredInRemoveTupletMode}
                                 currentInteraction={currentInteraction}
                             />
@@ -103,14 +98,14 @@ class Tuplet extends React.PureComponent {
 
     removeTuplet = () => {
         const {
-            measure,
+            measureIndex,
             instrument,
             noteIndex,
             currentInteraction,
             actions: {removeTuplet}
         } = this.props
         if (currentInteraction === REMOVE_TUPLET) {
-            removeTuplet(measure, instrument, noteIndex)
+            removeTuplet(measureIndex, instrument, noteIndex)
         }
     }
 }

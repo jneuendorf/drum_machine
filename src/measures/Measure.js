@@ -8,7 +8,10 @@ import {
     connected,
     areEqual,
 } from '../utils'
-import {getCurrentInteraction} from '../selectors'
+import {
+    getCurrentInteraction,
+    getCurrentPlayPos,
+} from '../selectors'
 import {
     getNumberOfNotes,
     getDuration,
@@ -21,9 +24,15 @@ const {GO_TO_MEASURE} = ActionTypes
 
 @connected(
     (state, ownProps) => {
+        const currentPlayPos = getCurrentPlayPos(state)
         return {
             currentInteraction: getCurrentInteraction(state),
             drumkits: state.drumkits,
+            currentPlayTime: (
+                currentPlayPos[0] === ownProps.index
+                ? currentPlayPos[1]
+                : -1
+            )
         }
     },
     ['setCurrentMenuInteraction', 'setCurrentPlayPos', 'setPlayingState']
@@ -46,10 +55,12 @@ class Measure extends React.PureComponent {
         const {
             drumkits,
             measure,
-            index: measureIndex,
-            ui,
+            index,
+            count,
+            currentPlayTime
+            // ui,
         } = this.props
-        console.log('rendering measure with index', measureIndex)
+        console.log('rendering measure with count', count)
         const {drumkit: drumkitName, notes, name} = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
@@ -62,20 +73,20 @@ class Measure extends React.PureComponent {
                 onClick={this.selectMeasure}
             >
                 <div className="count">
-                    {measureIndex + 1}
+                    {count + 1}
                     &nbsp;
                     {name !== '' ? `(${name})` : ''}
                 </div>
                 {instruments.map(instrument => (
                     <InstrumentNotes
                         key={instrument}
-                        measure={measure}
-                        measureIndex={measureIndex}
+                        measureIndex={index}
                         instrument={instrument}
                         notes={notes[instrument]}
                         notesPerNoteValue={notesPerNoteValue}
                         numberOfNotes={numberOfNotes}
                         measureDuration={measureDuration}
+                        currentPlayTime={currentPlayTime}
                     />
                 ))}
                 <a

@@ -60,7 +60,7 @@ export class TupletNote extends React.PureComponent {
         const {currentInteraction} = this.props
         if (currentInteraction === null) {
             const {
-                measure,
+                measureIndex,
                 instrument,
                 noteIndex,
                 tupletNoteIndex,
@@ -68,7 +68,7 @@ export class TupletNote extends React.PureComponent {
                     toggleNote,
                 },
             } = this.props
-            toggleNote(measure, instrument, noteIndex, tupletNoteIndex)
+            toggleNote(measureIndex, instrument, noteIndex, tupletNoteIndex)
         }
     }
 
@@ -76,7 +76,7 @@ export class TupletNote extends React.PureComponent {
         const {currentInteraction} = this.props
         if (event.shiftKey && currentInteraction === null) {
             const {
-                measure,
+                measureIndex,
                 instrument,
                 noteIndex,
                 tupletNoteIndex,
@@ -93,7 +93,7 @@ export class TupletNote extends React.PureComponent {
                 ? 1
                 : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
             )
-            setVolume(measure, instrument, noteIndex, tupletNoteIndex, volume)
+            setVolume(measureIndex, instrument, noteIndex, tupletNoteIndex, volume)
         }
     }
 }

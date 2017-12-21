@@ -64,7 +64,14 @@ const createListReducer = function(reducer, initialState=[]) {
         }
         // Handling a single item.
         else {
-            const item = typeof(meta.item) === 'function' ? meta.item() : meta.item
+            let {item} = meta
+            // Action is based on index.
+            if (index !== undefined && item === undefined) {
+                item = state[index]
+            }
+            if (typeof(item) === 'function') {
+                item = item()
+            }
             // apply single-item reducer
             const newItem = reducer(item, action, {list: state})
             switch (type) {

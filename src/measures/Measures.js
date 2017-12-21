@@ -6,11 +6,11 @@ import Comment from './Comment'
 import {connected} from '../utils'
 import {
     getMeasures,
+    getNonCommentMeasures,
     getIsLoading,
     getPlayingState,
     getCurrentInteraction,
 } from '../selectors'
-
 
 // Preload ajax loader
 const SPINNER_URL = 'images/vinyl.gif'
@@ -24,6 +24,7 @@ window.image = image
     (state, ownProps) => {
         return {
             measures: getMeasures(state),
+            nonCommentMeasures: getNonCommentMeasures(state),
             isLoading: getIsLoading(state),
             playingState: getPlayingState(state),
             currentInteraction: getCurrentInteraction(state),
@@ -49,7 +50,8 @@ class Measures extends React.PureComponent {
             actions: {
                 addClonedMeasure,
                 addEmptyMeasure
-            }
+            },
+            // height,
         } = this.props
 
         if (isLoading) {
@@ -61,7 +63,7 @@ class Measures extends React.PureComponent {
         }
 
         const style = playingState === 'play' ? {pointerEvents: 'none'} : {}
-        let measureIndex = 0
+        let measureCount = 0
         return (
             <div
                 className={`measures ${paramCase(currentInteraction) || ''}`}
@@ -83,7 +85,8 @@ class Measures extends React.PureComponent {
                         return (
                             <Measure
                                 measure={measure}
-                                index={measureIndex++}
+                                count={measureCount++}
+                                index={index}
                                 key={measure.id}
                                 uiKey={`Measure${measure.id}`}
                             />

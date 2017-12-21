@@ -4,9 +4,8 @@ import Note from './Note'
 import Tuplet from './Tuplet'
 import {
     connected,
-    arraysEqual,
 } from '../utils'
-import {getCurrentInteraction, getCurrentPlayPos} from '../selectors'
+import {getCurrentInteraction} from '../selectors'
 import {
     getNotePositions,
 } from '../utils/measure'
@@ -15,27 +14,25 @@ import {ActionTypes} from '../Actions'
 
 const {CONTINUE_NOTE_PATTERN} = ActionTypes
 
-
 @connected(
     (state, ownProps) => {
         return {
             currentInteraction: getCurrentInteraction(state),
-            currentPlayPos: getCurrentPlayPos(state),
         }
     },
     ['setCurrentMenuInteraction', 'setVolumes', 'continueNotePattern']
 )
 class InstrumentNotes extends React.PureComponent {
+
     render() {
         const {
-            measure,
             measureIndex,
             instrument,
             notes,
             notesPerNoteValue,
             numberOfNotes,
             measureDuration,
-            currentPlayPos,
+            currentPlayTime,
         } = this.props
         const allNotesOn = notes.every(note =>
             !Array.isArray(note)
@@ -58,16 +55,12 @@ class InstrumentNotes extends React.PureComponent {
                         return (
                             <Note
                                 key={index}
-                                measure={measure}
+                                measureIndex={measureIndex}
                                 instrument={instrument}
                                 noteIndex={index}
                                 volume={volume}
                                 isFirstOfNoteValue={notePositions[index] % notesPerNoteValue === 0}
-                                // TODO (PERFORMANCE): this is expensive...
-                                isCurrentlyPlaying={arraysEqual(
-                                    [measureIndex, time],
-                                    currentPlayPos
-                                )}
+                                isCurrentlyPlaying={time === currentPlayTime}
                             />
                         )
                     }
@@ -76,7 +69,6 @@ class InstrumentNotes extends React.PureComponent {
                         return (
                             <Tuplet
                                 key={index}
-                                measure={measure}
                                 measureIndex={measureIndex}
                                 instrument={instrument}
                                 noteIndex={index}
@@ -85,6 +77,7 @@ class InstrumentNotes extends React.PureComponent {
                                 toggle={this.toggleNote}
                                 startTime={time}
                                 duration={measureDuration / numberOfNotes * replacedNotes}
+                                currentPlayTime={currentPlayTime}
                             />
                         )
                     }
@@ -113,14 +106,14 @@ class InstrumentNotes extends React.PureComponent {
         const {currentInteraction} = this.props
         if (currentInteraction === CONTINUE_NOTE_PATTERN) {
             const {
-                measure,
+                measureIndex,
                 instrument,
                 actions: {
                     continueNotePattern,
                     setCurrentMenuInteraction,
                 }
             } = this.props
-            continueNotePattern(measure, instrument)
+            continueNotePattern(measureIndex, instrument)
             // Stay in CONTINUE_NOTE_PATTERN mode if shift is held down.
             if (!event.shiftKey) {
                 setCurrentMenuInteraction(null)
@@ -130,7 +123,7 @@ class InstrumentNotes extends React.PureComponent {
 
     toggleVolumes = () => {
         const {
-            measure,
+            measureIndex,
             instrument,
             notes,
             actions: {
@@ -142,7 +135,7 @@ class InstrumentNotes extends React.PureComponent {
             ? note > 0
             : note.slice(1).every(tupletNote => tupletNote > 0)
         )
-        setVolumes(measure, instrument, allNotesOn ? 0 : 1)
+        setVolumes(measureIndex, instrument, allNotesOn ? 0 : 1)
     }
 }
 

@@ -6,6 +6,12 @@ export const getMeasures = createSelector(
     getTab,
     tab => tab.measures
 )
+export const getNonCommentMeasures = createSelector(
+    getMeasures,
+    measures => measures.filter(
+        measureOrComment => typeof(measureOrComment) !== 'string'
+    )
+)
 export const getIsLoading = createSelector(
     getTab,
     tab => tab.isLoading

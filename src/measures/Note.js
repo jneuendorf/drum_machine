@@ -68,7 +68,7 @@ class Note extends React.PureComponent {
 
     onMouseMove = event => {
         const {
-            measure,
+            measureIndex,
             instrument,
             noteIndex,
             currentInteraction,
@@ -85,7 +85,7 @@ class Note extends React.PureComponent {
                 ? 1
                 : (deltaY > noteHeight ? 0 : 1 - deltaY/noteHeight)
             )
-            setVolume(measure, instrument, noteIndex, volume)
+            setVolume(measureIndex, instrument, noteIndex, volume)
         }
     }
 
@@ -109,7 +109,7 @@ class Note extends React.PureComponent {
 
     onClick = () => {
         const {
-            measure,
+            measureIndex,
             instrument,
             noteIndex,
             currentInteraction,
@@ -121,7 +121,7 @@ class Note extends React.PureComponent {
             },
         } = this.props
         if (currentInteraction === null) {
-            toggleNote(measure, instrument, noteIndex)
+            toggleNote(measureIndex, instrument, noteIndex)
         }
         else if (currentInteraction === ADD_TUPLET) {
             const notesInTuplet = parseInt(prompt(
@@ -144,7 +144,7 @@ class Note extends React.PureComponent {
             if (notesInTuplet === notesToReplace) {
                 return
             }
-            addTuplet(measure, instrument, noteIndex, notesToReplace, notesInTuplet)
+            addTuplet(measureIndex, instrument, noteIndex, notesToReplace, notesInTuplet)
             setCurrentMenuInteraction(null)
         }
     }

@@ -73,19 +73,19 @@ export const addMeasureFromTemplate = ({name, measures}) => ({
     meta: ListActions.append(...measures),
 })
 
-export const toggleNote = (measure, instrument, noteIndex, tupletNoteIndex) => ({
+export const toggleNote = (measureIndex, instrument, noteIndex, tupletNoteIndex) => ({
     type: ActionTypes.TOGGLE_NOTE,
     instrument, noteIndex, tupletNoteIndex,
-    meta: ListActions.update(measure),
+    meta: ListActions.updateAt(measureIndex),
 })
 
 export const setVolume = (...args) => {
-    let measure, instrument, noteIndex, tupletNoteIndex, volume
+    let measureIndex, instrument, noteIndex, tupletNoteIndex, volume
     if (args.length === 4) {
-        [measure, instrument, noteIndex, volume] = args
+        [measureIndex, instrument, noteIndex, volume] = args
     }
     else if (args.length === 5) {
-        [measure, instrument, noteIndex, tupletNoteIndex, volume] = args
+        [measureIndex, instrument, noteIndex, tupletNoteIndex, volume] = args
     }
     else {
         throw new Error('Invalid arguments.')
@@ -93,26 +93,26 @@ export const setVolume = (...args) => {
     return {
         type: ActionTypes.SET_VOLUME,
         instrument, noteIndex, tupletNoteIndex, volume,
-        meta: ListActions.update(measure),
+        meta: ListActions.updateAt(measureIndex),
     }
 }
 
-export const setVolumes = (measure, instrument, volume) => ({
+export const setVolumes = (measureIndex, instrument, volume) => ({
     type: ActionTypes.SET_VOLUMES,
-    measure, instrument, volume,
-    meta: ListActions.update(measure),
+    instrument, volume,
+    meta: ListActions.updateAt(measureIndex),
 })
 
-export const addTuplet = (measure, instrument, noteIndex, notesToReplace, notesInTuplet) => ({
+export const addTuplet = (measureIndex, instrument, noteIndex, notesToReplace, notesInTuplet) => ({
     type: ActionTypes.ADD_TUPLET,
-    measure, instrument, noteIndex, notesToReplace, notesInTuplet,
-    meta: ListActions.update(measure),
+    instrument, noteIndex, notesToReplace, notesInTuplet,
+    meta: ListActions.updateAt(measureIndex),
 })
 
-export const removeTuplet = (measure, instrument, noteIndex) => ({
+export const removeTuplet = (measureIndex, instrument, noteIndex) => ({
     type: ActionTypes.REMOVE_TUPLET,
-    measure, instrument, noteIndex,
-    meta: ListActions.update(measure),
+    instrument, noteIndex,
+    meta: ListActions.updateAt(measureIndex),
 })
 
 export const setName = (measure, name) => ({
@@ -166,10 +166,10 @@ export const setCurrentMenuInteraction = (currentInteraction) => ({
     currentInteraction
 })
 
-export const continueNotePattern = (measure, instrument) => ({
+export const continueNotePattern = (measureIndex, instrument) => ({
     type: ActionTypes.CONTINUE_NOTE_PATTERN,
-    measure, instrument,
-    meta: ListActions.update(measure),
+    instrument,
+    meta: ListActions.updateAt(measureIndex),
 })
 
 
