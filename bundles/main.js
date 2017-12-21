@@ -61884,6 +61884,10 @@ var _assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 24)
 
 var _assign2 = _interopRequireDefault(_assign);
 
+var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 41);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
 var _Actions = __webpack_require__(/*! ../Actions */ 8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -61902,12 +61906,19 @@ var soundControls = exports.soundControls = function soundControls() {
     switch (action.type) {
         case _Actions.ActionTypes.SET_CURRENT_PLAY_POS:
             {
+                var _state$currentPlayPos = (0, _slicedToArray3.default)(state.currentPlayPos, 2),
+                    currentMeasureIndex = _state$currentPlayPos[0],
+                    currentPlayTime = _state$currentPlayPos[1];
+
                 var measureIndex = action.measureIndex,
                     time = action.time;
 
-                return (0, _assign2.default)({}, state, {
-                    currentPlayPos: [measureIndex, time]
-                });
+                if (measureIndex !== currentMeasureIndex || time !== currentPlayTime) {
+                    return (0, _assign2.default)({}, state, {
+                        currentPlayPos: [measureIndex, time]
+                    });
+                }
+                return state;
             }
         case _Actions.ActionTypes.SET_PLAYING_STATE:
             {
@@ -63213,15 +63224,6 @@ var Measures = (_dec = (0, _utils.connected)(function (state, ownProps) {
 
     (0, _createClass3.default)(Measures, [{
         key: 'render',
-
-        // shouldComponentUpdate(nextProps, nextState) {
-        //     const {soundControls} = nextProps
-        //     if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
-        //         return false
-        //     }
-        //     return true
-        // }
-
         value: function render() {
             var _props = this.props,
                 measures = _props.measures,

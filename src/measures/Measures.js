@@ -33,14 +33,6 @@ window.image = image
     ['addClonedMeasure', 'addEmptyMeasure', 'addComment']
 )
 class Measures extends React.PureComponent {
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     const {soundControls} = nextProps
-    //     if (soundControls.playingState === 'play' && soundControls.freezeUiWhilePlaying) {
-    //         return false
-    //     }
-    //     return true
-    // }
-
     render() {
         const {
             measures,
@@ -51,7 +43,6 @@ class Measures extends React.PureComponent {
                 addClonedMeasure,
                 addEmptyMeasure
             },
-            // height,
         } = this.props
 
         if (isLoading) {
