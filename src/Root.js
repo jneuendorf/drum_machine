@@ -5,7 +5,7 @@ import Menu from './menu/Menu'
 import Measures from './measures/Measures'
 
 
-export class Root extends React.Component {
+export class Root extends React.PureComponent {
     state = {
         menuHeight: undefined
     }
@@ -17,11 +17,7 @@ export class Root extends React.Component {
                 <div className="columns main">
                     <div className="column is-2">
                         <Menu
-                            onChangeSize={({height}) =>
-                                // We want the outer height so we need to add
-                                // padding and margin.
-                                this.setState({menuHeight: height + 24 + 16})
-                            }
+                            onChangeSize={this.measureMenuHeight}
                         />
                     </div>
                     <div
@@ -34,6 +30,12 @@ export class Root extends React.Component {
                 </div>
             </div>
         )
+    }
+
+    measureMenuHeight = ({height}) => {
+        // We want the outer height so we need to add
+        // padding and margin.
+        this.setState({menuHeight: height + 24 + 16})
     }
 }
 
