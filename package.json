@@ -40,6 +40,7 @@
         "immutable": "^3.8.1",
         "immutable-sorted": "^0.2.3",
         "jquery": "^3.2.1",
+        "json-diff": "^0.5.2",
         "lodash.takerightwhile": "^4.6.0",
         "prop-types": "^15.5.10",
         "react": "^16.0.0",
