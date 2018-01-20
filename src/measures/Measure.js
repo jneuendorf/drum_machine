@@ -1,5 +1,4 @@
 import React from 'react'
-import ui from 'redux-ui'
 
 import InstrumentNotes from './InstrumentNotes'
 import MeasureSettings from './MeasureSettings'
@@ -17,6 +16,7 @@ import {
     getDuration,
 } from '../utils/measure'
 import {ActionTypes} from '../Actions'
+import pureDebug from '../utils/react-pure-render-debug'
 
 
 const {GO_TO_MEASURE} = ActionTypes
@@ -35,14 +35,14 @@ const {GO_TO_MEASURE} = ActionTypes
             )
         }
     },
-    ['setCurrentMenuInteraction', 'setCurrentPlayPos', 'setPlayingState']
+    [
+        'setCurrentMenuInteraction',
+        'setCurrentPlayPos',
+        'setPlayingState',
+        'setShowSettings',
+    ]
 )
-@ui({
-    key: (props) => props.uiKey,
-    state: {
-        showSettings: false,
-    },
-})
+@pureDebug
 class Measure extends React.PureComponent {
     // TODO (PERFORMANCE): Move this up 1 level (Measures) so it doesn't get called as often.
     componentWillReceiveProps(nextProps) {
@@ -51,17 +51,25 @@ class Measure extends React.PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        Player.invalidateCache()
+    }
+
     render() {
         const {
             drumkits,
             measure,
             index,
             count,
-            currentPlayTime
-            // ui,
+            currentPlayTime,
         } = this.props
         console.log('rendering measure with count', count)
-        const {drumkit: drumkitName, notes, name} = measure
+        const {
+            drumkit: drumkitName,
+            notes,
+            name,
+            showSettings,
+        } = measure
         const drumkit = drumkits[drumkitName]
         const {instruments} = drumkit
         const notesPerNoteValue = measure.minNoteValue / measure.noteValue
@@ -95,17 +103,25 @@ class Measure extends React.PureComponent {
                     onClick={this.toggleSettings}
                 >
                     <span className="icon is-small">
-                        <i className={`fa ${ui.showSettings ? 'fa-close' : 'fa-cogs'}`} />
+                        <i className={`fa ${showSettings ? 'fa-close' : 'fa-cogs'}`} />
                     </span>
                 </a>
-                {ui.showSettings ? this.renderSettings() : null}
+                {showSettings ? this.renderSettings() : null}
             </div>
         )
     }
 
     renderSettings() {
+        const {
+            // drumkits,
+            measure,
+            index,
+        } = this.props
         return (
-            <MeasureSettings {...this.props} />
+            <MeasureSettings
+                measure={measure}
+                index={index}
+            />
         )
     }
 
@@ -128,10 +144,11 @@ class Measure extends React.PureComponent {
 
     toggleSettings = () => {
         const {
-            ui,
-            updateUI,
+            index: measureIndex,
+            measure: {showSettings},
+            actions: {setShowSettings}
         } = this.props
-        updateUI('showSettings', !ui.showSettings)
+        setShowSettings(measureIndex, !showSettings)
     }
 }
 

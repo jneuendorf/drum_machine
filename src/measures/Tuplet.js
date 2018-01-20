@@ -38,6 +38,10 @@ class Tuplet extends React.PureComponent {
             currentPlayTime,
         } = this.props
         const tupletNoteDuration = duration / volumes.length
+        const className = (
+            `tuplet `
+            + (this.state.isHoveredInRemoveTupletMode ? 'isHoveredInRemoveTupletMode' : '')
+        )
         const style = {
             width: replacedNotes * noteWidth,
         }
@@ -48,7 +52,7 @@ class Tuplet extends React.PureComponent {
                 onMouseLeave={this.onMouseLeave}
             >
                 <div
-                    className="tuplet"
+                    className={className}
                     style={style}
                     onClick={this.removeTuplet}
                 >
@@ -68,7 +72,6 @@ class Tuplet extends React.PureComponent {
                                 volume={volume}
                                 key={tupletNoteIndex}
                                 isCurrentlyPlaying={time === currentPlayTime}
-                                tupletHoveredInRemoveTupletMode={this.state.isHoveredInRemoveTupletMode}
                                 currentInteraction={currentInteraction}
                             />
                         )

@@ -1,6 +1,31 @@
 import React from 'react'
 
+import {
+    connected,
+} from '../utils'
+import {
+    getMeasures,
+} from '../selectors'
 
+
+@connected(
+    (state, ownProps) => {
+        return {
+            measures: getMeasures(state),
+            drumkits: state.drumkits,
+        }
+    },
+    [
+        'setName',
+        'setBpm',
+        'setNumberOfBeats',
+        'setNoteValue',
+        'setMinNoteValue',
+        'clearMeasure',
+        'removeMeasure',
+        'createMeasureTemplates',
+    ]
+)
 class MeasureSettings extends React.Component {
     state = {
         templateName: '',
@@ -10,6 +35,7 @@ class MeasureSettings extends React.Component {
     render() {
         const {
             measure,
+            index: measureIndex,
             measure: {
                 numberOfBeats,
                 noteValue,
@@ -18,8 +44,7 @@ class MeasureSettings extends React.Component {
                 bpm,
                 name,
             },
-            tab: {measures},
-            index: measureIndex,
+            measures,
             drumkits,
             actions: {
                 setName,

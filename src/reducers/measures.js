@@ -44,6 +44,7 @@ const createMeasure = function(numberOfBeats=4, noteValue=4, minNoteValue=8, dru
         minNoteValue,
         drumkit,
         notes: notesByInstrument,
+        ui: {showSettings: false},
     }
 }
 
@@ -236,6 +237,10 @@ const measure = function(state, action, meta) {
                     [instrument]: [...currentPattern, ...continuedPattern],
                 }
             })
+        }
+        case ActionTypes.SET_SHOW_SETTINGS: {
+            const {showSettings} = action
+            return Object.assign({}, state, {showSettings})
         }
         default:
             return state

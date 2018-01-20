@@ -79,7 +79,7 @@ class Measures extends React.PureComponent {
                                 count={measureCount++}
                                 index={index}
                                 key={measure.id}
-                                uiKey={`Measure${measure.id}`}
+                                // uiKey={`Measure${measure.id}`}
                             />
                         )
                     }

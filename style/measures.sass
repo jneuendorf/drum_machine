@@ -67,6 +67,10 @@ $note-height: 30px
                         padding: 0rem 0.2rem
                         position: relative
                         top: -1rem
+                &.isHoveredInRemoveTupletMode
+                    background-color: lighten(#00d1b2, 30%)
+                    .tuplet-note .volume
+                        background-color: lighten(#00d1b2, 30%)
             .tuplet-note
                 border-right: 1px solid gray
                 flex: 1 1 0%
@@ -74,7 +78,10 @@ $note-height: 30px
                 position: relative
                 &:last-child
                     border-right: none
-                &.isCurrentlyPlaying .volume
+                &.isCurrentlyPlaying, &.isHoveredInRemoveTupletMode
+                    .volume
+                        background-color: lighten(#00d1b2, 30%)
+                &.isHoveredInRemoveTupletMode
                     background-color: lighten(#00d1b2, 30%)
             .note
                 height: $note-height
@@ -88,7 +95,10 @@ $note-height: 30px
                     right: 0
                     text-align: center
                     top: 0
-                &.isCurrentlyPlaying .volume
+                &.isCurrentlyPlaying, &.isHoveredInTupletMode
+                    .volume
+                        background-color: lighten(#00d1b2, 30%)
+                &.isHoveredInTupletMode
                     background-color: lighten(#00d1b2, 30%)
             .volume
                 background-color: #00d1b2

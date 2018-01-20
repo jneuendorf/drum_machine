@@ -19,39 +19,28 @@ const noteHeight = 30
     ]
 )
 export class TupletNote extends React.PureComponent {
-    state = {
-        isHoveredInTupletMode: false,
-    }
 
     render() {
         const {
             isFirstOfNoteValue,
             isCurrentlyPlaying,
             volume,
-            tupletHoveredInRemoveTupletMode,
         } = this.props
         const className = (
             `tuplet-note `
             + `${isFirstOfNoteValue ? 'isFirstOfNoteValue ' : ''}`
             + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
         )
-        const style = (
-            tupletHoveredInRemoveTupletMode
-            ? {backgroundColor: '#3273dd'}
-            : {}
-        )
-        const volumeStyle = Object.assign(
-            {top: `${Math.abs(1 - volume)*100}%`},
-            tupletHoveredInRemoveTupletMode ? {backgroundColor: '#3273dd'} : {}
-        )
         return (
             <div
                 className={className}
-                style={style}
                 onClick={this.onClick}
                 onMouseMove={this.onMouseMove}
             >
-                <div className="volume" style={volumeStyle} />
+                <div
+                    className="volume"
+                    style={{top: `${Math.abs(1 - volume)*100}%`}}
+                />
             </div>
         )
     }

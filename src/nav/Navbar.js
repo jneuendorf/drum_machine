@@ -8,6 +8,7 @@ import {store} from '../store'
 import {defaultConnect, serializeState} from "../utils"
 
 
+// TODO: remove redux-ui here and then from the project
 @ui({
     state: {
         managerToShow: null,

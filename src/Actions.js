@@ -22,6 +22,7 @@ export const ActionTypes = Enum([
     'SET_MIN_NOTE_VALUE',
     'CLEAR_MEASURE',
     'REMOVE_MEASURE',
+    'SET_SHOW_SETTINGS',
 
     'CREATE_MEASURE_TEMPLATE',
     'SET_CURRENT_MENU_INTERACTION',
@@ -153,6 +154,12 @@ export const clearMeasure = measure => ({
 export const removeMeasure = measure => ({
     type: ActionTypes.REMOVE_MEASURE,
     meta: ListActions.remove(measure),
+})
+
+export const setShowSettings = (measureIndex, showSettings) => ({
+    type: ActionTypes.SET_SHOW_SETTINGS,
+    showSettings,
+    meta: ListActions.updateAt(measureIndex),
 })
 
 

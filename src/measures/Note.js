@@ -37,30 +37,23 @@ class Note extends React.PureComponent {
         } = this.props
         const className = (
             `note `
-            + `${isFirstOfNoteValue ? 'isFirstOfNoteValue ' : ''}`
-            + `${isCurrentlyPlaying ? 'isCurrentlyPlaying ' : ''}`
-        )
-        // TODO: Move more styles to CSS (also for TupletNotes).
-        const style = (
-            this.state.isHoveredInTupletMode
-            ? {backgroundColor: '#3273dd'}
-            : {}
-        )
-        const volumeStyle = Object.assign(
-            {top: `${Math.abs(1 - volume)*100}%`},
-            this.state.isHoveredInTupletMode ? {backgroundColor: '#3273dd'} : {}
+            + (isFirstOfNoteValue ? 'isFirstOfNoteValue ' : '')
+            + (isCurrentlyPlaying ? 'isCurrentlyPlaying ' : '')
+            + (this.state.isHoveredInTupletMode ? 'isHoveredInTupletMode ' : '')
         )
         return (
-            <div className="column is-narrow">
+            <div className={`column is-narrow`}>
                 <div
                     className={className}
-                    style={style}
                     onClick={this.onClick}
                     onMouseMove={this.onMouseMove}
                     onMouseEnter={this.onMouseEnter}
                     onMouseLeave={this.onMouseLeave}
                 >
-                    <div className="volume" style={volumeStyle} />
+                    <div
+                        className={`volume`}
+                        style={{top: `${Math.abs(1 - volume)*100}%`}}
+                    />
                 </div>
             </div>
         )

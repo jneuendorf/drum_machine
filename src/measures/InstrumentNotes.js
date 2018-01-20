@@ -8,6 +8,7 @@ import {
 import {getCurrentInteraction} from '../selectors'
 import {
     getNotePositions,
+    roundedTime,
 } from '../utils/measure'
 import {ActionTypes} from '../Actions'
 
@@ -49,9 +50,12 @@ class InstrumentNotes extends React.PureComponent {
                 onClick={this.continueNotePattern}
             >
                 {notes.map((note, index) => {
-                    const time = notePositions[index] / numberOfNotes * measureDuration
+                    const time = roundedTime(
+                        notePositions[index] / numberOfNotes * measureDuration
+                    )
                     if (!Array.isArray(note)) {
                         const volume = note
+                        // console.log('>>> note at', index, ':', time, currentPlayTime)
                         return (
                             <Note
                                 key={index}

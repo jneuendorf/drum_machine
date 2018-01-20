@@ -10138,6 +10138,14 @@ label.panel-block:hover {
   top: -1rem;
 }
 
+.measures .measure .instrument .tuplet.isHoveredInRemoveTupletMode {
+  background-color: #6bffe9;
+}
+
+.measures .measure .instrument .tuplet.isHoveredInRemoveTupletMode .tuplet-note .volume {
+  background-color: #6bffe9;
+}
+
 .measures .measure .instrument .tuplet-note {
   border-right: 1px solid gray;
   flex: 1 1 0%;
@@ -10149,7 +10157,12 @@ label.panel-block:hover {
   border-right: none;
 }
 
-.measures .measure .instrument .tuplet-note.isCurrentlyPlaying .volume {
+.measures .measure .instrument .tuplet-note.isCurrentlyPlaying .volume,
+.measures .measure .instrument .tuplet-note.isHoveredInRemoveTupletMode .volume {
+  background-color: #6bffe9;
+}
+
+.measures .measure .instrument .tuplet-note.isHoveredInRemoveTupletMode {
   background-color: #6bffe9;
 }
 
@@ -10169,7 +10182,12 @@ label.panel-block:hover {
   top: 0;
 }
 
-.measures .measure .instrument .note.isCurrentlyPlaying .volume {
+.measures .measure .instrument .note.isCurrentlyPlaying .volume,
+.measures .measure .instrument .note.isHoveredInTupletMode .volume {
+  background-color: #6bffe9;
+}
+
+.measures .measure .instrument .note.isHoveredInTupletMode {
   background-color: #6bffe9;
 }
 

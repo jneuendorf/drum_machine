@@ -58,6 +58,7 @@ export const getGroupedSounds = function(measure) {
             const tickPercent = notePosition / numberOfNotes
             if (Array.isArray(note)) {
                 const [replacedNotes, ...volumes] = note
+                // The time a single tuplet note takes up (in percent).
                 const volumePercent = (replacedNotes / numberOfNotes) / volumes.length
                 for (const volumeIndex of volumes.keys()) {
                     const volume = volumes[volumeIndex]
@@ -75,13 +76,14 @@ export const getGroupedSounds = function(measure) {
     const duration = numberOfNotes * getMsBetweenNotes(measure)
     return SortedMap(
         Object.entries(groups)
+        .filter(([percent, group]) => group.length > 0)
         .map(([percent, group]) => [roundedTime(Number(percent) * duration), group]),
         (a, b) => {
             if (a < b) {
                 return -1
             }
             if (a > b) {
-                return a
+                return 1
             }
             return 0
         }

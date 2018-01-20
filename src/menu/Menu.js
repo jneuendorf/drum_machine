@@ -59,6 +59,8 @@ class Menu extends React.Component {
         const demos = {
             'A beat': 'demo1',
             'Reign of Darkness': 'taim-reign_of_darkness',
+            '7/4': '7-4',
+            // 'Test': 'test',
         }
         return (
             <aside
