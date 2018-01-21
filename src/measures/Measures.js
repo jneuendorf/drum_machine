@@ -65,7 +65,6 @@ class Measures extends React.PureComponent {
                         const comment = measureOrComment
                         return (
                             <Comment
-                                className="has-border-bottom"
                                 comment={comment}
                                 key={`comment${index}`}
                             />
@@ -121,7 +120,7 @@ class Measures extends React.PureComponent {
         )
     }
 
-    handleAddComment() {
+    handleAddComment = () => {
         const {actions: {addComment}} = this.props
         const comment = prompt('Enter your comment!', '')
         if (comment) {
